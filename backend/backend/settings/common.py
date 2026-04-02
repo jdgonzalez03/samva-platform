@@ -38,6 +38,7 @@ WAGTAIL_APPS = [
 PROJECT_APPS = [
     'accounts',
     'farmer',
+    'core',
 ]
 
 ADDONS_APPS = [
