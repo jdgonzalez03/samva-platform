@@ -19,7 +19,7 @@ class WagtailFarmerSnippetViewSet(SnippetViewSet):
 class WagtailOrganizationSnippetViewSet(SnippetViewSet):
     model = Organization
     menu_label = _("Organizations")
-    icon = "group"
+    icon = "organization"
     list_display = OrganizationAdmin.list_display
     search_fields = OrganizationAdmin.search_fields
     ordering = OrganizationAdmin.ordering
@@ -27,7 +27,7 @@ class WagtailOrganizationSnippetViewSet(SnippetViewSet):
 
 class WagtailFarmerSnippetViewSetGroup(SnippetViewSetGroup):
     menu_label = _("Producers")
-    menu_icon = "folder-open-1"
+    menu_icon = "tractor"
     menu_order = 200
     items = (
         WagtailFarmerSnippetViewSet,
