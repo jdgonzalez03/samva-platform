@@ -1,0 +1,16 @@
+# Core
+Django>=6.0,<7.0
+Wagtail>=7.0,<8.0
+
+# Database
+psycopg[binary]>=3.1
+
+# Django Ecosystem
+django-storages[boto3]>=1.14
+django-cors-headers>=4.3
+
+# Server
+gunicorn>=22.0
+
+# Utilities
+Pillow>=10.0
