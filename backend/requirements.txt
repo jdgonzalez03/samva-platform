@@ -2,6 +2,10 @@
 Django>=6.0,<7.0
 Wagtail>=7.0,<8.0
 
+# REST
+djangorestframework==3.17.1
+djangorestframework-simplejwt==5.5.1
+
 # Database
 psycopg[binary]>=3.1
 
