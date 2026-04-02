@@ -36,13 +36,13 @@ WAGTAIL_APPS = [
 ]
 
 PROJECT_APPS = [
-    # Add your project apps here
-    # e.g. 'auth',
+    'accounts',
+    'farmer',
 ]
 
 ADDONS_APPS = [
-    # Add your addon apps here
-    # e.g. 'drf_spectacular',
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 INSTALLED_APPS = WAGTAIL_APPS + DEPENDENCIES_APPS + PROJECT_APPS + ADDONS_APPS
@@ -142,10 +142,16 @@ STORAGES = {
 }
 
 # Wagtail Settings
-WAGTAIL_SITE_NAME = os.environ.get('WAGTAIL_SITE_NAME', 'Template Wagtail Nuxt')
+WAGTAIL_SITE_NAME = os.environ.get('WAGTAIL_SITE_NAME', 'S.A.M.V.A. Platform')
 
 WAGTAILADMIN_BASE_URL = os.environ.get('WAGTAILADMIN_BASE_URL', 'http://localhost:8000')
 
 WAGTAILSEARCH_BACKENDS = {
     "default": {"BACKEND": "wagtail.search.backends.database"}
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
 }
