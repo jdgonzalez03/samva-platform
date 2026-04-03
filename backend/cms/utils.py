@@ -33,4 +33,5 @@ ICON_CHOICES = [
 BACKGROUND_CHOICES = [
     ("white", _("Blanco")),
     ("gray", _("Gris")),
+    ("green", _("Verde")),
 ]
