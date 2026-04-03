@@ -30,6 +30,7 @@ WAGTAIL_APPS = [
     'wagtail.search',
     'wagtail.admin',
     'wagtail',
+    'wagtail.contrib.settings',
 
     'taggit',
     'modelcluster',
