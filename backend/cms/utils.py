@@ -29,3 +29,8 @@ ICON_CHOICES = [
     ("impact", _("Impacto")),
     ("sustainability", _("Sostenibilidad")),
 ]
+
+BACKGROUND_CHOICES = [
+    ("white", _("Blanco")),
+    ("gray", _("Gris")),
+]
