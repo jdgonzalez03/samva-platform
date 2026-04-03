@@ -96,7 +96,7 @@ class VisionMisionSectionBlock(StructBlock):
         label = _("Visión y Misión")
 
 
-
+# TODO: Improve this block to make it more general
 class HighlightBlock(StructBlock):
     title = CharBlock(
         required=True,
@@ -126,7 +126,7 @@ class HighlightBlock(StructBlock):
         icon = "doc-full"
         label = _("Highlight")
 
-
+# TODO: Improve this block to make it more general
 class SplitSectionBlock(StructBlock):
     background = ChoiceBlock(
         required=True,
