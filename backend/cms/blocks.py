@@ -189,8 +189,56 @@ class BenefitBlock(StructBlock):
         label = _("Beneficios")
 
 
+class MemberBlock(StructBlock):
+    name = CharBlock(
+        required=True,
+        label=_("Nombre"),
+        help_text=_("Nombre del miembro, ej: Ing.Juan Pérez"),
+    )
+    role = CharBlock(
+        required=True,
+        label=_("Rol"),
+        help_text=_("Rol del miembro, ej: Especialista IoT o Ingenieria Electrónica"),
+    )
+    image = ImageChooserBlock(
+        required=True,
+        label=_("Imagen"),
+        help_text=_("Imagen del miembro"),
+    )
+    description = TextBlock(
+        required=True,
+        label=_("Descripción"),
+        help_text=_("Descripción del miembro"),
+    )
+    
+    class Meta:
+        icon = "doc-full"
+        label = _("Miembro")
+
+
+
+class TeamBlock(StructBlock):
+    background = ChoiceBlock(
+        required=True,
+        choices=BACKGROUND_CHOICES,
+        default=BACKGROUND_CHOICES[0][0],
+        label=_("Fondo"),
+        help_text=_("Fondo de la sección"),
+    )
+    heading = HeadingTextBlock()
+    members = ListBlock(
+        MemberBlock()
+    )
+    
+    class Meta:
+        icon = "doc-full"
+        label = _("Equipo")
+
+
+
 class LandingStreamBlocks(StreamBlock):
     hero = HeroBlock()
     vision_mision = VisionMisionSectionBlock()
     split_section = SplitSectionBlock()
     benefits = BenefitBlock()
+    team = TeamBlock()
