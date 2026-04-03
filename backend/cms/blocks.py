@@ -216,7 +216,6 @@ class MemberBlock(StructBlock):
         label = _("Miembro")
 
 
-
 class TeamBlock(StructBlock):
     background = ChoiceBlock(
         required=True,
