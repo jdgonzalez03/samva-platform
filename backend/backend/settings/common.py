@@ -39,6 +39,7 @@ PROJECT_APPS = [
     'accounts',
     'farmer',
     'core',
+    'cms',
 ]
 
 ADDONS_APPS = [
