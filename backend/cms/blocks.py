@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
-from wagtail.blocks import StreamBlock, StructBlock, CharBlock, TextBlock, ChoiceBlock
+from wagtail.blocks import StreamBlock, StructBlock, CharBlock, TextBlock, ChoiceBlock, ListBlock
 
 from cms.utils import ICON_CHOICES, BACKGROUND_CHOICES
 
@@ -92,11 +92,71 @@ class VisionMisionSectionBlock(StructBlock):
     mision = CardBlock()
 
     class Meta:
-        icon = "eye"
+        icon = "success"
         label = _("Visión y Misión")
-        
+
+
+
+class HighlightBlock(StructBlock):
+    title = CharBlock(
+        required=True,
+        label=_("Título"),
+        help_text=_("Título del highlight"),
+    )
+    icon = ChoiceBlock(
+        required=True,
+        choices=ICON_CHOICES,
+        default=ICON_CHOICES[0][0],
+        label=_("Icono"),
+        help_text=_("Icono del highlight"),
+    )
+    items = ListBlock(
+        CharBlock(
+            required=True,
+            label=_("Item"),
+            help_text=_("Item del highlight"),
+            default="Item",
+        ),
+        required=True,
+        label=_("Items"),
+        help_text=_("Items del highlight"),
+    )
+    
+    class Meta:
+        icon = "doc-full"
+        label = _("Highlight")
+
+
+class SplitSectionBlock(StructBlock):
+    background = ChoiceBlock(
+        required=True,
+        choices=BACKGROUND_CHOICES,
+        default=BACKGROUND_CHOICES[0][0],
+        label=_("Fondo"),
+        help_text=_("Fondo de la sección"),
+    )
+    title = CharBlock(
+        required=True,
+        label=_("Título"),
+        help_text=_("Título de la sección"),
+        default="Sección dividida",
+    )
+    description = TextBlock(
+        required=True,
+        label=_("Descripción"),
+        help_text=_("Descripción de la sección"),
+    )
+    highlight = HighlightBlock()
+
+    
+    class Meta:
+        icon = "doc-full"
+        label = _("Sección dividida con Highlight")
+
+
 
 
 class LandingStreamBlocks(StreamBlock):
     hero = HeroBlock()
     vision_mision = VisionMisionSectionBlock()
+    split_section = SplitSectionBlock()
