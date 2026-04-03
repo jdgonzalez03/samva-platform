@@ -1,7 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 
-from wagtail.blocks import StreamBlock, StructBlock, CharBlock, TextBlock
+from wagtail.blocks import StreamBlock, StructBlock, CharBlock, TextBlock, ChoiceBlock
 
+from cms.utils import ICON_CHOICES
 
 class HeroBlock(StructBlock):
     badge = CharBlock(
@@ -33,6 +34,13 @@ class HeroBlock(StructBlock):
         label=_("Texto CTA"),
         help_text=_("Texto del CTA"),
         default="Comenzar ahora",
+    )
+    cta_icon = ChoiceBlock(
+        required=True,
+        choices=ICON_CHOICES,
+        default=ICON_CHOICES[0][0],
+        label=_("Icono CTA"),
+        help_text=_("Icono del CTA"),
     )
     cta_url = CharBlock(
         required=True,
