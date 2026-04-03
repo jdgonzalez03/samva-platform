@@ -154,9 +154,43 @@ class SplitSectionBlock(StructBlock):
         label = _("Sección dividida con Highlight")
 
 
+class HeadingTextBlock(StructBlock):
+    title = CharBlock(
+        required=True,
+        label=_("Título"),
+        help_text=_("Título de la sección"),
+    )
+    text = TextBlock(
+        required=True,
+        label=_("Texto"),
+        help_text=_("Texto de la sección"),
+    )
+    
+    class Meta:
+        icon = "doc-full"
+        label = _("Título con Texto")
+
+
+class BenefitBlock(StructBlock):
+    background = ChoiceBlock(
+        required=True,
+        choices=BACKGROUND_CHOICES,
+        default=BACKGROUND_CHOICES[0][0],
+        label=_("Fondo"),
+        help_text=_("Fondo de la sección"),
+    )
+    heading = HeadingTextBlock()
+    items = ListBlock(
+        CardBlock()
+    )
+    
+    class Meta:
+        icon = "doc-full"
+        label = _("Beneficios")
 
 
 class LandingStreamBlocks(StreamBlock):
     hero = HeroBlock()
     vision_mision = VisionMisionSectionBlock()
     split_section = SplitSectionBlock()
+    benefits = BenefitBlock()
