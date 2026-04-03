@@ -21,6 +21,28 @@ class TitleBlock(StructBlock):
     )
 
 
+class ButtonBlock(StructBlock):
+    text = CharBlock(
+        required=True,
+        label=_("Texto"),
+        help_text=_("Texto del botón"),
+        default="Comenzar ahora",
+    )
+    icon = ChoiceBlock(
+        required=True,
+        choices=ICON_CHOICES,
+        default=ICON_CHOICES[0][0],
+        label=_("Icono"),
+        help_text=_("Icono del botón"),
+    )
+    url = CharBlock(
+        required=True,
+        label=_("URL"),
+        help_text=_("URL del CTA"),
+        default="#",
+    )
+
+
 class HeroBlock(StructBlock):
     badge = CharBlock(
         required=True,
@@ -39,24 +61,10 @@ class HeroBlock(StructBlock):
         help_text=_("Descripción del hero"),
         default="Gestiona tus datos meteorológicos con facilidad",
     )
-    cta_text = CharBlock(
+    cta_button = ButtonBlock(
         required=True,
-        label=_("Texto CTA"),
-        help_text=_("Texto del CTA"),
-        default="Comenzar ahora",
-    )
-    cta_icon = ChoiceBlock(
-        required=True,
-        choices=ICON_CHOICES,
-        default=ICON_CHOICES[0][0],
-        label=_("Icono CTA"),
-        help_text=_("Icono del CTA"),
-    )
-    cta_url = CharBlock(
-        required=True,
-        label=_("URL CTA"),
-        help_text=_("URL del CTA"),
-        default="#",
+        label=_("Botón CTA"),
+        help_text=_("Botón CTA"),
     )
 
     class Meta:
@@ -306,6 +314,23 @@ class FeatureHighlightBlock(StructBlock):
         label = _("Feature Highlight")
 
 
+class CTASectionBlock(StructBlock):
+    background = ChoiceBlock(
+        required=True,
+        choices=BACKGROUND_CHOICES,
+        default=BACKGROUND_CHOICES[0][0],
+        label=_("Fondo"),
+        help_text=_("Fondo de la sección"),
+    )
+    heading = HeadingTextBlock()
+    cta_button = ButtonBlock()
+
+
+    class Meta:
+        icon = "doc-full"
+        label = _("CTA Section")
+
+
 class LandingStreamBlocks(StreamBlock):
     hero = HeroBlock()
     vision_mision = VisionMisionSectionBlock()
@@ -313,3 +338,4 @@ class LandingStreamBlocks(StreamBlock):
     benefits = BenefitBlock()
     team = TeamBlock()
     feature_highlight = FeatureHighlightBlock()
+    cta_section = CTASectionBlock()
