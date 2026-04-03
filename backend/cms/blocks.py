@@ -1,8 +1,25 @@
 from django.utils.translation import gettext_lazy as _
 
 from wagtail.blocks import StreamBlock, StructBlock, CharBlock, TextBlock, ChoiceBlock, ListBlock
+from wagtail.images.blocks import ImageBlock
 
 from cms.utils import ICON_CHOICES, BACKGROUND_CHOICES
+
+
+class TitleBlock(StructBlock):
+  title = CharBlock(
+        required=True,
+        label=_("Título"),
+        help_text=_("Título"),
+        default="Agricultura de Precisión",
+    )
+  highlight_text = CharBlock(
+        required=True,
+        label=_("Titulo Resaltado"),
+        help_text=_("Titulo resaltado"),
+        default="Inteligente y Sostenible",
+    )
+
 
 class HeroBlock(StructBlock):
     badge = CharBlock(
@@ -11,17 +28,10 @@ class HeroBlock(StructBlock):
         help_text=_("Texto del anuncio"),
         default="Integración con Estaciones Meteorológicas",
     )
-    title = CharBlock(
+    title = TitleBlock(
         required=True,
         label=_("Título"),
         help_text=_("Título del hero"),
-        default="Agricultura de Precisión",
-    )
-    highlight_text = CharBlock(
-        required=True,
-        label=_("Titulo Resaltado"),
-        help_text=_("Titulo resaltado del hero"),
-        default="Inteligente y Sostenible",
     )
     description = TextBlock(
         required=True,
@@ -200,7 +210,7 @@ class MemberBlock(StructBlock):
         label=_("Rol"),
         help_text=_("Rol del miembro, ej: Especialista IoT o Ingenieria Electrónica"),
     )
-    image = ImageChooserBlock(
+    image = ImageBlock(
         required=True,
         label=_("Imagen"),
         help_text=_("Imagen del miembro"),
@@ -234,6 +244,67 @@ class TeamBlock(StructBlock):
         label = _("Equipo")
 
 
+class ListItemsBlock(StructBlock):
+    list_icon = ChoiceBlock(
+        required=True,
+        choices=ICON_CHOICES,
+        default=ICON_CHOICES[0][0],
+        label=_("Icono"),
+        help_text=_("Icono de la lista"),
+    )
+    items = ListBlock(
+        StructBlock([
+            ("text", CharBlock()),
+        ])
+    )
+
+
+class BadgeBlock(StructBlock):
+    text = CharBlock(
+        required=True,
+        label=_("Texto"),
+        help_text=_("Texto del badge"),
+    )
+    status = CharBlock(
+        required=True,
+        label=_("Estado"),
+        help_text=_("Estado del badge"),
+    )
+    icon = ChoiceBlock(
+        required=True,
+        choices=ICON_CHOICES,
+        default=ICON_CHOICES[0][0],
+        label=_("Icono"),
+        help_text=_("Icono del badge"),
+    )
+
+
+class FeatureHighlightBlock(StructBlock):
+    background = ChoiceBlock(
+        required=True,
+        choices=BACKGROUND_CHOICES,
+        default=BACKGROUND_CHOICES[0][0],
+        label=_("Fondo"),
+        help_text=_("Fondo de la sección"),
+    )
+    imagen = ImageBlock(
+        required=True,
+        label=_("Imagen"),
+        help_text=_("Imagen de la sección"),
+    )
+    title = TitleBlock()
+    description = TextBlock(
+        required=True,
+        label=_("Descripción"),
+        help_text=_("Descripción de la sección"),
+    )
+    items = ListItemsBlock()
+    badge = BadgeBlock()
+    
+    class Meta:
+        icon = "doc-full"
+        label = _("Feature Highlight")
+
 
 class LandingStreamBlocks(StreamBlock):
     hero = HeroBlock()
@@ -241,3 +312,4 @@ class LandingStreamBlocks(StreamBlock):
     split_section = SplitSectionBlock()
     benefits = BenefitBlock()
     team = TeamBlock()
+    feature_highlight = FeatureHighlightBlock()
