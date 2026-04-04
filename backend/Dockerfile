@@ -9,6 +9,8 @@ RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-r
     libjpeg62-turbo-dev \
     zlib1g-dev \
     libwebp-dev \
+    libgdal-dev \
+    gdal-bin \
  && rm -rf /var/lib/apt/lists/*
 
 
