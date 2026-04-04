@@ -9,7 +9,7 @@ from wagtail.snippets.views.snippets import SnippetViewSet, SnippetViewSetGroup
 
 class WagtailFarmerSnippetViewSet(SnippetViewSet):
     model = Farmer
-    menu_label = _("Farmers")
+    menu_label = _("Granjeros")
     icon = "user"
     list_display = FarmerAdmin.list_display
     search_fields = FarmerAdmin.search_fields
@@ -18,7 +18,7 @@ class WagtailFarmerSnippetViewSet(SnippetViewSet):
 
 class WagtailOrganizationSnippetViewSet(SnippetViewSet):
     model = Organization
-    menu_label = _("Organizations")
+    menu_label = _("Organizaciones")
     icon = "organization"
     list_display = OrganizationAdmin.list_display
     search_fields = OrganizationAdmin.search_fields
@@ -26,7 +26,7 @@ class WagtailOrganizationSnippetViewSet(SnippetViewSet):
 
 
 class WagtailFarmerSnippetViewSetGroup(SnippetViewSetGroup):
-    menu_label = _("Producers")
+    menu_label = _("Granjeros")
     menu_icon = "tractor"
     menu_order = 200
     items = (
