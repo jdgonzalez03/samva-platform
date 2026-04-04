@@ -48,3 +48,11 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+backend/static/
+static/
+staticfiles/
+collectstatic/
+ 
+**/static/
+**/staticfiles/
