@@ -12,9 +12,16 @@ psycopg[binary]>=3.1
 # Django Ecosystem
 django-storages[boto3]>=1.14
 django-cors-headers>=4.3
+django-leaflet
+
+# Wagtail Ecosystem
+wagtailgeowidget==9.1.0
 
 # Server
 gunicorn>=22.0
 
 # Utilities
 Pillow>=10.0
+
+# MAPS
+GDAL==3.6.2
