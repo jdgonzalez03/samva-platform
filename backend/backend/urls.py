@@ -16,17 +16,31 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
-urlpatterns = [
-    path('django-admin/', admin.site.urls),
+from core.urls import api_urls as core_api_urls, urlpatterns as core_urlpatterns
 
+
+
+api_urls = [
+    path('core/', include(core_api_urls)),
+
+]
+
+
+urlpatterns = [
+    path('api/', include(api_urls)),
+    path('api/core/', include(core_urlpatterns)),
+
+    # Default 
+    path('django-admin/', admin.site.urls),
     path('admin/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
+    re_path(r'', include(wagtail_urls)),
 ]
 
 if settings.DEBUG:
