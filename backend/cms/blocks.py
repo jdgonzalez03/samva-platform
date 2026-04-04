@@ -7,18 +7,24 @@ from cms.utils import ICON_CHOICES, BACKGROUND_CHOICES
 
 
 class TitleBlock(StructBlock):
-  title = CharBlock(
+    title = CharBlock(
         required=True,
         label=_("Título"),
         help_text=_("Título"),
         default="Agricultura de Precisión",
     )
-  highlight_text = CharBlock(
+    highlight_text = CharBlock(
         required=True,
         label=_("Titulo Resaltado"),
         help_text=_("Titulo resaltado"),
         default="Inteligente y Sostenible",
     )
+
+    def get_api_representation(self, value, context=None):
+        return {
+            "title": value["title"],
+            "highlight_text": value["highlight_text"],
+        }
 
 
 class ButtonBlock(StructBlock):
@@ -41,6 +47,13 @@ class ButtonBlock(StructBlock):
         help_text=_("URL del CTA"),
         default="#",
     )
+
+    def get_api_representation(self, value, context=None):
+        return {
+            "text": value["text"],
+            "icon": value["icon"],
+            "url": value["url"],
+        }
 
 
 class HeroBlock(StructBlock):
@@ -71,6 +84,14 @@ class HeroBlock(StructBlock):
         icon = "image"
         label = _("Hero")
     
+    def get_api_representation(self, value, context=None):
+        return {
+            "badge": value["badge"],
+            "title": value["title"],
+            "description": value["description"],
+            "cta_button": value["cta_button"],
+        }
+
 
 class CardBlock(StructBlock):
     title = CharBlock(
@@ -96,6 +117,13 @@ class CardBlock(StructBlock):
     class Meta:
         icon = "table"
         label = _("Tarjeta")
+    
+    def get_api_representation(self, value, context=None):
+        return {
+            "title": value["title"],
+            "description": value["description"],
+            "icon": value["icon"],
+        }
 
 
 class VisionMisionSectionBlock(StructBlock):
@@ -112,9 +140,15 @@ class VisionMisionSectionBlock(StructBlock):
     class Meta:
         icon = "success"
         label = _("Visión y Misión")
+    
+    def get_api_representation(self, value, context=None):
+        return {
+            "background": value["background"],
+            "vision": value["vision"],
+            "mision": value["mision"],
+        }
 
 
-# TODO: Improve this block to make it more general
 class HighlightBlock(StructBlock):
     title = CharBlock(
         required=True,
@@ -143,33 +177,13 @@ class HighlightBlock(StructBlock):
     class Meta:
         icon = "doc-full"
         label = _("Highlight")
-
-# TODO: Improve this block to make it more general
-class SplitSectionBlock(StructBlock):
-    background = ChoiceBlock(
-        required=True,
-        choices=BACKGROUND_CHOICES,
-        default=BACKGROUND_CHOICES[0][0],
-        label=_("Fondo"),
-        help_text=_("Fondo de la sección"),
-    )
-    title = CharBlock(
-        required=True,
-        label=_("Título"),
-        help_text=_("Título de la sección"),
-        default="Sección dividida",
-    )
-    description = TextBlock(
-        required=True,
-        label=_("Descripción"),
-        help_text=_("Descripción de la sección"),
-    )
-    highlight = HighlightBlock()
-
     
-    class Meta:
-        icon = "doc-full"
-        label = _("Sección dividida con Highlight")
+    def get_api_representation(self, value, context=None):
+        return {
+            "title": value["title"],
+            "icon": value["icon"],
+            "items": value["items"],
+        }
 
 
 class HeadingTextBlock(StructBlock):
@@ -187,6 +201,35 @@ class HeadingTextBlock(StructBlock):
     class Meta:
         icon = "doc-full"
         label = _("Título con Texto")
+    
+    def get_api_representation(self, value, context=None):
+        return {
+            "title": value["title"],
+            "text": value["text"],
+        }
+
+
+class TwoColumnsContentBlock(StructBlock):
+    background = ChoiceBlock(
+        required=True,
+        choices=BACKGROUND_CHOICES,
+        default=BACKGROUND_CHOICES[0][0],
+        label=_("Fondo"),
+        help_text=_("Fondo de la sección"),
+    )
+    left_column = HeadingTextBlock()
+    right_column = HeadingTextBlock()
+    
+    class Meta:
+        icon = "doc-full"
+        label = _("Contenido en Dos Columnas")
+    
+    def get_api_representation(self, value, context=None):
+        return {
+            "background": value["background"],
+            "left_column": value["left_column"],
+            "right_column": value["right_column"],
+        }
 
 
 class BenefitBlock(StructBlock):
@@ -205,6 +248,13 @@ class BenefitBlock(StructBlock):
     class Meta:
         icon = "doc-full"
         label = _("Beneficios")
+    
+    def get_api_representation(self, value, context=None):
+        return {
+            "background": value["background"],
+            "heading": value["heading"],
+            "items": value["items"],
+        }
 
 
 class MemberBlock(StructBlock):
@@ -233,6 +283,14 @@ class MemberBlock(StructBlock):
         icon = "doc-full"
         label = _("Miembro")
 
+    def get_api_representation(self, value, context=None):
+        return {
+            "name": value["name"],
+            "role": value["role"],
+            "image": value["image"],
+            "description": value["description"],
+        }
+
 
 class TeamBlock(StructBlock):
     background = ChoiceBlock(
@@ -251,6 +309,12 @@ class TeamBlock(StructBlock):
         icon = "doc-full"
         label = _("Equipo")
 
+    def get_api_representation(self, value, context=None):
+        return {
+            "background": value["background"],
+            "heading": value["heading"],
+            "members": value["members"],
+        }
 
 class ListItemsBlock(StructBlock):
     list_icon = ChoiceBlock(
@@ -285,6 +349,13 @@ class BadgeBlock(StructBlock):
         label=_("Icono"),
         help_text=_("Icono del badge"),
     )
+    
+    def get_api_representation(self, value, context=None):
+        return {
+            "text": value["text"],
+            "status": value["status"],
+            "icon": value["icon"],
+        }
 
 
 class FeatureHighlightBlock(StructBlock):
@@ -312,6 +383,16 @@ class FeatureHighlightBlock(StructBlock):
     class Meta:
         icon = "doc-full"
         label = _("Feature Highlight")
+    
+    def get_api_representation(self, value, context=None):
+        return {
+            "background": value["background"],
+            "imagen": value["imagen"],
+            "title": value["title"],
+            "description": value["description"],
+            "items": value["items"],
+            "badge": value["badge"],
+        }
 
 
 class CTASectionBlock(StructBlock):
@@ -329,12 +410,19 @@ class CTASectionBlock(StructBlock):
     class Meta:
         icon = "doc-full"
         label = _("CTA Section")
+    
+    def get_api_representation(self, value, context=None):
+        return {
+            "background": value["background"],
+            "heading": value["heading"],
+            "cta_button": value["cta_button"],
+        }
 
 
 class LandingStreamBlocks(StreamBlock):
     hero = HeroBlock()
     vision_mision = VisionMisionSectionBlock()
-    split_section = SplitSectionBlock()
+    two_columns_content = TwoColumnsContentBlock()
     benefits = BenefitBlock()
     team = TeamBlock()
     feature_highlight = FeatureHighlightBlock()
