@@ -16,6 +16,7 @@ DEPENDENCIES_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'django.contrib.gis'
 ]
 
 WAGTAIL_APPS = [
@@ -34,6 +35,7 @@ WAGTAIL_APPS = [
 
     'taggit',
     'modelcluster',
+    'wagtailgeowidget',
 ]
 
 PROJECT_APPS = [
@@ -41,11 +43,13 @@ PROJECT_APPS = [
     'farmer',
     'core',
     'cms',
+    'farm',
 ]
 
 ADDONS_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
+    'leaflet',
 ]
 
 INSTALLED_APPS = WAGTAIL_APPS + DEPENDENCIES_APPS + PROJECT_APPS + ADDONS_APPS
@@ -87,7 +91,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database config
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.environ.get('POSTGRES_DB'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
@@ -123,6 +127,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_DIR, 'static'),
+]
 
 # STORAGE SETTINGS
 AWS_ACCESS_KEY_ID = os.environ.get('STORAGE_KEY')
@@ -157,4 +166,30 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+}
+
+# Security settings
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+# TODO : Improve this to load from .env files
+import glob
+def find_library(pattern):
+    matches = glob.glob(pattern)
+    return matches[0] if matches else None
+
+GDAL_LIBRARY_PATH = find_library('/usr/lib/x86_64-linux-gnu/libgdal.so*')
+GEOS_LIBRARY_PATH = find_library('/usr/lib/x86_64-linux-gnu/libgeos_c.so*')
+
+
+# Leaflet settings
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (4.142, -73.626),
+    'DEFAULT_ZOOM': 12,
+    'MAX_ZOOM': 20,
+    'MIN_ZOOM': 3,
+    'PLUGINS': {
+        'forms': {
+            'auto-include': True
+        }
+    }
 }
