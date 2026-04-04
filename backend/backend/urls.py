@@ -23,6 +23,8 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from core.urls import api_urls as core_api_urls, urlpatterns as core_urlpatterns
+from cms.urls import urlpatterns as cms_urlpatterns
+
 
 
 
@@ -35,6 +37,7 @@ api_urls = [
 urlpatterns = [
     path('api/', include(api_urls)),
     path('api/core/', include(core_urlpatterns)),
+    path('api/cms/', include(cms_urlpatterns)),
 
     # Default 
     path('django-admin/', admin.site.urls),
