@@ -57,5 +57,5 @@ collectstatic/
 **/static/
 **/staticfiles/
 
-**/images
+backend/**/images
 **/original_images
