@@ -56,3 +56,6 @@ collectstatic/
  
 **/static/
 **/staticfiles/
+
+**/images
+**/original_images
