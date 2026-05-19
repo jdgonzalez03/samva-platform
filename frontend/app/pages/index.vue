@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Default from "~/layouts/Default.vue"
+definePageMeta({
+  layout: 'default',
+})
 </script>
 
 <template>
-  <Default>
-    <h1>hola mundo</h1>
-  </Default>
+  <h1>hola mundo</h1>
 </template>

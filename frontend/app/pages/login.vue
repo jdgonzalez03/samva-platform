@@ -1,6 +1,9 @@
 <script setup lang="ts">
+definePageMeta({
+  layout: 'login',
+})
+
 import * as z from 'zod';
-import LoginLayout from '~/layouts/LoginLayout.vue';
 import TractorIcon from '~/components/icons/TractorIcon.vue';
 
 import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui';
@@ -33,17 +36,15 @@ function onSubmit(payload: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <LoginLayout>
-    <UContainer class="min-h-screen flex flex-col items-center justify-center">
-      <UPageCard>
-        <UAuthForm
-          title="Login"
-          description="Enter your credentials to access your account."
-          :icon="TractorIcon"
-          :fields="fields"
-          @submit="onSubmit"
-        />
-      </UPageCard>
-    </UContainer>
-  </LoginLayout>
+  <UContainer class="min-h-screen flex flex-col items-center justify-center">
+    <UPageCard>
+      <UAuthForm
+        title="Login"
+        description="Enter your credentials to access your account."
+        :icon="TractorIcon"
+        :fields="fields"
+        @submit="onSubmit"
+      />
+    </UPageCard>
+  </UContainer>
 </template>
