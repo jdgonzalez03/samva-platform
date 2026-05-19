@@ -133,25 +133,6 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
 ]
 
-# STORAGE SETTINGS
-AWS_ACCESS_KEY_ID = os.environ.get('STORAGE_KEY')
-AWS_SECRET_ACCESS_KEY = os.environ.get('STORAGE_SECRET')
-AWS_STORAGE_BUCKET_NAME = os.environ.get('STORAGE_BUCKET_NAME')
-AWS_S3_ENDPOINT_URL = os.environ.get('STORAGE_ENDPOINT_URL')
-AWS_S3_REGION_NAME = os.environ.get('STORAGE_REGION_NAME')
-AWS_S3_SIGNATURE_VERSION = 's3v4'
-AWS_QUERYSTRING_AUTH = os.environ.get('STORAGE_QUERYSTRING_AUTH') == 'True'
-AWS_DEFAULT_ACL = None
-AWS_S3_FILE_OVERWRITE = False
-
-STORAGES = {
-    'default': {
-        'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
-    },
-    'staticfiles': {
-        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
-    },
-}
 
 # Wagtail Settings
 WAGTAIL_SITE_NAME = os.environ.get('WAGTAIL_SITE_NAME', 'S.A.M.V.A. Platform')

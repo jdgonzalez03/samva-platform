@@ -2,7 +2,11 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-
+  modules: [
+    '@nuxt/ui',
+  ],
+  css: ['~/assets/main.css'],
+  
   runtimeConfig: {
     apiBaseServer: process.env.NUXT_API_BASE_SERVER || 'http://localhost:8000/api',
     public: {

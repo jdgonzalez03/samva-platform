@@ -182,7 +182,7 @@ class HighlightBlock(StructBlock):
         return {
             "title": value["title"],
             "icon": value["icon"],
-            "items": value["items"],
+            "items": list(value["items"]),
         }
 
 
@@ -250,10 +250,16 @@ class BenefitBlock(StructBlock):
         label = _("Beneficios")
     
     def get_api_representation(self, value, context=None):
+        card_block = CardBlock()
         return {
             "background": value["background"],
-            "heading": value["heading"],
-            "items": value["items"],
+            "heading": self.child_blocks["heading"].get_api_representation(
+                value["heading"], context
+            ),
+            "items": [
+                card_block.get_api_representation(item, context)
+                for item in value["items"]
+            ],
         }
 
 
@@ -284,10 +290,20 @@ class MemberBlock(StructBlock):
         label = _("Miembro")
 
     def get_api_representation(self, value, context=None):
+        image_data = None
+        if value["image"]:
+            image_data = {
+                "id": value["image"].id,
+                "title": value["image"].title,
+                "url": value["image"].file.url if value["image"].file else None,
+                "width": value["image"].width,
+                "height": value["image"].height,
+            }
+        
         return {
             "name": value["name"],
             "role": value["role"],
-            "image": value["image"],
+            "image": image_data,
             "description": value["description"],
         }
 
@@ -310,10 +326,16 @@ class TeamBlock(StructBlock):
         label = _("Equipo")
 
     def get_api_representation(self, value, context=None):
+        member_block = MemberBlock()
         return {
             "background": value["background"],
-            "heading": value["heading"],
-            "members": value["members"],
+            "heading": self.child_blocks["heading"].get_api_representation(
+                value["heading"], context
+            ),
+            "members": [
+                member_block.get_api_representation(member, context)
+                for member in value["members"]
+            ],
         }
 
 class ListItemsBlock(StructBlock):
@@ -329,6 +351,22 @@ class ListItemsBlock(StructBlock):
             ("text", CharBlock()),
         ])
     )
+    
+    def get_api_representation(self, value, context=None):
+        # Create a StructBlock instance for the items
+        item_block = StructBlock([
+            ("text", CharBlock()),
+        ])
+        
+        return {
+            "list_icon": value["list_icon"],
+            "items": [
+                {
+                    "text": item["text"]
+                }
+                for item in value["items"]
+            ],
+        }
 
 
 class BadgeBlock(StructBlock):
@@ -385,13 +423,29 @@ class FeatureHighlightBlock(StructBlock):
         label = _("Feature Highlight")
     
     def get_api_representation(self, value, context=None):
+        imagen_data = None
+        if value["imagen"]:
+            imagen_data = {
+                "id": value["imagen"].id,
+                "title": value["imagen"].title,
+                "url": value["imagen"].file.url if value["imagen"].file else None,
+                "width": value["imagen"].width,
+                "height": value["imagen"].height,
+            }
+        
         return {
             "background": value["background"],
-            "imagen": value["imagen"],
-            "title": value["title"],
+            "imagen": imagen_data,
+            "title": self.child_blocks["title"].get_api_representation(
+                value["title"], context
+            ),
             "description": value["description"],
-            "items": value["items"],
-            "badge": value["badge"],
+            "items": self.child_blocks["items"].get_api_representation(
+                value["items"], context
+            ),
+            "badge": self.child_blocks["badge"].get_api_representation(
+                value["badge"], context
+            ),
         }
 
 
