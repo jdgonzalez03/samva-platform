@@ -1,6 +1,6 @@
 
 up-dev:
-	docker compose -f docker-compose.dev.yml up
+	docker compose -f docker-compose.dev.yml up --build
 
 # Django management commands
 migrations:
