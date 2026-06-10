@@ -24,13 +24,13 @@ const buttonIconComponent = computed(() => {
 <template>
   <div class="relative w-full overflow-hidden bg-cover bg-center text-white"
     style="background-image: url('/images/hero-image.jpg');">
-    <div class="absolute inset-0 bg-black/40 pointer-events-none" />
+    <div class="absolute inset-0 bg-black/50 pointer-events-none" />
 
     <div class="relative z-10">
       <UPageHero :headline="block.value.badge">
         <template #headline>
           <p
-            class="text-sm font-semibold uppercase tracking-wide text-primary-500 bg-primary/10 px-3 py-1 rounded-full inline-block mb-4 border border-primary/20">
+            class="text-sm font-semibold uppercase tracking-wide text-primary-500 border border-primary/70 px-3 py-1 rounded-full inline-block mb-4 ">
             {{ block.value.badge }}
           </p>
         </template>
@@ -43,7 +43,7 @@ const buttonIconComponent = computed(() => {
         </template>
 
         <template #description>
-          <p class="text-lg text-white max-w-2xl text-center mx-auto">
+          <p class="text-hexl text-white max-w-2xl text-center mx-auto">
             {{ block.value.description }}
           </p>
         </template>
