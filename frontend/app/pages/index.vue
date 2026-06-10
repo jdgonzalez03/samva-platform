@@ -19,7 +19,7 @@ const { data } = await useFetch<LandingData>(
 </script>
 
 <template>
-  <div class="container flex flex-col items-center justify-center gap-12 px-4 py-16 mx-auto">
+  <div class="container flex flex-col items-center justify-center gap-12 px-4 py-4 mx-auto">
     <template v-if="data?.body" v-for="block in data.body" :key="block.id">
       <HeroSection v-if="block.type === 'hero'" :block="block" />
     </template>
