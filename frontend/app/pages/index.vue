@@ -4,6 +4,7 @@ definePageMeta({
 })
 import { useRuntimeConfig } from '#imports'
 import type { LandingData } from '#shared/types/cms/landing'
+import VisionMision from '../components/cms/vision-mision.vue'
 import HeroSection from '../components/cms/hero-section.vue'
 
 // TODO: Extract maybe to a composable or something, but for now it's fine here
@@ -21,7 +22,8 @@ const { data } = await useFetch<LandingData>(
 <template>
   <div class="container flex flex-col items-center justify-center gap-12 px-4 py-4 mx-auto">
     <template v-if="data?.body" v-for="block in data.body" :key="block.id">
-      <HeroSection v-if="block.type === 'hero'" :block="block" />
+      <hero-section v-if="block.type === 'hero'" :block="block" />
+      <vision-mision v-else-if="block.type === 'vision_mision'" :block="block" />
     </template>
   </div>
 </template>
