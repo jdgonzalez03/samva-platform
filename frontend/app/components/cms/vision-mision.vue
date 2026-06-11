@@ -24,6 +24,7 @@ const bgClass = computed(() => {
       :description="block.value.vision.description"
       icon="i-lucide-eye"
       variant="soft"
+      spotlight
     />
 
     <UPageCard
@@ -31,6 +32,7 @@ const bgClass = computed(() => {
       :description="block.value.mision.description"
       icon="i-lucide-flag"
       variant="soft"
+      spotlight
     />
   </div>
 </template>
