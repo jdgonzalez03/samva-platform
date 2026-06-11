@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { VisionMisionBlock } from '#shared/types/cms/blocks'
+import { getBlockBackground } from '#shared/utils/block'
 
 interface Props {
   block: VisionMisionBlock
@@ -8,12 +9,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const bgClass = computed(() => {
-  if (props.block.value.background) {
-    return `bg-${props.block.value.background}`
-  }
-  return 'bg-white'
-})
+const bgClass = computed(() => getBlockBackground(props.block.value.background))
 
 </script>
 
