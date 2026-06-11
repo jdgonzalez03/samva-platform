@@ -11,7 +11,7 @@ psycopg[binary]>=3.1
 
 # Django Ecosystem
 django-storages[boto3]>=1.14
-django-cors-headers>=4.3
+django-cors-headers==4.9.0
 django-leaflet
 
 # Wagtail Ecosystem
