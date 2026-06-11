@@ -1,75 +1,33 @@
-# Nuxt Minimal Starter
+# Frontend — S.A.M.V.A. Platform
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+App Nuxt 4 con Nuxt UI v4 y TailwindCSS 4.
 
-## Setup
-
-Make sure to install dependencies:
+## Comandos
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+npm install        # Instalar dependencias
+npm run dev        # Servidor dev en http://localhost:3000
+npm run build      # Build producción
+npm run generate   # Generación estática
+npm run preview    # Preview de build
+npm run typecheck  # TypeScript type-check
 ```
 
-## Development Server
+## Estructura
 
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+```
+app/               # Código Vue
+├── pages/         # Rutas (/, /login, /dashboard)
+├── layouts/       # Layouts (default, login, dashboard)
+├── components/    # Componentes Vue
+├── composables/   # Composables (useAuth, cms/)
+└── middleware/    # Route middleware (auth.ts — stub)
+shared/            # Tipos y utilidades compartidas (alias #shared/)
+server/            # Rutas Nitro API server
 ```
 
-## Production
+## Notas
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- El alias `#shared/` mapea a `shared/` (ej: `import type { LandingData } from '#shared/types/cms/landing'`).
+- La autenticación es un stub — `app/middleware/auth.ts` redirige siempre a `/login`.
+- `npm run typecheck` requiere el directorio `.nuxt/` (generado automáticamente en `postinstall`).
