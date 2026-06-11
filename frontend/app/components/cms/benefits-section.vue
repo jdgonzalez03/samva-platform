@@ -2,6 +2,7 @@
 import { computed } from "vue"
 import type { BenefitsBlock } from "#shared/types/cms/blocks"
 import { getBlockIcon } from "#shared/utils/icons"
+import { getBlockBackground } from "#shared/utils/block"
 
 interface Props {
   block: BenefitsBlock
@@ -9,14 +10,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const bgClass = computed(() => {
-  const bgMap: Record<string, string> = {
-    white: "bg-white",
-    gray: "bg-gray-100",
-    green: "bg-green-100",
-  }
-  return bgMap[props.block.value.background] || "bg-white"
-})
+const bgClass = computed(() => getBlockBackground(props.block.value.background))
 </script>
 
 <template>
