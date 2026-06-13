@@ -8,6 +8,7 @@ import VisionMision from '../components/cms/vision-mision.vue'
 import HeroSection from '../components/cms/hero-section.vue'
 import BenefitsSection from '../components/cms/benefits-section.vue'
 
+
 // TODO: Extract maybe to a composable or something, but for now it's fine here
 const config = useRuntimeConfig()
 const { data } = await useFetch<LandingData>(
@@ -26,6 +27,7 @@ const { data } = await useFetch<LandingData>(
       <hero-section v-if="block.type === 'hero'" :block="block" />
       <vision-mision v-else-if="block.type === 'vision_mision'" :block="block" />
       <benefits-section v-else-if="block.type === 'benefits'" :block="block" />
+      <cms-team-section v-else-if="block.type === 'team'" :block="block" />
     </template>
   </div>
 </template>
