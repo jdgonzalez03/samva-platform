@@ -1,3 +1,5 @@
+import { getAccessToken } from '#api/tokens'
+
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
 
