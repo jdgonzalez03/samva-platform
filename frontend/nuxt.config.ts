@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'url'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -7,7 +9,9 @@ export default defineNuxtConfig({
     '@nuxt/icon'
   ],
   css: ['~/assets/main.css'],
-  
+  alias: {
+    '#api': fileURLToPath(new URL('./app/utils/api', import.meta.url)),
+  },
   runtimeConfig: {
     apiBaseServer: process.env.NUXT_API_BASE_SERVER || 'http://localhost:8000/api',
     public: {
