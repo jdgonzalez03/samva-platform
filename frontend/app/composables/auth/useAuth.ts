@@ -1,80 +1,52 @@
-const ACCESS_TOKEN_KEY = "accessToken";
-const REFRESH_TOKEN_KEY = "refreshToken";
+import type { LoginPayload } from '#shared/types/auth/auth'
+import type { Profile } from '#shared/types/accounts/profile'
 
-const router = useRouter()
-const config = useRuntimeConfig()
-const API_BASE_URL = config.public.apiBase;
+import { authApi } from '#api/auth/index'
+import { accountsApi } from '#api/accounts/index'
+import { setTokens, clearTokens, hasTokens } from '#api/tokens'
 
-export function getAccessToken(): string | null {
-  return localStorage.getItem(ACCESS_TOKEN_KEY);
-}
-
-export function getRefreshToken(): string | null {
-  return localStorage.getItem(REFRESH_TOKEN_KEY);
-}
-
-export function setAccessToken(accessToken: string): void {
-  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-}
-
-export function setRefreshToken(refreshToken: string): void {
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-}
-
-export function setTokens(accessToken: string, refreshToken: string): void {
-  setAccessToken(accessToken);
-  setRefreshToken(refreshToken);
-}
-
-export function clearTokens(): void {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
-}
-
-export function hasTokens(): boolean {
-  return getAccessToken() !== null;
-}
-
-export async function refreshAccessToken(): Promise<boolean> {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) return false;
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/accounts/token/refresh/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refresh: refreshToken }),
-    });
-
-    if (!response.ok) {
-      return false;
-    }
-
-    const data = await response.json();
-    setAccessToken(data.access);
-    return true;
-  } catch {
-    return false;
-  }
-}
+const isAuthenticated = useState('auth', () => false)
+const user = useState<Profile | null>('user', () => null)
+const loading = useState('auth-loading', () => false)
 
 export function useAuth() {
   const router = useRouter();
 
-  function logout() {
-    clearTokens();
-    router.push('/login');
+  const login = async (payload: LoginPayload) => {
+    loading.value = true
+      try {
+        const data = await authApi.login(payload)
+        setTokens(data.tokens.access, data.tokens.refresh)
+        user.value = await accountsApi.getMe()
+        isAuthenticated.value = true
+      } finally {
+        loading.value = false
+      }
+    }
+  
+  const fetchMe = async () => {
+    if (!hasTokens()) return
+    try {
+      user.value = await accountsApi.getMe()
+      isAuthenticated.value = true
+    } catch {
+      logout()
+    }
   }
-
+  
+  const logout = () => {
+    clearTokens()
+    user.value = null
+    isAuthenticated.value = false
+    router.push('/login')
+  }
+  
   return {
-    hasTokens,
-    getAccessToken,
-    getRefreshToken,
-    setTokens,
-    clearTokens,
-    refreshAccessToken,
+    isAuthenticated: readonly(isAuthenticated),
+    user: readonly(user),
+    loading: readonly(loading),
+    login,
     logout,
-  };
+    fetchMe,
+  }
 }
