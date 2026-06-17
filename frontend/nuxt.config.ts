@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     apiBaseServer: process.env.NUXT_API_BASE_SERVER || 'http://localhost:8000/api',
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api',
+      mediaBase: process.env.NUXT_PUBLIC_MEDIA_BASE || 'http://localhost:8000',
     },
   },
 
