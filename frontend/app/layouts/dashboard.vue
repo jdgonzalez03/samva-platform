@@ -2,6 +2,8 @@
 
 import TracktorIcon from '../components/icons/TractorIcon.vue'
 
+const { user, loading } = useAuth() 
+
 const colorMode = useColorMode()
 if (colorMode.preference === 'light') {
   colorMode.preference = 'dark'
@@ -36,7 +38,14 @@ const helpLinks = [
       <UNavigationMenu :items="helpLinks" orientation="vertical" class="mt-auto" />
 
       <template #footer>
-        <DropDownUser />
+        <div v-if="loading" class="flex items-center gap-3 w-full">
+          <USkeleton class="size-8 rounded-full shrink-0" />
+          <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+            <USkeleton class="h-3.5 w-32" />
+            <USkeleton class="h-3 w-24" />
+          </div>
+        </div>
+        <DropDownUser v-else-if="user" :user="user" />
       </template>
     </UDashboardSidebar>
     <div class="flex flex-1 min-w-0 overflow-hidden">
