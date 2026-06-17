@@ -20,9 +20,9 @@ const helpLinks = [
 
 <template>
   <UDashboardGroup>
-    <UDashboardSidebar side="left" collapsible>
+    <UDashboardSidebar side="left">
       <template #header="{ collapsed }">
-        <div class="flex items-center gap-2 px-3 py-1">
+        <div class="flex items-center gap-2 px-3 py-1 cursor-pointer" @click="navigateTo('/dashboard')">
           <div class="text-primary">
             <TracktorIcon />
           </div>
@@ -39,6 +39,8 @@ const helpLinks = [
         <DropDownUser />
       </template>
     </UDashboardSidebar>
-    <slot />
+    <div class="flex flex-1 min-w-0 overflow-hidden">
+      <slot />
+    </div>
   </UDashboardGroup>
 </template>
