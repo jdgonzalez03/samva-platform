@@ -27,11 +27,14 @@ export function useAuth() {
   
   const fetchMe = async () => {
     if (!hasTokens()) return
+    loading.value = true
     try {
       user.value = await accountsApi.getMe()
       isAuthenticated.value = true
     } catch {
       logout()
+    } finally {
+      loading.value = false
     }
   }
   
