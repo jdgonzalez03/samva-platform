@@ -21,5 +21,7 @@ export const fetcher = {
   post:   <T>(url: string, body?: any) => request<T>(url, { method: 'POST', body }),
   put:    <T>(url: string, body?: any) => request<T>(url, { method: 'PUT', body }),
   patch:  <T>(url: string, body?: any) => request<T>(url, { method: 'PATCH', body }),
+  patchFormData: <T>(url: string, formData: FormData) =>
+    request<T>(url, { method: 'PATCH', body: formData }),
   delete: <T>(url: string) => request<T>(url, { method: 'DELETE' }),
 }
