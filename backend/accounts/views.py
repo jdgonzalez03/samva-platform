@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
 from .serializers import LoginSerializer, MeSerializer
-
+from farmer.serializers import FarmerUpdateSerializer
 
 # Create your views here.
 class LoginView(APIView):
@@ -51,3 +51,15 @@ class MeView(APIView):
     def get(self, request):
         serializer = MeSerializer(request.user)
         return Response(serializer.data)
+
+    def patch(self, request):
+        farmer = request.user.farmer
+        serializer = FarmerUpdateSerializer(
+            farmer, 
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(MeSerializer(request.user).data)
