@@ -121,7 +121,7 @@ async function handleSubmit() {
 
 <template>
   <DashboardProfileSkeleton v-if="!user" />
-
+<!-- TODO: Look for a way to refactor this form -->
   <UDashboardPanel v-else id="profile-dashboard">
     <template #header>
       <UDashboardNavbar title="My Profile" icon="i-lucide-user" />
