@@ -12,6 +12,7 @@ const links = [
   { label: 'Dashboard', icon: 'i-lucide-layout-dashboard', to: '/dashboard' },
   { label: 'Historial', icon: 'i-lucide-history', to: '/dashboard/history' },
   { label: 'Predicciones', icon: 'i-lucide-trending-up', to: '/dashboard/predictions' },
+  { label: 'Profile', icon: 'i-lucide-user', to: '/dashboard/profile'}
 ]
 
 const helpLinks = [
