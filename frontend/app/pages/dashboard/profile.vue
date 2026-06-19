@@ -7,7 +7,9 @@ definePageMeta({
   layout: 'dashboard',
 })
 
-const { user, fetchMe, updateProfile } = useAccount()
+const { updateProfile } = useAccount()
+const { user, fetchMe } = useAuth()
+
 
 const toast = useToast()
 const saving = ref(false)
