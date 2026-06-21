@@ -1,0 +1,538 @@
+[
+  {
+    "model": "farm.farm",
+    "pk": 1,
+    "fields": {
+      "owner": 1,
+      "name": "Finca El Tesoro",
+      "address": "Vereda El Tesoro, Km 5 vía Choachí, Bogotá",
+      "location": "SRID=4326;POINT (-74.1040 4.5960)",
+      "created_at": "2025-01-20T00:00:00Z",
+      "updated_at": "2025-01-20T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 2,
+    "fields": {
+      "owner": 1,
+      "name": "Finca San Vicente",
+      "address": "Vereda San Vicente, Sibaté, Cundinamarca",
+      "location": "SRID=4326;POINT (-74.0565 4.5465)",
+      "created_at": "2025-01-20T00:00:00Z",
+      "updated_at": "2025-01-20T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 3,
+    "fields": {
+      "owner": 2,
+      "name": "Finca La Montaña",
+      "address": "Corregimiento Santa Elena, Medellín, Antioquia",
+      "location": "SRID=4326;POINT (-75.5740 6.2480)",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 4,
+    "fields": {
+      "owner": 2,
+      "name": "Finca El Edén",
+      "address": "Vereda El Edén, San Pedro de los Milagros, Antioquia",
+      "location": "SRID=4326;POINT (-75.6070 6.2980)",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 5,
+    "fields": {
+      "owner": 2,
+      "name": "Finca Los Arrayanes",
+      "address": "Vereda Arrayanes, Rionegro, Antioquia",
+      "location": "SRID=4326;POINT (-75.5255 6.2180)",
+      "created_at": "2025-02-05T00:00:00Z",
+      "updated_at": "2025-02-05T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 6,
+    "fields": {
+      "owner": 3,
+      "name": "Finca El Paraíso",
+      "address": "Corregimiento El Hormiguero, Cali, Valle del Cauca",
+      "location": "SRID=4326;POINT (-76.5330 3.4485)",
+      "created_at": "2025-02-10T00:00:00Z",
+      "updated_at": "2025-02-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 7,
+    "fields": {
+      "owner": 4,
+      "name": "Finca La Esperanza",
+      "address": "Vereda La Esperanza, Juan de Acosta, Atlántico",
+      "location": "SRID=4326;POINT (-74.8035 10.9780)",
+      "created_at": "2025-02-15T00:00:00Z",
+      "updated_at": "2025-02-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 8,
+    "fields": {
+      "owner": 4,
+      "name": "Finca Santa Fe",
+      "address": "Vereda Santa Fe, Sabanalarga, Atlántico",
+      "location": "SRID=4326;POINT (-74.7540 10.9280)",
+      "created_at": "2025-02-15T00:00:00Z",
+      "updated_at": "2025-02-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 9,
+    "fields": {
+      "owner": 5,
+      "name": "Finca El Encanto",
+      "address": "Vereda El Encanto, Piedecuesta, Santander",
+      "location": "SRID=4326;POINT (-73.1240 7.1180)",
+      "created_at": "2025-03-01T00:00:00Z",
+      "updated_at": "2025-03-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 10,
+    "fields": {
+      "owner": 5,
+      "name": "Finca San José",
+      "address": "Vereda San José, Girón, Santander",
+      "location": "SRID=4326;POINT (-73.1740 7.0780)",
+      "created_at": "2025-03-01T00:00:00Z",
+      "updated_at": "2025-03-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 11,
+    "fields": {
+      "owner": 5,
+      "name": "Finca Buenos Aires",
+      "address": "Vereda Buenos Aires, Floridablanca, Santander",
+      "location": "SRID=4326;POINT (-73.0860 7.1485)",
+      "created_at": "2025-03-05T00:00:00Z",
+      "updated_at": "2025-03-05T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 12,
+    "fields": {
+      "owner": 6,
+      "name": "Finca Las Palmeras",
+      "address": "Vereda Las Palmeras, Santa Rosa de Cabal, Risaralda",
+      "location": "SRID=4326;POINT (-75.7040 4.8080)",
+      "created_at": "2025-03-10T00:00:00Z",
+      "updated_at": "2025-03-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 1,
+    "fields": {
+      "farm": 1,
+      "name": "Lote La Colina",
+      "description": "Lote en la colina con vista a los cerros orientales",
+      "geometry": "SRID=4326;POLYGON ((-74.105 4.595, -74.103 4.595, -74.103 4.597, -74.105 4.597, -74.105 4.595))",
+      "centroid": "SRID=4326;POINT (-74.104000 4.596000)",
+      "area_hectares": 4.94,
+      "created_at": "2025-01-20T00:00:00Z",
+      "updated_at": "2025-01-20T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 2,
+    "fields": {
+      "farm": 1,
+      "name": "Lote El Abrevadero",
+      "description": "Lote cercano al abrevadero natural",
+      "geometry": "SRID=4326;POLYGON ((-74.108 4.592, -74.105 4.592, -74.105 4.595, -74.108 4.595, -74.108 4.592))",
+      "centroid": "SRID=4326;POINT (-74.106500 4.593500)",
+      "area_hectares": 11.12,
+      "created_at": "2025-01-20T00:00:00Z",
+      "updated_at": "2025-01-20T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 3,
+    "fields": {
+      "farm": 2,
+      "name": "Lote El Manantial",
+      "description": "Lote con manantial de agua cristalina",
+      "geometry": "SRID=4326;POLYGON ((-74.058 4.545, -74.055 4.545, -74.055 4.548, -74.058 4.548, -74.058 4.545))",
+      "centroid": "SRID=4326;POINT (-74.056500 4.546500)",
+      "area_hectares": 11.12,
+      "created_at": "2025-01-20T00:00:00Z",
+      "updated_at": "2025-01-20T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 4,
+    "fields": {
+      "farm": 2,
+      "name": "Lote La Pradera",
+      "description": "Lote de pastoreo con amplia pradera",
+      "geometry": "SRID=4326;POLYGON ((-74.062 4.542, -74.059 4.542, -74.059 4.545, -74.062 4.545, -74.062 4.542))",
+      "centroid": "SRID=4326;POINT (-74.060500 4.543500)",
+      "area_hectares": 11.12,
+      "created_at": "2025-01-20T00:00:00Z",
+      "updated_at": "2025-01-20T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 5,
+    "fields": {
+      "farm": 3,
+      "name": "Lote Alto",
+      "description": "Lote en la parte alta de la montaña",
+      "geometry": "SRID=4326;POLYGON ((-75.575 6.247, -75.573 6.247, -75.573 6.249, -75.575 6.249, -75.575 6.247))",
+      "centroid": "SRID=4326;POINT (-75.574000 6.248000)",
+      "area_hectares": 4.93,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 6,
+    "fields": {
+      "farm": 3,
+      "name": "Lote Bajo",
+      "description": "Lote en la parte baja cerca al río",
+      "geometry": "SRID=4326;POLYGON ((-75.578 6.244, -75.576 6.244, -75.576 6.247, -75.578 6.247, -75.578 6.244))",
+      "centroid": "SRID=4326;POINT (-75.577000 6.245500)",
+      "area_hectares": 7.39,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 7,
+    "fields": {
+      "farm": 3,
+      "name": "Lote El Rodeo",
+      "description": "Lote destinado al rodeo del ganado",
+      "geometry": "SRID=4326;POLYGON ((-75.572 6.25, -75.57 6.25, -75.57 6.252, -75.572 6.252, -75.572 6.25))",
+      "centroid": "SRID=4326;POINT (-75.571000 6.251000)",
+      "area_hectares": 4.93,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 8,
+    "fields": {
+      "farm": 4,
+      "name": "Lote Los Naranjos",
+      "description": "Lote cultivado con naranjos",
+      "geometry": "SRID=4326;POLYGON ((-75.608 6.297, -75.606 6.297, -75.606 6.299, -75.608 6.299, -75.608 6.297))",
+      "centroid": "SRID=4326;POINT (-75.607000 6.298000)",
+      "area_hectares": 4.93,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 9,
+    "fields": {
+      "farm": 4,
+      "name": "Lote El Rosal",
+      "description": "Lote con plantación de rosas",
+      "geometry": "SRID=4326;POLYGON ((-75.611 6.294, -75.608 6.294, -75.608 6.297, -75.611 6.297, -75.611 6.294))",
+      "centroid": "SRID=4326;POINT (-75.609500 6.295500)",
+      "area_hectares": 11.09,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 10,
+    "fields": {
+      "farm": 5,
+      "name": "Lote Las Flores",
+      "description": "Lote de cultivo de flores",
+      "geometry": "SRID=4326;POLYGON ((-75.527 6.217, -75.524 6.217, -75.524 6.219, -75.527 6.219, -75.527 6.217))",
+      "centroid": "SRID=4326;POINT (-75.525500 6.218000)",
+      "area_hectares": 7.39,
+      "created_at": "2025-02-05T00:00:00Z",
+      "updated_at": "2025-02-05T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 11,
+    "fields": {
+      "farm": 5,
+      "name": "Lote El Progreso",
+      "description": "Lote de producción agrícola",
+      "geometry": "SRID=4326;POLYGON ((-75.53 6.214, -75.528 6.214, -75.528 6.217, -75.53 6.217, -75.53 6.214))",
+      "centroid": "SRID=4326;POINT (-75.529000 6.215500)",
+      "area_hectares": 7.39,
+      "created_at": "2025-02-05T00:00:00Z",
+      "updated_at": "2025-02-05T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 12,
+    "fields": {
+      "farm": 6,
+      "name": "Lote Principal",
+      "description": "Lote principal de cultivo de caña",
+      "geometry": "SRID=4326;POLYGON ((-76.535 3.447, -76.531 3.447, -76.531 3.45, -76.535 3.45, -76.535 3.447))",
+      "centroid": "SRID=4326;POINT (-76.533000 3.448500)",
+      "area_hectares": 14.84,
+      "created_at": "2025-02-10T00:00:00Z",
+      "updated_at": "2025-02-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 13,
+    "fields": {
+      "farm": 6,
+      "name": "Lote El Porvenir",
+      "description": "Lote de expansión agrícola",
+      "geometry": "SRID=4326;POLYGON ((-76.538 3.444, -76.535 3.444, -76.535 3.447, -76.538 3.447, -76.538 3.444))",
+      "centroid": "SRID=4326;POINT (-76.536500 3.445500)",
+      "area_hectares": 11.13,
+      "created_at": "2025-02-10T00:00:00Z",
+      "updated_at": "2025-02-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 14,
+    "fields": {
+      "farm": 6,
+      "name": "Lote La Esperanza",
+      "description": "Nuevo lote de cultivo",
+      "geometry": "SRID=4326;POLYGON ((-76.532 3.451, -76.529 3.451, -76.529 3.453, -76.532 3.453, -76.532 3.451))",
+      "centroid": "SRID=4326;POINT (-76.530500 3.452000)",
+      "area_hectares": 7.42,
+      "created_at": "2025-02-10T00:00:00Z",
+      "updated_at": "2025-02-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 15,
+    "fields": {
+      "farm": 7,
+      "name": "Lote La Vega",
+      "description": "Lote en la vega del río",
+      "geometry": "SRID=4326;POLYGON ((-74.805 10.977, -74.802 10.977, -74.802 10.979, -74.805 10.979, -74.805 10.977))",
+      "centroid": "SRID=4326;POINT (-74.803500 10.978000)",
+      "area_hectares": 7.30,
+      "created_at": "2025-02-15T00:00:00Z",
+      "updated_at": "2025-02-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 16,
+    "fields": {
+      "farm": 7,
+      "name": "Lote El Milagro",
+      "description": "Lote de cultivo de palma",
+      "geometry": "SRID=4326;POLYGON ((-74.808 10.974, -74.805 10.974, -74.805 10.977, -74.808 10.977, -74.808 10.974))",
+      "centroid": "SRID=4326;POINT (-74.806500 10.975500)",
+      "area_hectares": 10.95,
+      "created_at": "2025-02-15T00:00:00Z",
+      "updated_at": "2025-02-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 17,
+    "fields": {
+      "farm": 8,
+      "name": "Lote Los Almendros",
+      "description": "Lote con árboles de almendro",
+      "geometry": "SRID=4326;POLYGON ((-74.755 10.927, -74.753 10.927, -74.753 10.929, -74.755 10.929, -74.755 10.927))",
+      "centroid": "SRID=4326;POINT (-74.754000 10.928000)",
+      "area_hectares": 4.87,
+      "created_at": "2025-02-15T00:00:00Z",
+      "updated_at": "2025-02-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 18,
+    "fields": {
+      "farm": 8,
+      "name": "Lote San Fernando",
+      "description": "Lote de cultivo de yuca",
+      "geometry": "SRID=4326;POLYGON ((-74.758 10.924, -74.755 10.924, -74.755 10.927, -74.758 10.927, -74.758 10.924))",
+      "centroid": "SRID=4326;POINT (-74.756500 10.925500)",
+      "area_hectares": 10.95,
+      "created_at": "2025-02-15T00:00:00Z",
+      "updated_at": "2025-02-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 19,
+    "fields": {
+      "farm": 9,
+      "name": "Lote La Montaña",
+      "description": "Lote en zona montañosa",
+      "geometry": "SRID=4326;POLYGON ((-73.125 7.117, -73.123 7.117, -73.123 7.119, -73.125 7.119, -73.125 7.117))",
+      "centroid": "SRID=4326;POINT (-73.124000 7.118000)",
+      "area_hectares": 4.92,
+      "created_at": "2025-03-01T00:00:00Z",
+      "updated_at": "2025-03-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 20,
+    "fields": {
+      "farm": 9,
+      "name": "Lote El Valle",
+      "description": "Lote en el valle",
+      "geometry": "SRID=4326;POLYGON ((-73.128 7.114, -73.125 7.114, -73.125 7.117, -73.128 7.117, -73.128 7.114))",
+      "centroid": "SRID=4326;POINT (-73.126500 7.115500)",
+      "area_hectares": 11.07,
+      "created_at": "2025-03-01T00:00:00Z",
+      "updated_at": "2025-03-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 21,
+    "fields": {
+      "farm": 9,
+      "name": "Lote La Quebrada",
+      "description": "Lote cercano a la quebrada",
+      "geometry": "SRID=4326;POLYGON ((-73.122 7.12, -73.12 7.12, -73.12 7.122, -73.122 7.122, -73.122 7.12))",
+      "centroid": "SRID=4326;POINT (-73.121000 7.121000)",
+      "area_hectares": 4.92,
+      "created_at": "2025-03-01T00:00:00Z",
+      "updated_at": "2025-03-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 22,
+    "fields": {
+      "farm": 10,
+      "name": "Lote Las Palmas",
+      "description": "Lote con palmas de cera",
+      "geometry": "SRID=4326;POLYGON ((-73.175 7.077, -73.173 7.077, -73.173 7.079, -73.175 7.079, -73.175 7.077))",
+      "centroid": "SRID=4326;POINT (-73.174000 7.078000)",
+      "area_hectares": 4.92,
+      "created_at": "2025-03-01T00:00:00Z",
+      "updated_at": "2025-03-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 23,
+    "fields": {
+      "farm": 10,
+      "name": "Lote El Mirador",
+      "description": "Lote con vista panorámica",
+      "geometry": "SRID=4326;POLYGON ((-73.178 7.074, -73.176 7.074, -73.176 7.077, -73.178 7.077, -73.178 7.074))",
+      "centroid": "SRID=4326;POINT (-73.177000 7.075500)",
+      "area_hectares": 7.38,
+      "created_at": "2025-03-01T00:00:00Z",
+      "updated_at": "2025-03-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 24,
+    "fields": {
+      "farm": 11,
+      "name": "Lote La Esperanza",
+      "description": "Lote de pastoreo",
+      "geometry": "SRID=4326;POLYGON ((-73.087 7.147, -73.085 7.147, -73.085 7.15, -73.087 7.15, -73.087 7.147))",
+      "centroid": "SRID=4326;POINT (-73.086000 7.148500)",
+      "area_hectares": 7.38,
+      "created_at": "2025-03-05T00:00:00Z",
+      "updated_at": "2025-03-05T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 25,
+    "fields": {
+      "farm": 11,
+      "name": "Lote El Trébol",
+      "description": "Lote de cultivo de café",
+      "geometry": "SRID=4326;POLYGON ((-73.084 7.144, -73.082 7.144, -73.082 7.147, -73.084 7.147, -73.084 7.144))",
+      "centroid": "SRID=4326;POINT (-73.083000 7.145500)",
+      "area_hectares": 7.38,
+      "created_at": "2025-03-05T00:00:00Z",
+      "updated_at": "2025-03-05T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 26,
+    "fields": {
+      "farm": 12,
+      "name": "Lote El Cafetal",
+      "description": "Lote de cultivo de café",
+      "geometry": "SRID=4326;POLYGON ((-75.705 4.807, -75.703 4.807, -75.703 4.809, -75.705 4.809, -75.705 4.807))",
+      "centroid": "SRID=4326;POINT (-75.704000 4.808000)",
+      "area_hectares": 4.94,
+      "created_at": "2025-03-10T00:00:00Z",
+      "updated_at": "2025-03-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 27,
+    "fields": {
+      "farm": 12,
+      "name": "Lote El Placer",
+      "description": "Lote de cultivo de plátano",
+      "geometry": "SRID=4326;POLYGON ((-75.708 4.804, -75.705 4.804, -75.705 4.807, -75.708 4.807, -75.708 4.804))",
+      "centroid": "SRID=4326;POINT (-75.706500 4.805500)",
+      "area_hectares": 11.11,
+      "created_at": "2025-03-10T00:00:00Z",
+      "updated_at": "2025-03-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 28,
+    "fields": {
+      "farm": 12,
+      "name": "Lote La Linda",
+      "description": "Pequeño lote de pancoger",
+      "geometry": "SRID=4326;POLYGON ((-75.702 4.81, -75.7005 4.81, -75.7005 4.8115, -75.702 4.8115, -75.702 4.81))",
+      "centroid": "SRID=4326;POINT (-75.701250 4.810750)",
+      "area_hectares": 2.78,
+      "created_at": "2025-03-10T00:00:00Z",
+      "updated_at": "2025-03-10T00:00:00Z"
+    }
+  }
+]

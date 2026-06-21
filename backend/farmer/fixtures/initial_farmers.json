@@ -1,0 +1,138 @@
+[
+  {
+    "model": "farmer.organization",
+    "pk": 1,
+    "fields": {
+      "name": "Cooperativa Agropecuaria del Campo",
+      "nit": "900123456-7",
+      "created_at": "2025-01-15T00:00:00Z",
+      "updated_at": "2025-01-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farmer.farmer",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "organization": 1,
+      "avatar": null,
+      "first_name": "Juan",
+      "last_name": "Pérez",
+      "document_type": "CC",
+      "gender": "M",
+      "document_number": "1012345678",
+      "phone_number": "+57 310 234 5678",
+      "city": "Bogotá",
+      "department": "Cundinamarca",
+      "address": "Cra 7 # 45-67, Chapinero",
+      "is_active": true,
+      "created_at": "2025-01-15T00:00:00Z",
+      "updated_at": "2025-01-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farmer.farmer",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "organization": 1,
+      "avatar": null,
+      "first_name": "María",
+      "last_name": "López",
+      "document_type": "CC",
+      "gender": "F",
+      "document_number": "1023456789",
+      "phone_number": "+57 320 345 6789",
+      "city": "Medellín",
+      "department": "Antioquia",
+      "address": "Cl 50 # 65-32, Laureles",
+      "is_active": true,
+      "created_at": "2025-01-15T00:00:00Z",
+      "updated_at": "2025-01-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farmer.farmer",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "organization": 1,
+      "avatar": null,
+      "first_name": "Carlos",
+      "last_name": "Gómez",
+      "document_type": "CC",
+      "gender": "M",
+      "document_number": "1034567890",
+      "phone_number": "+57 300 456 7890",
+      "city": "Cali",
+      "department": "Valle del Cauca",
+      "address": "Av 3N # 20-15, San Vicente",
+      "is_active": true,
+      "created_at": "2025-01-15T00:00:00Z",
+      "updated_at": "2025-01-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farmer.farmer",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "organization": 1,
+      "avatar": null,
+      "first_name": "Ana",
+      "last_name": "Martínez",
+      "document_type": "CC",
+      "gender": "F",
+      "document_number": "1045678901",
+      "phone_number": "+57 301 567 8901",
+      "city": "Barranquilla",
+      "department": "Atlántico",
+      "address": "Cra 55 # 74-12, El Prado",
+      "is_active": true,
+      "created_at": "2025-01-15T00:00:00Z",
+      "updated_at": "2025-01-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farmer.farmer",
+    "pk": 5,
+    "fields": {
+      "user": 5,
+      "organization": null,
+      "avatar": null,
+      "first_name": "Pedro",
+      "last_name": "Rodríguez",
+      "document_type": "CC",
+      "gender": "M",
+      "document_number": "1056789012",
+      "phone_number": "+57 315 678 9012",
+      "city": "Bucaramanga",
+      "department": "Santander",
+      "address": "Cl 36 # 27-08, Cabecera del Llano",
+      "is_active": true,
+      "created_at": "2025-01-15T00:00:00Z",
+      "updated_at": "2025-01-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "farmer.farmer",
+    "pk": 6,
+    "fields": {
+      "user": 6,
+      "organization": null,
+      "avatar": null,
+      "first_name": "Lucía",
+      "last_name": "Fernández",
+      "document_type": "CC",
+      "gender": "F",
+      "document_number": "1067890123",
+      "phone_number": "+57 311 789 0123",
+      "city": "Pereira",
+      "department": "Risaralda",
+      "address": "Av Circunvalar # 15-42, Jardín",
+      "is_active": true,
+      "created_at": "2025-01-15T00:00:00Z",
+      "updated_at": "2025-01-15T00:00:00Z"
+    }
+  }
+]
