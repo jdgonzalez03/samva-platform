@@ -35,6 +35,11 @@ logs:
 down:
 	docker compose -f docker-compose.dev.yml down
 
+loaddata:
+	docker compose -f docker-compose.dev.yml exec backend python manage.py loaddata accounts/fixtures/initial_users.json
+	docker compose -f docker-compose.dev.yml exec backend python manage.py loaddata farmer/fixtures/initial_farmers.json
+	docker compose -f docker-compose.dev.yml exec backend python manage.py loaddata farm/fixtures/initial_farms_with_plots.json
+
 clean:
 	docker compose -f docker-compose.dev.yml down -v
 	docker system prune -f
