@@ -49,7 +49,7 @@ class WagtailStationVariableAdmin(SnippetViewSet):
 class WagtailFieldSensorAdmin(SnippetViewSet):
     model = FieldSensor
     menu_label = _("Field sensors")
-    icon = "radio"
+    icon = "cog"
     list_display = FieldSensorAdmin.list_display
     search_fields = FieldSensorAdmin.search_fields
     ordering = FieldSensorAdmin.ordering
