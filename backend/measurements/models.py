@@ -102,4 +102,65 @@ class WeatherMeasurement(models.Model):
     def __str__(self):
         var = self.station_variable.env_variable
         return f'{var.name}: {self.value} {var.unit}'
-# Create your models here.
+
+
+class SensorMeasurement(models.Model):
+    """
+    Record of a value captured by a field sensor.
+    Unlike WeatherMeasurement, each reading arrives
+    individually from the device (REST endpoint, socket, MQTT, etc.).
+
+    Two differentiated timestamps:
+        recorded_at  → when the data occurred according to the sensor
+        received_at  → when it arrived at the server
+
+    The difference is important for sensors that accumulate data
+    offline and send it in batch when they regain connectivity.
+    """
+
+    sensor_variable = models.ForeignKey(
+        "sensors.FieldSensorVariable",
+        on_delete=models.PROTECT,
+        related_name='measurements',
+        verbose_name=_('Sensor variable'),
+    )
+    value = models.DecimalField(
+        max_digits=12,
+        decimal_places=4,
+        null=True,
+        blank=True,
+        verbose_name=_('Value'),
+    )
+    recorded_at = models.DateTimeField(
+        verbose_name=_('Recorded at'),
+        db_index=True,
+        help_text=_('Timestamp reported by the sensor'),
+    )
+    received_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('Received at server'),
+    )
+
+    panels = [
+        FieldPanel('sensor_variable'),
+        FieldPanel('value'),
+        MultiFieldPanel([
+            FieldPanel('recorded_at'),
+            FieldPanel('received_at'),
+        ], heading=_('Timestamps')),
+    ]
+
+    class Meta:
+        verbose_name = _('Sensor measurement')
+        verbose_name_plural = _('Sensor measurements')
+        ordering = ['-recorded_at']
+        indexes = [
+            models.Index(fields=['sensor_variable', 'recorded_at']),
+        ]
+
+    def __str__(self):
+        var = self.sensor_variable.env_variable
+        return (
+            f'{var.name}: {self.value} {var.unit} '
+            f'@ {self.recorded_at:%Y-%m-%d %H:%M}'
+        )
