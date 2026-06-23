@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -193,3 +193,10 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BEAT_SCHEDULE = {
+    'what_time_is_it': {
+        'task': 'core.tasks.what_time_is_it',
+        'schedule': crontab(minute='*/5'),  #Every 5 minutes
+    },
+}
