@@ -5,7 +5,6 @@ import uuid
 
 def create_landing_page(apps, schema_editor):
     LandingPage = apps.get_model("cms", "LandingPage")
-    Page = apps.get_model("wagtailcore", "Page")
     Site = apps.get_model("wagtailcore", "Site")
     ContentType = apps.get_model("contenttypes", "ContentType")
     Locale = apps.get_model("wagtailcore", "Locale")
@@ -13,8 +12,7 @@ def create_landing_page(apps, schema_editor):
     if LandingPage.objects.exists():
         return
 
-    root = Page.objects.get(id=1)
-    ct = ContentType.objects.get(app_label="cms", model="landingpage")
+    ct = ContentType.objects.get_for_model(LandingPage)
     locale = Locale.objects.get(language_code="en")
 
     landing = LandingPage(
