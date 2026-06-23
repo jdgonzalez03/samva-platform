@@ -25,7 +25,7 @@ services:
       - "5432:5432"
 
   broker:
-    image: rabbitmq:4-management-alpine
+    image: rabbitmq:3.13-management-alpine
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-samva_platform}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-samva_platform}
@@ -73,6 +73,19 @@ services:
     command: celery -A backend beat -l INFO
     depends_on:
       - backend
+      - broker
+      - celery_worker
+
+  flower:
+    build: *backend-build
+    volumes:
+      - .:/app
+    environment:
+      <<: *common-env
+    command: celery -A backend flower --port=5555
+    ports:
+      - "5555:5555"
+    depends_on:
       - broker
       - celery_worker
 
