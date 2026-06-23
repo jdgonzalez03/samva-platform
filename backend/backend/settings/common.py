@@ -53,6 +53,7 @@ ADDONS_APPS = [
     'rest_framework_simplejwt',
     'leaflet',
     'corsheaders',
+    'django_celery_results',
 ]
 
 INSTALLED_APPS = WAGTAIL_APPS + DEPENDENCIES_APPS + PROJECT_APPS + ADDONS_APPS
