@@ -11,7 +11,7 @@ from farm.forms import PlotAdminForm
 
 class WagtailFarmAdmin(SnippetViewSet):
     model = Farm
-    menu_label = _('Granjas')
+    menu_label = _('Farms')
     icon = 'folder-open-1'
     list_display = FarmAdmin.list_display
     search_fields = FarmAdmin.search_fields
@@ -20,7 +20,7 @@ class WagtailFarmAdmin(SnippetViewSet):
 
 class WagtailPlotAdmin(SnippetViewSet):
     model = Plot
-    menu_label = _('Lotes')
+    menu_label = _('Plots')
     icon = 'folder-open-1'
     list_display = PlotAdmin.list_display
     search_fields = PlotAdmin.search_fields
@@ -31,7 +31,7 @@ class WagtailPlotAdmin(SnippetViewSet):
 
 
 class WagtailFarmAdminGroup(SnippetViewSetGroup):
-    menu_label = _('Granjas')
+    menu_label = _('Farms & Plots')
     menu_icon = 'folder-open-1'
     menu_order = 201
     items = (
