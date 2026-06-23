@@ -44,6 +44,7 @@ PROJECT_APPS = [
     'core',
     'cms',
     'farm',
+    'sensors',
 ]
 
 ADDONS_APPS = [
