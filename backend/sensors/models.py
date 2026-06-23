@@ -189,4 +189,93 @@ class WeatherStationVariableConfiguration(models.Model):
  
     def __str__(self):
         return f'{self.station.name} - {self.env_variable.name} [{self.field_key}]'
+
+
+
+class FieldSensor(models.Model):
+    """
+    Physical sensor installed in a specific plot.
+    Unlike the weather station, the field sensor
+    is associated with a concrete plot within the farm.
+    A plot can have multiple sensors.
+    """
+
+    plot = models.ForeignKey(
+        "farm.Plot",
+        on_delete=models.CASCADE,
+        related_name='field_sensors',
+        verbose_name=_('Plot'),
+        help_text=_('Plot where the sensor is physically installed'),
+    )
+    name = models.CharField(
+        max_length=100,
+        verbose_name=_('Name'),
+        help_text=_('Example: Soil moisture sensor — North plot'),
+    )
+    serial_number = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name=_('Serial number'),
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name=_('Active'),
+    )
+    installed_at = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('Installation date'),
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created'))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Updated'))
+
+    panels = [
+        MultiFieldPanel([
+            FieldPanel('plot'),
+            FieldPanel('name'),
+            FieldPanel('serial_number'),
+            FieldPanel('is_active'),
+            FieldPanel('installed_at'),
+        ], heading=_('Field sensor')),
+    ]
+
+    class Meta:
+        verbose_name = _('Field sensor')
+        verbose_name_plural = _('Field sensors')
+ 
+    def __str__(self):
+        return f'{self.name} ({self.plot.name})'
+ 
+ 
+class FieldSensorVariable(models.Model):
+    """
+    Environmental variable measured by a field sensor.
+    A sensor can measure more than one variable (temperature + humidity).
+    """
+
+    sensor = models.ForeignKey(
+        FieldSensor,
+        on_delete=models.CASCADE,
+        related_name='sensor_variables',
+        verbose_name=_('Sensor'),
+    )
+    env_variable = models.ForeignKey(
+        EnvironmentalVariable,
+        on_delete=models.PROTECT,
+        related_name='field_sensor_variables',
+        verbose_name=_('Environmental variable'),
+    )
+
+    panels = [
+        FieldPanel('sensor'),
+        FieldPanel('env_variable'),
+    ]
+
+    class Meta:
+        verbose_name = _('Sensor variable')
+        verbose_name_plural = _('Sensor variables')
+        unique_together = [('sensor', 'env_variable')]
+ 
+    def __str__(self):
+        return f'{self.sensor.name} - {self.env_variable.name}'
  
