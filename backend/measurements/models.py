@@ -55,4 +55,51 @@ class WeatherSnapshot(models.Model):
 
     def __str__(self):
         return f'{self.station.name} — {self.recorded_at:%Y-%m-%d %H:%M}'
+
+
+class WeatherMeasurement(models.Model):
+    """
+    Individual value of an environmental variable within a WeatherSnapshot.
+    Each snapshot generates as many WeatherMeasurements as
+    active WeatherStationVariableConfigurations the station has.
+    """
+
+    snapshot = models.ForeignKey(
+        WeatherSnapshot,
+        on_delete=models.CASCADE,
+        related_name='measurements',
+        verbose_name=_('Snapshot'),
+    )
+    station_variable = models.ForeignKey(
+        "sensors.WeatherStationVariableConfiguration",
+        on_delete=models.PROTECT,
+        related_name='measurements',
+        verbose_name=_('Station variable'),
+    )
+    value = models.DecimalField(
+        max_digits=12,
+        decimal_places=4,
+        null=True,
+        blank=True,
+        verbose_name=_('Value'),
+        help_text=_('Null if the data was empty or invalid from the source'),
+    )
+
+    panels = [
+        FieldPanel('snapshot'),
+        FieldPanel('station_variable'),
+        FieldPanel('value'),
+    ]
+
+    class Meta:
+        verbose_name = _('Weather measurement')
+        verbose_name_plural = _('Weather measurements')
+        unique_together = [('snapshot', 'station_variable')]
+        indexes = [
+            models.Index(fields=['station_variable', 'snapshot']),
+        ]
+
+    def __str__(self):
+        var = self.station_variable.env_variable
+        return f'{var.name}: {self.value} {var.unit}'
 # Create your models here.
