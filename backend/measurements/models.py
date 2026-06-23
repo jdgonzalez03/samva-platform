@@ -42,6 +42,7 @@ class WeatherSnapshot(models.Model):
             FieldPanel('recorded_at'),
         ], heading=_('Snapshot info')),
         FieldPanel('raw_json'),
+        FieldPanel('ingested_at', read_only=True),
     ]
 
     class Meta:
@@ -146,7 +147,7 @@ class SensorMeasurement(models.Model):
         FieldPanel('value'),
         MultiFieldPanel([
             FieldPanel('recorded_at'),
-            FieldPanel('received_at'),
+            FieldPanel('received_at', read_only=True),
         ], heading=_('Timestamps')),
     ]
 

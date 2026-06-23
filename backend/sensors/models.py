@@ -128,6 +128,10 @@ class WeatherStation(models.Model):
             FieldPanel('api_secret'),
             FieldPanel('polling_interval_minutes'),
         ], heading=_('Integration configuration')),
+        MultiFieldPanel([
+            FieldPanel('created_at', read_only=True),
+            FieldPanel('updated_at', read_only=True),
+        ], heading=_('Timestamps')),
     ]
  
     class Meta:
@@ -237,6 +241,10 @@ class FieldSensor(models.Model):
             FieldPanel('is_active'),
             FieldPanel('installed_at'),
         ], heading=_('Field sensor')),
+        MultiFieldPanel([
+            FieldPanel('created_at', read_only=True),
+            FieldPanel('updated_at', read_only=True),
+        ], heading=_('Timestamps')),
     ]
 
     class Meta:
