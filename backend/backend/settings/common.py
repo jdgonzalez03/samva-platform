@@ -200,3 +200,7 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/5'),  #Every 5 minutes
     },
 }
+
+
+# Weather Station Provider Configuration
+WEATHERLINK_BASE_URL='https://api.weatherlink.com/v2/'
