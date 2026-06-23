@@ -137,3 +137,56 @@ class WeatherStation(models.Model):
     def __str__(self):
         return f'{self.name} — {self.farm.name}'
  
+
+
+class WeatherStationVariableConfiguration(models.Model):
+    """
+    Mapping between a WeatherStation and an EnvironmentalVariable.
+    field_key is the field name in the provider's API JSON response.
+
+    Example:
+        station      → Station UNILLANOS
+        env_variable → Outdoor temperature (°C)
+        field_key    → "temp_out"
+    """
+
+    station = models.ForeignKey(
+        WeatherStation,
+        on_delete=models.CASCADE,
+        related_name='station_variables',
+        verbose_name=_('Station'),
+    )
+    env_variable = models.ForeignKey(
+        EnvironmentalVariable,
+        on_delete=models.PROTECT,
+        related_name='weather_station_variables',
+        verbose_name=_('Environmental variable'),
+    )
+    field_key = models.CharField(
+        max_length=100,
+        verbose_name=_('Field key'),
+        help_text=_('Exact field name in the API response. Example: "temp_out"'),
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name=_('Active'),
+    )
+
+    panels = [
+        FieldPanel('station'),
+        FieldPanel('env_variable'),
+        FieldPanel('field_key'),
+        FieldPanel('is_active'),
+    ]
+
+    class Meta:
+        verbose_name = _('Station variable')
+        verbose_name_plural = _('Station variables')
+        unique_together = [
+            ('station', 'env_variable'),
+            ('station', 'field_key'),
+        ]
+ 
+    def __str__(self):
+        return f'{self.station.name} - {self.env_variable.name} [{self.field_key}]'
+ 
