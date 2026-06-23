@@ -1,3 +1,16 @@
+x-backend-build: &backend-build
+  context: .
+  dockerfile: Dockerfile
+  target: dev
+
+x-common-env: &common-env
+  DJANGO_SETTINGS_MODULE: backend.settings.dev
+  DJANGO_SECRET_KEY: django-insecure-dev-key-change-in-production
+  POSTGRES_DB: ${POSTGRES_DB:-template_django_nuxt}
+  POSTGRES_USER: ${POSTGRES_USER:-template_django_nuxt}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-template_django_nuxt}
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
 services:
   postgres:
     image: postgis/postgis:15-3.4
@@ -11,10 +24,7 @@ services:
       - "5432:5432"
   
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dev
+    build: *backend-build
     volumes:
       - .:/app
     ports:
@@ -22,13 +32,7 @@ services:
     depends_on:
       - postgres
     environment:
-      DJANGO_SETTINGS_MODULE: backend.settings.dev
-      DJANGO_SECRET_KEY: django-insecure-dev-key-change-in-production
-      POSTGRES_DB: ${POSTGRES_DB:-template_django_nuxt}
-      POSTGRES_USER: ${POSTGRES_USER:-template_django_nuxt}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-template_django_nuxt}
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: "5432"
+      <<: *common-env
       WAGTAILADMIN_BASE_URL: http://localhost
       DJANGO_SUPERUSER_USERNAME: admin
       DJANGO_SUPERUSER_PASSWORD: admin
