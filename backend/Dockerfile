@@ -30,10 +30,10 @@ FROM base AS production
 RUN useradd -m wagtail
 COPY --chown=wagtail:wagtail . .
 USER wagtail
-RUN DJANGO_SETTINGS_MODULE=config.settings.production \
+RUN DJANGO_SETTINGS_MODULE=backend.settings.prod \
     DJANGO_SECRET_KEY=build-time-secret \
     POSTGRES_HOST=none \
     python manage.py collectstatic --noinput --clear
 EXPOSE 8000
 ENTRYPOINT ["sh", "-c", "python manage.py migrate --noinput && exec \"$@\"", "--"]
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
