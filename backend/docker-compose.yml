@@ -11,6 +11,7 @@ x-common-env: &common-env
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-template_django_nuxt}
   POSTGRES_HOST: postgres
   POSTGRES_PORT: "5432"
+
 services:
   postgres:
     image: postgis/postgis:15-3.4
@@ -22,7 +23,13 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-template_django_nuxt}
     ports:
       - "5432:5432"
-  
+
+  broker:
+    image: rabbitmq:4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-samva_platform}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-samva_platform}
+
   backend:
     build: *backend-build
     volumes:
@@ -31,6 +38,7 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
+      - broker
     environment:
       <<: *common-env
       WAGTAILADMIN_BASE_URL: http://localhost
@@ -39,12 +47,34 @@ services:
       DJANGO_SUPERUSER_EMAIL: admin@localhost
       GDAL_LIBRARY_PATH: /usr/lib/x86_64-linux-gnu/libgdal.so
       GEOS_LIBRARY_PATH: /usr/lib/x86_64-linux-gnu/libgeos_c.so
-
     command: >
       sh -c "python manage.py makemigrations --noinput &&
              python manage.py migrate --noinput &&
              python manage.py createsuperuser --noinput || true &&
              python manage.py runserver 0.0.0.0:8000"
+
+  celery_worker:
+    build: *backend-build
+    volumes:
+      - .:/app
+    environment:
+      <<: *common-env
+    command: celery -A backend worker -l INFO
+    depends_on:
+      - backend
+      - broker
+
+  celery_beat:
+    build: *backend-build
+    volumes:
+      - .:/app
+    environment:
+      <<: *common-env
+    command: celery -A backend beat -l INFO
+    depends_on:
+      - backend
+      - broker
+      - celery_worker
 
 volumes:
   postgres_data:
