@@ -10,7 +10,7 @@ class DataTypeChoices(models.TextChoices):
     STRING = ("string", _("String"))
 
 
-class EnvironmentVariable(models.Model):
+class EnvironmentalVariable(models.Model):
     """
     Global definition of a measurable environmental variable.
     Created by the administrator. Shared by stations and field sensors.
