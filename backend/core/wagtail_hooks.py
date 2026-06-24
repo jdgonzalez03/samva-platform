@@ -1,4 +1,6 @@
 from wagtail import hooks
+from wagtail.admin.menu import MenuItem
+
 
 
 @hooks.register('register_icons')
@@ -33,7 +35,16 @@ def leaflet_admin_js():
     """
 
 
-from wagtail.admin.menu import MenuItem
+
+@hooks.register('register_admin_menu_item')
+def register_flower_menu_item():
+    return MenuItem(
+        'Django Admin',
+        '/django-admin/',
+        icon_name='cogs',
+        order=10000,
+        attrs={'target': '_blank', 'rel': 'noopener noreferrer'}
+    )
 
 
 @hooks.register('register_admin_menu_item')
