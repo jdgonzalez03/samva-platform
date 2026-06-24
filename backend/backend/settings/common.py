@@ -196,10 +196,14 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_BEAT_SCHEDULE = {
     'what_time_is_it': {
         'task': 'core.tasks.what_time_is_it',
-        'schedule': crontab(minute='*/5'),  #Every 5 minutes
+        'schedule': crontab(minute='*/5'),
+    },
+    'poll_weather_stations': {
+        'task': 'sensors.tasks.poll_weather_stations',
+        'schedule': crontab(minute='*/5'),
     },
 }
 
 
 # Weather Station Provider Configuration
-WEATHERLINK_BASE_URL='https://api.weatherlink.com/v2/'
+WEATHERLINK_BASE_URL='https://api.weatherlink.com/v2'
