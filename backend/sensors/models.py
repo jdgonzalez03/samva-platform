@@ -10,6 +10,14 @@ class DataTypeChoices(models.TextChoices):
     STRING = ("string", _("String"))
 
 
+class SemanticKey(models.TextChoices):
+    SOIL_MOISTURE   = ('soil_moisture',   _('Soil moisture'))
+    AIR_TEMPERATURE = ('air_temperature', _('Air temperature'))
+    SOLAR_RADIATION = ('solar_radiation', _('Solar radiation'))
+    RELATIVE_HUMIDITY = ('relative_humidity', _('Relative humidity'))
+    OTHER           = ('other',           _('Other'))
+
+
 class EnvironmentalVariable(models.Model):
     """
     Global definition of a measurable environmental variable.
@@ -21,6 +29,17 @@ class EnvironmentalVariable(models.Model):
         unique=True,
         verbose_name=_('Name'),
         help_text=_('Example: Outdoor temperature'),
+    )
+    semantic_key = models.CharField(
+        max_length=30,
+        choices=SemanticKey.choices,
+        default=SemanticKey.OTHER,
+        verbose_name=_('Semantic key'),
+        help_text=_(
+            'Role of this variable in the system. '
+            'The prediction engine uses this key to find '
+            'the correct sensor automatically.'
+        ),
     )
     unit = models.CharField(
         max_length=20,
@@ -42,6 +61,7 @@ class EnvironmentalVariable(models.Model):
     panels = [
         MultiFieldPanel([
             FieldPanel('name'),
+            FieldPanel('semantic_key'),
             FieldPanel('unit'),
             FieldPanel('data_type'),
             FieldPanel('description'),
