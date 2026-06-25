@@ -33,3 +33,9 @@ requests==2.34.2
 celery==5.6.3
 django-celery-results==2.6.0
 flower==2.0.1
+
+# Fuzzy Models
+numpy==2.5.0
+scikit-fuzzy==0.5.0
+scipy==1.18.0
+networkx==3.6.1
