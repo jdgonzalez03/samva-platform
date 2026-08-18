@@ -6,9 +6,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxt/ui',
-    '@nuxt/icon'
+    '@nuxt/icon',
+    '@nuxt/eslint'
   ],
   css: ['~/assets/main.css'],
+  eslint: {
+    config: {
+      stylistic: true,
+    },
+  },
   alias: {
     '#api': fileURLToPath(new URL('./app/utils/api', import.meta.url)),
   },
