@@ -2,7 +2,7 @@
   // Frontend: formatting is handled by ESLint (stylistic rules) via fixAll on save.
   // formatOnSave stays off for these files so Volar/Prettier don't fight with ESLint.
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "always"
   },
   "[vue]": {
     "editor.formatOnSave": false
@@ -25,8 +25,8 @@
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.fixAll.ruff": "explicit",
-      "source.organizeImports.ruff": "explicit"
+      "source.fixAll.ruff": "always",
+      "source.organizeImports.ruff": "always"
     }
   },
   "ruff.configuration": "${workspaceFolder}/backend/ruff.toml"
