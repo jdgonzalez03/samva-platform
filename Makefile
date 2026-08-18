@@ -43,3 +43,18 @@ loaddata:
 clean:
 	docker compose -f docker-compose.dev.yml down -v
 	docker system prune -f
+# Lint / Format
+lint-backend:
+	docker compose -f docker-compose.dev.yml exec backend ruff check .
+
+format-backend:
+	docker compose -f docker-compose.dev.yml exec backend ruff format .
+	docker compose -f docker-compose.dev.yml exec backend ruff check --fix .
+
+lint-frontend:
+	docker compose -f docker-compose.dev.yml exec frontend npm run lint
+
+lint-frontend-fix:
+	docker compose -f docker-compose.dev.yml exec frontend npm run lint:fix
+
+lint: lint-backend lint-frontend
