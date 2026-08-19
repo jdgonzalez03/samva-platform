@@ -1,18 +1,22 @@
 {
-  // Frontend: formatting is handled by ESLint (stylistic rules) via fixAll on save.
-  // formatOnSave stays off for these files so Volar/Prettier don't fight with ESLint.
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "always"
-  },
+  // Frontend: Prettier formats on save; ESLint only lints (no fixAll on save).
   "[vue]": {
-    "editor.formatOnSave": false
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   },
   "[typescript]": {
-    "editor.formatOnSave": false
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   },
   "[javascript]": {
-    "editor.formatOnSave": false
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "prettier.configPath": "frontend/.prettierrc",
   "eslint.workingDirectories": ["frontend"],
   "eslint.validate": [
     "javascript",
