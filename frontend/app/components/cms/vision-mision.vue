@@ -10,7 +10,6 @@ interface Props {
 const props = defineProps<Props>()
 
 const bgClass = computed(() => getBlockBackground(props.block.value.background))
-
 </script>
 
 <template>

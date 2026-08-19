@@ -1,30 +1,30 @@
-const ACCESS_TOKEN_KEY = "accessToken";
-const REFRESH_TOKEN_KEY = "refreshToken";
+const ACCESS_TOKEN_KEY = 'accessToken'
+const REFRESH_TOKEN_KEY = 'refreshToken'
 
 export function getAccessToken(): string | null {
-  return localStorage.getItem(ACCESS_TOKEN_KEY);
+  return localStorage.getItem(ACCESS_TOKEN_KEY)
 }
 
 export function getRefreshToken(): string | null {
-  return localStorage.getItem(REFRESH_TOKEN_KEY);
+  return localStorage.getItem(REFRESH_TOKEN_KEY)
 }
 
 export function setAccessToken(accessToken: string): void {
-  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
 }
 
 export function setRefreshToken(refreshToken: string): void {
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
 }
 
 export function setTokens(accessToken: string, refreshToken: string): void {
-  setAccessToken(accessToken);
-  setRefreshToken(refreshToken);
+  setAccessToken(accessToken)
+  setRefreshToken(refreshToken)
 }
 
 export function clearTokens(): void {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
+  localStorage.removeItem(ACCESS_TOKEN_KEY)
+  localStorage.removeItem(REFRESH_TOKEN_KEY)
 }
 
 export function hasTokens(): boolean {

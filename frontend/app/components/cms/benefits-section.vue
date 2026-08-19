@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from "vue"
-import type { BenefitsBlock } from "#shared/types/cms/blocks"
-import { getBlockIcon } from "#shared/utils/icons"
-import { getBlockBackground } from "#shared/utils/block"
+import { computed } from 'vue'
+import type { BenefitsBlock } from '#shared/types/cms/blocks'
+import { getBlockIcon } from '#shared/utils/icons'
+import { getBlockBackground } from '#shared/utils/block'
 
 interface Props {
   block: BenefitsBlock
@@ -17,8 +17,12 @@ const bgClass = computed(() => getBlockBackground(props.block.value.background))
   <section :class="[bgClass, 'w-full py-16']">
     <UContainer>
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900">{{ block.value.heading.title }}</h2>
-        <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto">{{ block.value.heading.text }}</p>
+        <h2 class="text-3xl font-bold text-gray-900">
+          {{ block.value.heading.title }}
+        </h2>
+        <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto">
+          {{ block.value.heading.text }}
+        </p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

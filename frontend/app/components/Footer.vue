@@ -8,8 +8,8 @@ import Logo from '~/components/Logo.vue'
       <div class="flex flex-col items-start">
         <Logo :is-bg-white="false" />
         <p class="text-muted text-sm mt-2 max-w-md">
-          Sistemas de Apoyo al Monitoreo de Variables Agrícolas. Innovación tecnológica para un campo más productivo y
-          sostenible.
+          Sistemas de Apoyo al Monitoreo de Variables Agrícolas. Innovación
+          tecnológica para un campo más productivo y sostenible.
         </p>
         <div class="flex items-center space-x-4 mt-4">
           <UIcon name="i-lucide-github" class="text-primary size-6" />
@@ -24,7 +24,10 @@ import Logo from '~/components/Logo.vue'
         <div class="grid grid-cols-1 gap-3 text-sm">
           <div class="flex items-center space-x-2">
             <UIcon name="i-lucide-mail" class="text-primary size-4" />
-            <a href="mailto:info@samva.cl" class="text-white hover:text-primary">
+            <a
+              href="mailto:info@samva.cl"
+              class="text-white hover:text-primary"
+            >
               info@samva.cl
             </a>
           </div>
@@ -44,9 +47,10 @@ import Logo from '~/components/Logo.vue'
       </div>
     </template>
     <template #bottom>
-      <hr class="border-gray-700 mb-4">
+      <hr class="border-gray-700 mb-4" />
       <p class="text-muted text-sm text-center">
-        &copy; S.A.M.V.A. {{ new Date().getFullYear() }}. Todos los derechos reservados.
+        &copy; S.A.M.V.A. {{ new Date().getFullYear() }}. Todos los derechos
+        reservados.
       </p>
     </template>
   </UFooter>

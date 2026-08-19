@@ -9,10 +9,7 @@ import Logo from '~/components/Logo.vue'
     </template>
 
     <template #right>
-      <UButton
-        to="/dashboard"
-        class="flex items-center gap-2"
-      >
+      <UButton to="/dashboard" class="flex items-center gap-2">
         Ir al Dashboard
         <UIcon name="i-lucide-layout-dashboard" class="size-5" />
       </UButton>

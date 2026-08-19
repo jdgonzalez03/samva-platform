@@ -9,7 +9,9 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const buttonIcon = computed(() => getBlockIcon(props.block.value.cta_button.icon))
+const buttonIcon = computed(() =>
+  getBlockIcon(props.block.value.cta_button.icon),
+)
 </script>
 
 <template>

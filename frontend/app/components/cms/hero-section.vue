@@ -18,25 +18,27 @@ const buttonIconComponent = computed(() => {
   }
   return undefined
 })
-
 </script>
 
 <template>
-  <div class="relative w-full overflow-hidden bg-cover bg-center text-white"
-    style="background-image: url('/images/hero-image.jpg');">
+  <div
+    class="relative w-full overflow-hidden bg-cover bg-center text-white"
+    style="background-image: url('/images/hero-image.jpg')"
+  >
     <div class="absolute inset-0 bg-black/50 pointer-events-none" />
 
     <div class="relative z-10">
       <UPageHero :headline="block.value.badge">
         <template #headline>
           <p
-            class="text-sm font-semibold uppercase tracking-wide text-primary-500 border border-primary/70 px-3 py-1 rounded-full inline-block mb-4 ">
+            class="text-sm font-semibold uppercase tracking-wide text-primary-500 border border-primary/70 px-3 py-1 rounded-full inline-block mb-4"
+          >
             {{ block.value.badge }}
           </p>
         </template>
 
         <template #title>
-          <p class="text-white">{{ block.value.title.title }} </p>
+          <p class="text-white">{{ block.value.title.title }}</p>
           <span class="text-primary">
             {{ block.value.title.highlight_text }}
           </span>
@@ -49,8 +51,17 @@ const buttonIconComponent = computed(() => {
         </template>
 
         <template #links>
-          <UButton color="primary" :href="ctaUrl" class="inline-flex items-center gap-2" size="xl">
-            <component v-if="buttonIconComponent" :is="buttonIconComponent" class="size-5 text-white" />
+          <UButton
+            color="primary"
+            :href="ctaUrl"
+            class="inline-flex items-center gap-2"
+            size="xl"
+          >
+            <component
+              v-if="buttonIconComponent"
+              :is="buttonIconComponent"
+              class="size-5 text-white"
+            />
             {{ block.value.cta_button.text }}
           </UButton>
         </template>

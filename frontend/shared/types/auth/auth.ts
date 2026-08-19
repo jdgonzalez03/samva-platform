@@ -1,15 +1,14 @@
 export interface LoginPayload {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 export interface AuthTokens {
-  refresh: string;
-  access: string;
+  refresh: string
+  access: string
 }
 
 export interface AuthResponse {
-  message: string;
-  tokens: AuthTokens;
+  message: string
+  tokens: AuthTokens
 }
-

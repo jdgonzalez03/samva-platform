@@ -17,10 +17,12 @@ async function request<T>(url: string, opts?: Record<string, any>): Promise<T> {
 }
 
 export const fetcher = {
-  get:    <T>(url: string) => request<T>(url),
-  post:   <T>(url: string, body?: any) => request<T>(url, { method: 'POST', body }),
-  put:    <T>(url: string, body?: any) => request<T>(url, { method: 'PUT', body }),
-  patch:  <T>(url: string, body?: any) => request<T>(url, { method: 'PATCH', body }),
+  get: <T>(url: string) => request<T>(url),
+  post: <T>(url: string, body?: any) =>
+    request<T>(url, { method: 'POST', body }),
+  put: <T>(url: string, body?: any) => request<T>(url, { method: 'PUT', body }),
+  patch: <T>(url: string, body?: any) =>
+    request<T>(url, { method: 'PATCH', body }),
   patchFormData: <T>(url: string, formData: FormData) =>
     request<T>(url, { method: 'PATCH', body: formData }),
   delete: <T>(url: string) => request<T>(url, { method: 'DELETE' }),

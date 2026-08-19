@@ -10,7 +10,6 @@ definePageMeta({
 const { updateProfile } = useAccount()
 const { user, fetchMe } = useAuth()
 
-
 const toast = useToast()
 const saving = ref(false)
 const avatarFile = ref<File | null>(null)
@@ -110,9 +109,17 @@ async function handleSubmit() {
     }
     await updateProfile(payload)
     await fetchMe()
-    toast.add({ title: 'Profile updated', description: 'Changes saved successfully', color: 'success' })
+    toast.add({
+      title: 'Profile updated',
+      description: 'Changes saved successfully',
+      color: 'success',
+    })
   } catch {
-    toast.add({ title: 'Update error', description: 'Could not save changes. Please try again.', color: 'error' })
+    toast.add({
+      title: 'Update error',
+      description: 'Could not save changes. Please try again.',
+      color: 'error',
+    })
   } finally {
     saving.value = false
   }
@@ -121,7 +128,7 @@ async function handleSubmit() {
 
 <template>
   <DashboardProfileSkeleton v-if="!user" />
-<!-- TODO: Look for a way to refactor this form -->
+  <!-- TODO: Look for a way to refactor this form -->
   <UDashboardPanel v-else id="profile-dashboard">
     <template #header>
       <UDashboardNavbar title="My Profile" icon="i-lucide-user" />
@@ -137,7 +144,9 @@ async function handleSubmit() {
           <div class="flex flex-col gap-4">
             <!-- User Information -->
             <UCard>
-              <div class="flex flex-col items-center text-center gap-3 pb-4 border-b border-default">
+              <div
+                class="flex flex-col items-center text-center gap-3 pb-4 border-b border-default"
+              >
                 <div class="relative group">
                   <UAvatar
                     v-if="avatarSrc"
@@ -148,7 +157,15 @@ async function handleSubmit() {
                   <div
                     v-else
                     class="w-18 h-18 rounded-full flex items-center justify-center text-2xl font-medium text-white select-none"
-                    style="background: linear-gradient(135deg, #3B6D11 0%, #639922 100%); width: 72px; height: 72px;"
+                    style="
+                      background: linear-gradient(
+                        135deg,
+                        #3b6d11 0%,
+                        #639922 100%
+                      );
+                      width: 72px;
+                      height: 72px;
+                    "
                   >
                     {{ initials }}
                   </div>
@@ -175,9 +192,11 @@ async function handleSubmit() {
 
                 <div>
                   <p class="font-medium text-base text-highlighted">
-                    {{ form.first_name || form.last_name
-                      ? `${form.first_name} ${form.last_name}`.trim()
-                      : user.email }}
+                    {{
+                      form.first_name || form.last_name
+                        ? `${form.first_name} ${form.last_name}`.trim()
+                        : user.email
+                    }}
                   </p>
                   <p class="text-sm text-muted">{{ user.email }}</p>
                 </div>
@@ -189,23 +208,41 @@ async function handleSubmit() {
               </div>
 
               <div class="mt-4 flex flex-col gap-2.5">
-                <p class="text-xs font-medium uppercase tracking-widest text-muted mb-1">
+                <p
+                  class="text-xs font-medium uppercase tracking-widest text-muted mb-1"
+                >
                   Account Information
                 </p>
 
-                <div v-if="memberSince" class="flex items-center gap-2 text-sm text-muted">
+                <div
+                  v-if="memberSince"
+                  class="flex items-center gap-2 text-sm text-muted"
+                >
                   <UIcon name="i-lucide-calendar" class="size-4 shrink-0" />
-                  <span>Member since <span class="text-default font-medium">{{ memberSince }}</span></span>
+                  <span
+                    >Member since
+                    <span class="text-default font-medium">{{
+                      memberSince
+                    }}</span></span
+                  >
                 </div>
 
-                <div v-if="form.city || form.department" class="flex items-center gap-2 text-sm text-muted">
+                <div
+                  v-if="form.city || form.department"
+                  class="flex items-center gap-2 text-sm text-muted"
+                >
                   <UIcon name="i-lucide-map-pin" class="size-4 shrink-0" />
                   <span class="text-default">
-                    {{ [form.city, form.department].filter(Boolean).join(', ') }}
+                    {{
+                      [form.city, form.department].filter(Boolean).join(', ')
+                    }}
                   </span>
                 </div>
 
-                <div v-if="form.phone_number" class="flex items-center gap-2 text-sm text-muted">
+                <div
+                  v-if="form.phone_number"
+                  class="flex items-center gap-2 text-sm text-muted"
+                >
                   <UIcon name="i-lucide-phone" class="size-4 shrink-0" />
                   <span class="text-default">{{ form.phone_number }}</span>
                 </div>
@@ -214,25 +251,56 @@ async function handleSubmit() {
             <!-- Organization Information -->
             <UCard v-if="user.farmer.organization">
               <template #header>
-                <p class="text-xs font-medium uppercase tracking-widest text-muted">
+                <p
+                  class="text-xs font-medium uppercase tracking-widest text-muted"
+                >
                   Organization
                 </p>
               </template>
 
               <div class="flex flex-col gap-2.5">
-                <div v-if="user.farmer.organization.name" class="flex items-center gap-2 text-sm">
-                  <UIcon name="i-lucide-building" class="size-4 shrink-0 text-muted" />
-                  <span class="text-default font-medium">{{ user.farmer.organization.name }}</span>
+                <div
+                  v-if="user.farmer.organization.name"
+                  class="flex items-center gap-2 text-sm"
+                >
+                  <UIcon
+                    name="i-lucide-building"
+                    class="size-4 shrink-0 text-muted"
+                  />
+                  <span class="text-default font-medium">{{
+                    user.farmer.organization.name
+                  }}</span>
                 </div>
 
-                <div v-if="user.farmer.organization.nit" class="flex items-center gap-2 text-sm text-muted">
+                <div
+                  v-if="user.farmer.organization.nit"
+                  class="flex items-center gap-2 text-sm text-muted"
+                >
                   <UIcon name="i-lucide-hash" class="size-4 shrink-0" />
-                  <span class="text-default">NIT {{ user.farmer.organization.nit }}</span>
+                  <span class="text-default"
+                    >NIT {{ user.farmer.organization.nit }}</span
+                  >
                 </div>
 
-                <div v-if="user.farmer.organization.created_at" class="flex items-center gap-2 text-sm text-muted">
-                  <UIcon name="i-lucide-calendar-plus" class="size-4 shrink-0" />
-                  <span>Registered <span class="text-default font-medium">{{ new Date(user.farmer.organization.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) }}</span></span>
+                <div
+                  v-if="user.farmer.organization.created_at"
+                  class="flex items-center gap-2 text-sm text-muted"
+                >
+                  <UIcon
+                    name="i-lucide-calendar-plus"
+                    class="size-4 shrink-0"
+                  />
+                  <span
+                    >Registered
+                    <span class="text-default font-medium">{{
+                      new Date(
+                        user.farmer.organization.created_at,
+                      ).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                      })
+                    }}</span></span
+                  >
                 </div>
               </div>
             </UCard>
@@ -249,7 +317,9 @@ async function handleSubmit() {
             <!-- Personal Information form -->
             <UCard>
               <template #header>
-                <p class="text-xs font-medium uppercase tracking-widest text-muted">
+                <p
+                  class="text-xs font-medium uppercase tracking-widest text-muted"
+                >
                   Personal Information
                 </p>
               </template>
@@ -320,7 +390,9 @@ async function handleSubmit() {
             <!-- Location Information form -->
             <UCard>
               <template #header>
-                <p class="text-xs font-medium uppercase tracking-widest text-muted">
+                <p
+                  class="text-xs font-medium uppercase tracking-widest text-muted"
+                >
                   Location
                 </p>
               </template>
@@ -342,7 +414,11 @@ async function handleSubmit() {
                   />
                 </UFormField>
 
-                <UFormField name="address" label="Address" class="md:col-span-2">
+                <UFormField
+                  name="address"
+                  label="Address"
+                  class="md:col-span-2"
+                >
                   <UInput
                     v-model="form.address"
                     placeholder="Street, number, neighborhood…"

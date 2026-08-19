@@ -7,13 +7,12 @@ const colorMode = useColorMode()
 onMounted(() => {
   colorMode.preference = 'light'
 })
-
 </script>
 
 <template>
   <Header />
-    <UMain>
-      <slot />
-    </UMain>
+  <UMain>
+    <slot />
+  </UMain>
   <Footer />
 </template>

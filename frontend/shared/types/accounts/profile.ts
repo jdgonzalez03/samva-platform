@@ -29,14 +29,14 @@ export interface Profile {
 }
 
 export interface UpdateProfilePayload {
-  first_name?: string, 
-  last_name?: string, 
-  document_type?: string,
-  document_number?: string,
-  gender?: string, 
-  phone_number?: string, 
-  city?: string,
-  department?: string, 
-  address?: string, 
+  first_name?: string
+  last_name?: string
+  document_type?: string
+  document_number?: string
+  gender?: string
+  phone_number?: string
+  city?: string
+  department?: string
+  address?: string
   avatar?: File
 }

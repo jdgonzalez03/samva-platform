@@ -10,9 +10,18 @@ interface Props {
 
 const props = defineProps<Props>()
 
-type BadgeColor = 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
+type BadgeColor =
+  'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'
 
-const validBadgeColors: BadgeColor[] = ['primary', 'secondary', 'success', 'info', 'warning', 'error', 'neutral']
+const validBadgeColors: BadgeColor[] = [
+  'primary',
+  'secondary',
+  'success',
+  'info',
+  'warning',
+  'error',
+  'neutral',
+]
 
 const bgClass = computed(() => getBlockBackground(props.block.value.background))
 const imagen = computed(() => props.block.value.imagen)
@@ -24,7 +33,7 @@ const badgeColor = computed<BadgeColor>(() => {
     ? (status as BadgeColor)
     : 'primary'
 })
-const contentCenter = computed(() => imagen ? '' : 'max-w-3xl mx-auto')
+const contentCenter = computed(() => (imagen ? '' : 'max-w-3xl mx-auto'))
 </script>
 
 <template>
@@ -51,7 +60,9 @@ const contentCenter = computed(() => imagen ? '' : 'max-w-3xl mx-auto')
 
           <h2 class="text-3xl font-bold mt-4">
             {{ block.value.title.title }}
-            <span class="text-primary">{{ block.value.title.highlight_text }}</span>
+            <span class="text-primary">{{
+              block.value.title.highlight_text
+            }}</span>
           </h2>
 
           <p class="text-lg text-gray-600 mt-4">
@@ -64,7 +75,10 @@ const contentCenter = computed(() => imagen ? '' : 'max-w-3xl mx-auto')
               :key="index"
               class="flex items-start gap-3"
             >
-              <UIcon :name="listIcon" class="size-5 text-primary mt-0.5 shrink-0" />
+              <UIcon
+                :name="listIcon"
+                class="size-5 text-primary mt-0.5 shrink-0"
+              />
               <span>{{ item.text }}</span>
             </li>
           </ul>

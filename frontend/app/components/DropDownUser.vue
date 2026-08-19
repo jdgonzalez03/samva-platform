@@ -21,13 +21,13 @@ const avatarUrl = getImageUrl(props.user.farmer.avatar)
 
 const userItems = computed<DropdownMenuItem[][]>(() => [
   [
-    { 
+    {
       label: 'Log out',
       icon: 'i-lucide-log-out',
       onSelect: () => {
         logout()
-      }
-    }
+      },
+    },
   ],
   [
     {
@@ -46,7 +46,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
           },
           onSelect(e: Event) {
             e.preventDefault()
-          }
+          },
         },
         {
           label: 'Dark',
@@ -60,31 +60,34 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
           },
           onSelect(e: Event) {
             e.preventDefault()
-          }
-        }
-      ]
-    }
-  ]
+          },
+        },
+      ],
+    },
+  ],
 ])
 </script>
 
 <template>
-  <UDropdownMenu 
-    :items="userItems" 
+  <UDropdownMenu
+    :items="userItems"
     :content="{ align: 'center', collisionPadding: 12 }"
-    :ui="{ content: 'w-(--reka-dropdown-menu-trigger-width) min-w-48' }">
-    <UButton 
-      :label="displayName" 
+    :ui="{ content: 'w-(--reka-dropdown-menu-trigger-width) min-w-48' }"
+  >
+    <UButton
+      :label="displayName"
       :avatar="{
         src: avatarUrl,
-        loading: 'lazy'
+        loading: 'lazy',
       }"
-      trailing-icon="i-lucide-chevrons-up-down" 
-      color="neutral" variant="ghost"
-      square 
-      class="w-full data-[state=open]:bg-elevated overflow-hidden" 
+      trailing-icon="i-lucide-chevrons-up-down"
+      color="neutral"
+      variant="ghost"
+      square
+      class="w-full data-[state=open]:bg-elevated overflow-hidden"
       :ui="{
-        trailingIcon: 'text-dimmed ms-auto'
-      }" />
+        trailingIcon: 'text-dimmed ms-auto',
+      }"
+    />
   </UDropdownMenu>
 </template>

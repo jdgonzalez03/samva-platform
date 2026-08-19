@@ -15,4 +15,3 @@ export async function loginUser(payload: LoginPayload): Promise<AuthResponse> {
 
   return response.json()
 }
-

@@ -12,19 +12,22 @@ import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
 const { login, loading } = useAuth()
 const toast = useToast()
 
-const fields: AuthFormField[] = [{
-  name: 'email',
-  label: 'Email',
-  type: 'email',
-  placeholder: 'you@example.com',
-  required: true,
-}, {
-  name: 'password',
-  label: 'Password',
-  type: 'password',
-  placeholder: '••••••••',
-  required: true,
-}]
+const fields: AuthFormField[] = [
+  {
+    name: 'email',
+    label: 'Email',
+    type: 'email',
+    placeholder: 'you@example.com',
+    required: true,
+  },
+  {
+    name: 'password',
+    label: 'Password',
+    type: 'password',
+    placeholder: '••••••••',
+    required: true,
+  },
+]
 
 const schema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -36,7 +39,11 @@ type Schema = z.output<typeof schema>
 async function onSubmit(payload: FormSubmitEvent<Schema>) {
   try {
     await login({ email: payload.data.email, password: payload.data.password })
-    toast.add({ title: 'Welcome back', description: 'You have been logged in successfully', color: 'success' })
+    toast.add({
+      title: 'Welcome back',
+      description: 'You have been logged in successfully',
+      color: 'success',
+    })
     await navigateTo('/dashboard')
   } catch (error: any) {
     toast.add({
@@ -46,7 +53,6 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
     })
   }
 }
-
 </script>
 
 <template>

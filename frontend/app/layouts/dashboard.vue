@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
 import TracktorIcon from '../components/icons/TractorIcon.vue'
 
-const { user, loading } = useAuth() 
+const { user, loading } = useAuth()
 
 const colorMode = useColorMode()
 if (colorMode.preference === 'light') {
@@ -11,13 +10,27 @@ if (colorMode.preference === 'light') {
 const links = [
   { label: 'Dashboard', icon: 'i-lucide-layout-dashboard', to: '/dashboard' },
   { label: 'History', icon: 'i-lucide-history', to: '/dashboard/history' },
-  { label: 'Predictions', icon: 'i-lucide-trending-up', to: '/dashboard/predictions' },
-  { label: 'Profile', icon: 'i-lucide-user', to: '/dashboard/profile'}
+  {
+    label: 'Predictions',
+    icon: 'i-lucide-trending-up',
+    to: '/dashboard/predictions',
+  },
+  { label: 'Profile', icon: 'i-lucide-user', to: '/dashboard/profile' },
 ]
 
 const helpLinks = [
-  { label: 'Feedback', icon: 'i-lucide-message-circle', to: 'mailto:jdgonzalez.urrego@unillanos.edu.co', target: '_blank' }, 
-  { label: 'Help & Support', icon: 'i-lucide-info', to: 'https://wa.me/573014980859', target: '_blank' },
+  {
+    label: 'Feedback',
+    icon: 'i-lucide-message-circle',
+    to: 'mailto:jdgonzalez.urrego@unillanos.edu.co',
+    target: '_blank',
+  },
+  {
+    label: 'Help & Support',
+    icon: 'i-lucide-info',
+    to: 'https://wa.me/573014980859',
+    target: '_blank',
+  },
 ]
 </script>
 
@@ -25,12 +38,17 @@ const helpLinks = [
   <UDashboardGroup>
     <UDashboardSidebar side="left">
       <template #header="{ collapsed }">
-        <div class="flex items-center gap-2 px-3 py-1 cursor-pointer" @click="navigateTo('/dashboard')">
+        <div
+          class="flex items-center gap-2 px-3 py-1 cursor-pointer"
+          @click="navigateTo('/dashboard')"
+        >
           <div class="text-primary">
             <TracktorIcon />
           </div>
           <Transition name="fade">
-            <span v-if="!collapsed" class="text-lg font-bold truncate">SAMVA</span>
+            <span v-if="!collapsed" class="text-lg font-bold truncate"
+              >SAMVA</span
+            >
           </Transition>
         </div>
       </template>
@@ -38,7 +56,11 @@ const helpLinks = [
       <DashboardFarmsMenu />
       <USeparator />
       <UNavigationMenu :items="links" orientation="vertical" class="px-2" />
-      <UNavigationMenu :items="helpLinks" orientation="vertical" class="mt-auto" />
+      <UNavigationMenu
+        :items="helpLinks"
+        orientation="vertical"
+        class="mt-auto"
+      />
 
       <template #footer>
         <div v-if="loading" class="flex items-center gap-3 w-full">
