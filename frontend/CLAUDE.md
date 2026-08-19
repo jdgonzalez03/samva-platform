@@ -2,6 +2,8 @@
 
 Guidelines for the Nuxt frontend (`frontend/`). Stack: Nuxt 4 + Nuxt UI + TypeScript (exact pins in `package.json`). Before Vue/Nuxt work, consult the project skills: `nuxt-ui`, `vue-best-practices`, `vue-router-best-practices`, `vue-testing-best-practices`, `accessibility`.
 
+Architecture decision: the frontend is migrating from layered architecture to domain modules (Nuxt Layers) — see [ADR 0001](../docs/adr/0001-frontend-modular-architecture-nuxt-layers.md). Until a domain is migrated, its code follows the current layered scheme described below.
+
 ## Guidelines
 
 ### HTTP & API layer
