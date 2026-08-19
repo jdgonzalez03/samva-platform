@@ -50,76 +50,153 @@ myproject/
 
 ### Split Settings Pattern
 
+This project uses `backend/settings/` with `common.py` (shared base), `dev.py`, and `prod.py`. Secrets and environment-specific values come from environment variables via `os.environ.get()`.
+
 ```python
-# config/settings/base.py
-from pathlib import Path
+# backend/settings/common.py
+import os
+from celery.schedules import crontab
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(PROJECT_DIR)
 
-SECRET_KEY = env('DJANGO_SECRET_KEY')
-DEBUG = False
-ALLOWED_HOSTS = []
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-INSTALLED_APPS = [
+# Apps grouped by category, then combined
+DEPENDENCIES_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'corsheaders',
-    # Local apps
-    'apps.users',
-    'apps.products',
+    'django.contrib.postgres',
+    'django.contrib.gis',
 ]
+
+WAGTAIL_APPS = [
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.admin',
+    'wagtail',
+    # ... rest of wagtail.* apps
+    'taggit',
+    'modelcluster',
+    'wagtailgeowidget',
+]
+
+PROJECT_APPS = [
+    'accounts',
+    'farmer',
+    'core',
+    'cms',
+    'farm',
+    'sensors',
+    'predictions',
+]
+
+ADDONS_APPS = [
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'leaflet',
+    'corsheaders',
+    'django_celery_results',
+]
+
+INSTALLED_APPS = WAGTAIL_APPS + DEPENDENCIES_APPS + PROJECT_APPS + ADDONS_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # before CommonMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
-WSGI_APPLICATION = 'config.wsgi.application'
+ROOT_URLCONF = 'backend.urls'
+WSGI_APPLICATION = 'backend.wsgi.application'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# GeoDjango database (PostGIS)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT', default='5432'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': 'postgres',
+        'PORT': 5432,
     }
 }
 
-# config/settings/development.py
-from .base import *
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+# Security settings shared by all environments
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+# Celery (broker URL is environment-specific, lives in dev.py/prod.py)
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BEAT_SCHEDULE = {
+    'poll_weather_stations': {
+        'task': 'sensors.tasks.poll_weather_stations',
+        'schedule': crontab(minute='*/5'),
+    },
+}
+```
+
+```python
+# backend/settings/dev.py
+from .common import *
 
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-DATABASES['default']['NAME'] = 'myproject_dev'
+ALLOWED_HOSTS = ['*']
 
-INSTALLED_APPS += ['debug_toolbar']
+# CORS / CSRF relaxed for local frontend
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+]
 
-MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+# Celery config
+CELERY_BROKER_URL = 'amqp://samva_platform:samva_platform@broker:5672/'
+```
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# config/settings/production.py
-from .base import *
+```python
+# backend/settings/prod.py
+from .common import *
 
 DEBUG = False
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+ALLOWED_HOSTS = [
+    'yourdomain.com',
+    'www.yourdomain.com',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://yourdomain.com',
+]
+
+# Production security hardening (recommended additions)
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -127,26 +204,22 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# Logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/django/django.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'WARNING',
-            'propagate': True,
-        },
-    },
-}
+# Celery broker from environment: supports user/password pair or a full URL
+if os.environ.get('RABBITMQ_USER', None):
+    RABBITMQ_USER = os.environ.get('RABBITMQ_USER')
+    RABBITMQ_PASSWORD = os.environ.get('RABBITMQ_PASSWORD')
+    CELERY_BROKER_URL = 'amqp://{}:{}@broker:5672/'.format(RABBITMQ_USER, RABBITMQ_PASSWORD)
+elif os.environ.get('RABBITMQ_URL', None):
+    CELERY_BROKER_URL = os.environ.get('RABBITMQ_URL')
 ```
+
+Key conventions:
+
+- **`common.py` holds everything shared**; `dev.py`/`prod.py` start with `from .common import *` and only override what differs (DEBUG, hosts, CORS/CSRF, broker URL).
+- **Group `INSTALLED_APPS` into named lists** (`DEPENDENCIES_APPS`, `WAGTAIL_APPS`, `PROJECT_APPS`, `ADDONS_APPS`) and concatenate — keeps app registration readable as the project grows.
+- **Secrets never hardcoded**: `SECRET_KEY`, database credentials, and broker credentials come from environment variables.
+- **Select the settings module** via `DJANGO_SETTINGS_MODULE=backend.settings.dev` (or `.prod`) in the environment / Docker compose.
+- **Prod-only security flags** (SSL redirect, secure cookies, HSTS) live in `prod.py` so dev stays friction-free.
 
 ## Model Design Patterns
 
