@@ -1,0 +1,22 @@
+{
+  "auth": {
+    "login": {
+      "pageTitle": "Iniciar sesión",
+      "title": "Bienvenido de nuevo",
+      "description": "Ingresa tus credenciales para acceder a tu cuenta de S.A.M.V.A.",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tucorreo{'@'}ejemplo.com",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Iniciar sesión",
+      "successTitle": "Bienvenido de nuevo",
+      "successDescription": "Has iniciado sesión correctamente",
+      "errorTitle": "Error al iniciar sesión",
+      "errorDescription": "Ocurrió un error al iniciar sesión"
+    },
+    "validation": {
+      "email": "Ingresa un correo electrónico válido",
+      "password": "La contraseña debe tener al menos 6 caracteres"
+    }
+  }
+}
