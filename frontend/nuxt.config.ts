@@ -4,15 +4,43 @@ import { fileURLToPath } from 'url'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/ui', '@nuxt/icon', '@nuxt/eslint'],
-  css: ['~/assets/main.css'],
+  modules: ['@nuxt/ui', '@nuxt/icon', '@nuxt/eslint', '@nuxtjs/i18n'],
+  i18n: {
+    defaultLocale: 'es',
+    strategy: 'prefix_except_default',
+    // Locale metadata lives here; message files ship per layer
+    // (layers/<name>/i18n/locales/{es,en}.json) and are merged by the module.
+    locales: [
+      { code: 'es', language: 'es-CO', name: 'Español' },
+      { code: 'en', language: 'en', name: 'English' },
+    ],
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root',
+      fallbackLocale: 'es',
+    },
+  },
+  css: [
+    fileURLToPath(
+      new URL('./layers/common/app/assets/main.css', import.meta.url),
+    ),
+  ],
   eslint: {
     config: {
       stylistic: false,
     },
   },
   alias: {
-    '#api': fileURLToPath(new URL('./app/utils/api', import.meta.url)),
+    // The common HTTP stack only (fetcher, tokens, errors) — domain api modules
+    // live inside their own layer and are not exposed here.
+    '#api': fileURLToPath(
+      new URL('./layers/common/app/utils/api', import.meta.url),
+    ),
+    // Reserved for genuinely cross-layer types; empty today.
+    '#shared': fileURLToPath(
+      new URL('./layers/common/shared', import.meta.url),
+    ),
   },
   runtimeConfig: {
     apiBaseServer:
