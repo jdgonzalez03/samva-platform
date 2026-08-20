@@ -1,0 +1,14 @@
+{
+  "common": {
+    "changeLanguage": "Change language",
+    "error": {
+      "notFoundTitle": "404 — Page not found",
+      "genericTitle": "Error",
+      "notFoundHeading": "Page not found",
+      "genericHeading": "Something went wrong",
+      "notFoundDescription": "The page you are looking for does not exist or was moved. Check the address or go back home.",
+      "genericDescription": "Something went wrong while processing your request. Try going back home.",
+      "backHome": "Back to home"
+    }
+  }
+}

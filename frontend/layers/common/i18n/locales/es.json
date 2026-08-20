@@ -1,0 +1,14 @@
+{
+  "common": {
+    "changeLanguage": "Cambiar idioma",
+    "error": {
+      "notFoundTitle": "404 — Página no encontrada",
+      "genericTitle": "Error",
+      "notFoundHeading": "Página no encontrada",
+      "genericHeading": "Ha ocurrido un error",
+      "notFoundDescription": "La página que buscas no existe o fue movida. Verifica la dirección o vuelve al inicio.",
+      "genericDescription": "Algo salió mal al procesar tu solicitud. Intenta volver al inicio.",
+      "backHome": "Volver al inicio"
+    }
+  }
+}
