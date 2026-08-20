@@ -18,7 +18,7 @@ test.describe('Página principal /', () => {
 
   test('el hero section es visible con título de agricultura de precisión', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByText(/agricultura de precisión/i)).toBeVisible()
+    await expect(page.getByText(/agricultura de precisión/i).first()).toBeVisible()
   })
 
   test('la sección visión y misión es visible', async ({ page }) => {
@@ -29,12 +29,14 @@ test.describe('Página principal /', () => {
 
   test('el footer se renderiza con texto S.A.M.V.A.', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByText(/s\.a\.m\.v\.a/i)).toBeVisible()
+    await expect(
+      page.getByRole('contentinfo').getByRole('heading', { name: /s\.a\.m\.v\.a/i }),
+    ).toBeVisible()
   })
 
-  test('el botón Ir al Dashboard navega a /dashboard', async ({ page }) => {
+  test('el botón Ir al Dashboard redirige a /login para visitantes anónimos', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('link', { name: /ir al dashboard/i }).click()
-    await expect(page).toHaveURL(/\/dashboard/)
+    await expect(page).toHaveURL(/\/login/)
   })
 })
