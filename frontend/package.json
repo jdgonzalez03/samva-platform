@@ -17,6 +17,8 @@
   "dependencies": {
     "@nuxt/icon": "^2.2.3",
     "@nuxt/ui": "^4.6.1",
+    "@nuxtjs/i18n": "^10.6.0",
+    "@tanstack/vue-query": "^5.101.4",
     "@unovis/ts": "^1.6.6",
     "@unovis/vue": "^1.6.6",
     "@vue-leaflet/vue-leaflet": "^0.10.1",
