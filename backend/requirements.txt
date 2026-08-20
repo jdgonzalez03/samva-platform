@@ -1,5 +1,5 @@
 # Core
-Django>=6.0,<7.0
+Django==6.1
 Wagtail>=7.0,<8.0
 
 # REST
