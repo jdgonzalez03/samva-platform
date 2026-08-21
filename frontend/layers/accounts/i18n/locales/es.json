@@ -1,0 +1,54 @@
+{
+  "accounts": {
+    "profile": {
+      "pageTitle": "Mi perfil",
+      "loadError": "No pudimos cargar tu perfil. Inténtalo de nuevo.",
+      "retry": "Reintentar",
+      "farmerBadge": "Agricultor",
+      "changeAvatar": "Cambiar foto de perfil",
+      "accountInformation": "Información de la cuenta",
+      "memberSince": "Miembro desde",
+      "organization": "Organización",
+      "noOrganization": "Sin organización",
+      "registered": "Registrada",
+      "nit": "NIT",
+      "personalInformation": "Información personal",
+      "location": "Ubicación",
+      "fields": {
+        "email": "Correo electrónico",
+        "emailPlaceholder": "tucorreo{'@'}ejemplo.com",
+        "firstName": "Nombre",
+        "firstNamePlaceholder": "Juan",
+        "lastName": "Apellido",
+        "lastNamePlaceholder": "Pérez",
+        "gender": "Género",
+        "documentType": "Tipo de documento",
+        "documentNumber": "Número de documento",
+        "documentNumberPlaceholder": "Número de documento",
+        "phone": "Teléfono",
+        "phonePlaceholder": "+57 300 000 0000",
+        "city": "Ciudad",
+        "cityPlaceholder": "Ciudad",
+        "department": "Departamento",
+        "departmentPlaceholder": "Departamento",
+        "address": "Dirección",
+        "addressPlaceholder": "Calle, número, barrio…",
+        "selectPlaceholder": "Selecciona"
+      },
+      "documentTypes": {
+        "cc": "Cédula de ciudadanía",
+        "ce": "Cédula de extranjería",
+        "passport": "Pasaporte"
+      },
+      "genders": {
+        "male": "Masculino",
+        "female": "Femenino"
+      },
+      "saveChanges": "Guardar cambios",
+      "updateSuccessTitle": "Perfil actualizado",
+      "updateSuccessDescription": "Los cambios se guardaron correctamente",
+      "updateErrorTitle": "Error al actualizar",
+      "updateErrorDescription": "No se pudieron guardar los cambios. Inténtalo de nuevo."
+    }
+  }
+}
