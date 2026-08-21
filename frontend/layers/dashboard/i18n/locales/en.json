@@ -1,0 +1,25 @@
+{
+  "dashboard": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "profile": "Profile"
+    },
+    "help": {
+      "feedback": "Feedback",
+      "support": "Help & Support"
+    },
+    "userMenu": {
+      "logout": "Log out",
+      "appearance": "Appearance",
+      "light": "Light",
+      "dark": "Dark",
+      "language": "Language"
+    },
+    "index": {
+      "title": "Dashboard",
+      "welcome": "Welcome to your dashboard. Soon you will find the status of your farms and sensors here."
+    },
+    "profileUnavailable": "Profile unavailable.",
+    "retry": "Retry"
+  }
+}
