@@ -4,10 +4,12 @@ export default defineConfig({
   testDir: '.',
   timeout: 30000,
   expect: { timeout: 10000 },
-  fullyParallel: true,
+  // Auth/profile/i18n specs share one backend user and log in concurrently;
+  // a single worker serializes across files (fullyParallel only covers one file).
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: 'list',
 
   projects: [
@@ -23,6 +25,8 @@ export default defineConfig({
       testMatch: 'frontend/**/*.spec.ts',
       use: {
         baseURL: 'http://localhost:3000',
+        // Pinned so specs stay stable when i18n lands (Spanish default).
+        locale: 'es-CO',
       },
     },
   ],

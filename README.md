@@ -1,83 +1,89 @@
 # S.A.M.V.A. Platform
 
-Plataforma de gestión agrícola con CMS headless.
+A web platform for farmers. It collects environmental data from sensors in the field (temperature, humidity, rain) and shows it in a simple way. The goal: help farmers make better decisions.
+
+For the full picture of how the system is built, read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Stack
 
-- **Backend**: Django 6 + Wagtail 7 + DRF + PostGIS + JWT
-- **Frontend**: Nuxt 4 + Nuxt UI v4 + TailwindCSS 4 + TypeScript 6
-- **Infra**: Docker Compose, Nginx, PostGIS 15
+- **Backend**: Django + Wagtail + Django REST Framework + Celery + PostGIS + JWT
+- **Frontend**: Nuxt 4 + Nuxt UI v4 + Tailwind CSS 4 + TypeScript
+- **E2E**: Playwright
+- **Infra**: Docker Compose, Nginx, RabbitMQ
 
-## Estructura
+Exact versions live in `backend/requirements.txt` and `frontend/package.json`.
+
+## Repository structure
 
 ```
-backend/             # Proyecto Django
-├── backend/         # Config del proyecto (settings/, urls.py)
-├── accounts/        # App de usuarios
-├── farmer/          # App de agricultores
-├── core/            # Config general y Wagtail Site Settings
-├── cms/             # Páginas Wagtail y API pública
-├── farm/            # App de fincas
-├── docker-compose.yml  # Entorno de desarrollo
-└── Dockerfile       # Multi-stage (dev / production)
-
-frontend/            # App Nuxt 4
-├── app/             # Vue app (pages/, layouts/, components/, composables/)
-├── shared/          # Tipos compartidos (alias #shared/)
-└── server/          # Rutas Nitro
-
-nginx/               # Configs para probar producción
-docker-compose.yml       # Producción (pruebas)
-docker-compose.dev.yml   # Producción (pruebas, con MinIO)
+backend/       # Django project (see backend/README.md)
+frontend/      # Nuxt 4 app (see frontend/README.md)
+e2e/           # Playwright end-to-end tests (see e2e/README.md)
+nginx/         # Nginx configs for production tests
+docs/          # Architecture and ADRs (decision records)
+Makefile       # Common commands (see below)
+docker-compose.yml       # Production test (full stack behind Nginx)
+docker-compose.dev.yml   # Production test with MinIO (S3 storage)
 ```
 
-## Desarrollo
+## Development
+
+Start the backend (API + database + Celery):
 
 ```bash
 cd backend
 docker compose up --build
 ```
 
-Servicios:
-- Backend API: http://localhost:8000/api/
+Then you have:
+
+- API: http://localhost:8000/api/
 - Wagtail admin: http://localhost:8000/admin/
 - Django admin: http://localhost:8000/django-admin/
 
-### Comandos Django
+The container runs migrations and creates a superuser (`admin` / `admin`) at start.
 
-```bash
-docker compose exec backend python manage.py makemigrations
-docker compose exec backend python manage.py migrate
-docker compose exec backend python manage.py createsuperuser
-docker compose exec backend python manage.py shell
-```
-
-El contenedor ejecuta migraciones y crea un superusuario (admin/admin) automáticamente al iniciar.
-
-### Frontend (desarrollo standalone)
+Start the frontend in another terminal:
 
 ```bash
 cd frontend
 npm install
-npm run dev
+npm run dev   # http://localhost:3000
 ```
 
-Requiere el backend corriendo en `http://localhost:8000`.
+## Common commands (Makefile)
 
-## Producción (pruebas locales)
+Run these from the repository root. They use `docker-compose.dev.yml`.
 
 ```bash
-docker compose -f docker-compose.yml up --build 
-# o con MinIO para almacenamiento S3:
-docker compose -f docker-compose.dev.yml up --build # o desde el directorio raiz make up-dev
+make up-dev            # Start the full stack
+make down              # Stop it
+make logs              # Follow the logs
+make migrations        # Django makemigrations
+make migrate           # Django migrate
+make createsuperuser   # Create an admin user
+make loaddata          # Load seed data (users, farmers, farms)
+make shell             # Django shell
+make lint              # Lint backend (Ruff) + frontend (ESLint)
+make format-backend    # Format backend with Ruff
+make clean             # Stop and remove volumes
 ```
 
-Servicios completos con Nginx en http://localhost/.
+## Production (local test)
 
-## Notas técnicas
+```bash
+docker compose -f docker-compose.yml up --build
+# or with MinIO for S3 storage:
+make up-dev
+```
 
-- La base de datos es **PostGIS** (no PostgreSQL plano) — requiere GDAL/GEOS.
-- Autenticación vía **JWT** (djangorestframework-simplejwt). El frontend tiene un stub de auth pendiente de implementar.
-- API REST en `/api/`. Wagtail funciona como CMS headless con StreamField.
-- Settings: `backend.settings.dev` (desarrollo), `backend.settings.prod` (producción).
-- Tipos compartidos frontend en `frontend/shared/types/` con alias `#shared/`.
+Full stack with Nginx at http://localhost/.
+
+## Technical notes
+
+- The database is **PostGIS**, not plain PostgreSQL. It needs GDAL/GEOS.
+- Auth uses **JWT** (djangorestframework-simplejwt). Login is with email + password.
+- The API lives under `/api/`. Wagtail works as a headless CMS with StreamField.
+- Django settings: `backend.settings.dev` (development), `backend.settings.prod` (production).
+- Frontend shared types live in `frontend/shared/types/` (alias `#shared/`); the API layer uses the alias `#api/`.
+- Architecture decisions are recorded in `docs/adr/`.

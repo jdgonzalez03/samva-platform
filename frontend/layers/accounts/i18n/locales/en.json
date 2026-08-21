@@ -1,0 +1,54 @@
+{
+  "accounts": {
+    "profile": {
+      "pageTitle": "My Profile",
+      "loadError": "Could not load your profile. Please try again.",
+      "retry": "Retry",
+      "farmerBadge": "Farmer",
+      "changeAvatar": "Change profile photo",
+      "accountInformation": "Account Information",
+      "memberSince": "Member since",
+      "organization": "Organization",
+      "noOrganization": "No organization",
+      "registered": "Registered",
+      "nit": "NIT",
+      "personalInformation": "Personal Information",
+      "location": "Location",
+      "fields": {
+        "email": "Email",
+        "emailPlaceholder": "you{'@'}example.com",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "Joe",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "Doe",
+        "gender": "Gender",
+        "documentType": "Document Type",
+        "documentNumber": "Document Number",
+        "documentNumberPlaceholder": "Document Number",
+        "phone": "Phone",
+        "phonePlaceholder": "+57 300 000 0000",
+        "city": "City",
+        "cityPlaceholder": "City",
+        "department": "Department",
+        "departmentPlaceholder": "Department",
+        "address": "Address",
+        "addressPlaceholder": "Street, number, neighborhood…",
+        "selectPlaceholder": "Select"
+      },
+      "documentTypes": {
+        "cc": "Identity Card",
+        "ce": "Foreign ID Card",
+        "passport": "Passport"
+      },
+      "genders": {
+        "male": "Male",
+        "female": "Female"
+      },
+      "saveChanges": "Save changes",
+      "updateSuccessTitle": "Profile updated",
+      "updateSuccessDescription": "Changes saved successfully",
+      "updateErrorTitle": "Update error",
+      "updateErrorDescription": "Could not save changes. Please try again."
+    }
+  }
+}

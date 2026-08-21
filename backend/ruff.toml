@@ -1,0 +1,34 @@
+target-version = "py314"
+line-length = 100
+
+extend-exclude = [
+    "**/migrations/**",
+    "staticfiles",
+    "static",
+]
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort (import sorting)
+    "UP",  # pyupgrade (modern Python syntax)
+    "B",   # flake8-bugbear (likely bugs)
+    "DJ",  # flake8-django
+]
+ignore = [
+    "E501",  # line length is enforced by the formatter, not the linter
+]
+
+[lint.isort]
+known-first-party = [
+    "accounts",
+    "backend",
+    "cms",
+    "core",
+    "farm",
+    "farmer",
+    "predictions",
+    "sensors",
+]

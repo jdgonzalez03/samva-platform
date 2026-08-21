@@ -8,6 +8,7 @@ def register_icons(icons):
     return icons + [
         'core/icons/tractor.svg',
         'core/icons/organization.svg',
+        'core/icons/chart.svg',
     ]
 
 # Mandatory Leaflet CSS and JS for Wagtail admin, if we use only django-admin, it doesnt need this

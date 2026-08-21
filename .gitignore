@@ -18,6 +18,10 @@ venv/
 /backend/media/
 db.sqlite3
 
+# Celery
+celerybeat-schedule*
+celerybeat.pid
+
 # Node
 node_modules/
 .output/
@@ -31,7 +35,9 @@ dist/
 
 # IDE
 .idea/
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 *.swp
 *.swo
 *~

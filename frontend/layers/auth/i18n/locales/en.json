@@ -1,0 +1,22 @@
+{
+  "auth": {
+    "login": {
+      "pageTitle": "Sign in",
+      "title": "Welcome back",
+      "description": "Enter your credentials to access your S.A.M.V.A account.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you{'@'}example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Sign in",
+      "successTitle": "Welcome back",
+      "successDescription": "You have been logged in successfully",
+      "errorTitle": "Login failed",
+      "errorDescription": "An error occurred while logging in"
+    },
+    "validation": {
+      "email": "Please enter a valid email address",
+      "password": "Password must be at least 6 characters long"
+    }
+  }
+}

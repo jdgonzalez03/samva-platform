@@ -1,0 +1,37 @@
+{
+  // Frontend: Prettier formats on save; ESLint only lints (no fixAll on save).
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "prettier.configPath": "frontend/.prettierrc",
+  "eslint.workingDirectories": ["frontend"],
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "vue"
+  ],
+
+  // Backend: Ruff as Python formatter + auto-fix on save
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "always",
+      "source.organizeImports.ruff": "always"
+    }
+  },
+  "ruff.configuration": "${workspaceFolder}/backend/ruff.toml"
+}

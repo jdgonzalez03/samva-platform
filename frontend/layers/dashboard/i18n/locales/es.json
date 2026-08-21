@@ -1,0 +1,25 @@
+{
+  "dashboard": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "profile": "Perfil"
+    },
+    "help": {
+      "feedback": "Comentarios",
+      "support": "Ayuda y soporte"
+    },
+    "userMenu": {
+      "logout": "Cerrar sesión",
+      "appearance": "Apariencia",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "language": "Idioma"
+    },
+    "index": {
+      "title": "Dashboard",
+      "welcome": "Bienvenido a tu panel. Muy pronto encontrarás aquí el estado de tus fincas y sensores."
+    },
+    "profileUnavailable": "Perfil no disponible.",
+    "retry": "Reintentar"
+  }
+}

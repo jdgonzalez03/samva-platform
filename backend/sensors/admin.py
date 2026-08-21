@@ -14,9 +14,9 @@ from sensors.models import (
 
 @admin.register(EnvironmentalVariable)
 class EnvironmentalVariableAdmin(admin.ModelAdmin):
-    list_display = ('name', 'unit', 'data_type')
+    list_display = ('name', 'unit', 'data_type', 'semantic_key')
     search_fields = ('name', 'unit')
-    list_filter = ('data_type',)
+    list_filter = ('data_type', 'semantic_key')
     ordering = ('name',)
 
 
