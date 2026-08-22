@@ -13,6 +13,7 @@ Architecture: domain modules as Nuxt Layers — see [ADR 0001](../docs/adr/0001-
 - New domains (`farm`, `sensors`, `predictions`, …) are born as layers with their own `nuxt.config.ts` (`$meta: { name: '<layer>' }`).
 - In-layer imports of types/utils/api use relative paths (no per-domain aliases); rely on Nuxt auto-imports for components/composables.
 - Nuxt plugins that consume another plugin's injection must be named object plugins with `dependsOn: ['<name>']` — auto-registered layers load alphabetically, so cross-layer plugin order is otherwise accidental. Current names: `api`, `vue-query`, `i18n:plugin` (module-owned), `auth-init` — do not rename without updating dependents.
+- Adding, renaming, or deleting a file under a layer's `app/{composables,utils}` invalidates the running dev server's module graph: restart `npm run dev` before trusting the browser or e2e, otherwise the stale module 404s and route navigation aborts with no visible error.
 - In a layer's `nuxt.config.ts`, resolve `imports.dirs` (and any path option) to absolute paths with `fileURLToPath(new URL(..., import.meta.url))` — relative paths are not layer-relative.
 
 ### HTTP & API layer
@@ -69,6 +70,7 @@ function clearUser() { user.value = null }
   - **Correct:** `<UIcon>`, `<UButton>`, `<UForm>`, `<UInput>`
 - Always use Lucide icons (`i-lucide-*`). Never use heroicons or any other icon set.
 - Every page sets its tab title with `useHead({ title: '...' })` (auto-imported) — never leave the default.
+- A `<UAvatar>` (or a `:avatar="…"` on `<UButton>`) always passes `text` with the owner's initials from `getInitials()` — with neither `text` nor `alt` the fallback renders an empty `bg-elevated` circle that reads as a skeleton; mark it `aria-hidden` when a sibling label already names the control.
 
 **Correct:**
 
