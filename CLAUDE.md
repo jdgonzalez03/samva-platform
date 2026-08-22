@@ -20,12 +20,12 @@ Two top-level sections: **Guidelines** (rules to follow when changing the system
 - Every change must fix affected tests and add tests for new behaviour (Django + Vitest/Playwright) — never leave tests behind.
 
 ### Django / make commands
-- Never run `python manage.py` directly; use `make` targets (route through Docker): `backend-makemigrations`, `backend-migrate`, `backend-dev`, `backend-restart`, `backend-test`, `backend-seed`.
-- Commands for backend development are in backend/Makefile
+- Never run `python manage.py` directly; use `make` targets (route through Docker): `migrations`, `migrate`, `test`, `loaddata`, `createsuperuser`, `shell`, `bash`.
+- Commands for backend development are in `backend/makefile` (run from `backend/`); the root `Makefile` has the stack-level targets (`up-dev`, `down`, `logs`, `lint`, …).
 
 ### E2E
-- Any multi-step user-facing feature (clicks, UI state changes, navigation) needs a Playwright test in `e2e/tests/<module>/` matching the frontend module name; exception: views reached only via app-sent external links (email verify/reset), already covered in `e2e/tests/auth/`.
-- Reuse `e2e/helpers/`: `createVerifiedUser` (registers + verifies, returns `{ email, password, username }`) and `loginUser`.
+- Any multi-step user-facing feature (clicks, UI state changes, navigation) needs a Playwright test in `e2e/frontend/<module>.spec.ts` matching the frontend layer name; API-level tests go in `e2e/backend/`. The layout is flat — there is no `e2e/tests/` directory.
+- Reuse `e2e/frontend/helpers.ts`: `loginAs` (logs in through the real form as the seeded user) and `gotoHydrated` (navigates and waits for hydration); every UI string a spec selects by lives in the exported `T` map, never inline in the spec.
 
 ### Build vs. reuse
 - Before hand-rolling anything non-trivial (a pattern, an abstraction, infra glue), challenge the instinct to write custom code: check whether a mature, well-maintained library does it better, and weigh that explicitly (standardisation, caching, less code to own vs. an added dependency) rather than defaulting to bespoke.
