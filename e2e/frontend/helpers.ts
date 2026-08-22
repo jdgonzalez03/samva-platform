@@ -29,6 +29,13 @@ export const T = {
   retry: 'Reintentar',
   // sidebar profile fallback
   profileUnavailable: 'Perfil no disponible.',
+  // farm switcher + dashboard plot count (seed: juan.perez owns both farms,
+  // 2 plots each; farms are ordered by name so El Tesoro is the default)
+  farmFirst: 'Finca El Tesoro',
+  farmSecond: 'Finca San Vicente',
+  plotCount: '2 lotes',
+  farmsUnavailable: 'Fincas no disponibles.',
+  plotsLoadError: 'No se pudieron cargar los lotes.',
   // error page (error.vue)
   errorTitle: '404 — Página no encontrada',
   errorHeading: 'Página no encontrada',
