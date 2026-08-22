@@ -41,11 +41,7 @@ const form = reactive({
   address: '',
 })
 
-const initials = computed(() => {
-  const f = form.first_name?.trim()?.[0] ?? ''
-  const l = form.last_name?.trim()?.[0] ?? ''
-  return (f + l).toUpperCase() || '?'
-})
+const initials = computed(() => getInitials(form.first_name, form.last_name))
 
 const avatarSrc = computed(() => {
   if (avatarPreview.value) return avatarPreview.value
