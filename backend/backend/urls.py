@@ -14,40 +14,36 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
-
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
-from core.urls import api_urls as core_api_urls, urlpatterns as core_urlpatterns
-from cms.urls import urlpatterns as cms_urlpatterns
-
 from accounts.urls import urlpatterns as accounts_urlpatterns
+from cms.urls import urlpatterns as cms_urlpatterns
+from core.urls import api_urls as core_api_urls
+from core.urls import urlpatterns as core_urlpatterns
 from farm.urls import urlpatterns as farm_urlpatterns
 
-
-
-
 api_urls = [
-    path('core/', include(core_api_urls)),
+    path("core/", include(core_api_urls)),
 ]
 
 
 urlpatterns = [
-    path('api/', include(api_urls)),
-    path('api/core/', include(core_urlpatterns)),
-    path('api/cms/', include(cms_urlpatterns)),
-    path('api/accounts/', include(accounts_urlpatterns)),
-    path('api/farm/', include((farm_urlpatterns, 'farm'))),
-
-    # Default 
-    path('django-admin/', admin.site.urls),
-    path('admin/', include(wagtailadmin_urls)),
-    path('documents/', include(wagtaildocs_urls)),
-    re_path(r'', include(wagtail_urls)),
+    path("api/", include(api_urls)),
+    path("api/core/", include(core_urlpatterns)),
+    path("api/cms/", include(cms_urlpatterns)),
+    path("api/accounts/", include(accounts_urlpatterns)),
+    path("api/farm/", include((farm_urlpatterns, "farm"))),
+    # Default
+    path("django-admin/", admin.site.urls),
+    path("admin/", include(wagtailadmin_urls)),
+    path("documents/", include(wagtaildocs_urls)),
+    re_path(r"", include(wagtail_urls)),
 ]
 
 if settings.DEBUG:
