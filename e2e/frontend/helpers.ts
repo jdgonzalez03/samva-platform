@@ -19,6 +19,9 @@ export const T = {
   // sidebar user dropdown (trigger shows the user's display name;
   // last_name is stable — first_name is edited by profile.spec.ts)
   userMenu: 'Pérez',
+  // seeded farmer has no avatar, so the trigger falls back to their initials
+  userDisplayName: 'Juan Pérez',
+  userInitials: 'JP',
   logout: 'Cerrar sesión',
   // profile page
   firstName: 'Nombre',
