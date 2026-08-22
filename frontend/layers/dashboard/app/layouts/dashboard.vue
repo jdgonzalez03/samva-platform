@@ -57,15 +57,23 @@ const helpLinks = computed(() => [
           </Transition>
         </NuxtLink>
       </template>
-      <USeparator />
-      <DashboardFarmsMenu />
-      <USeparator />
-      <UNavigationMenu :items="links" orientation="vertical" class="px-2" />
-      <UNavigationMenu
-        :items="helpLinks"
-        orientation="vertical"
-        class="mt-auto"
-      />
+      <template #default="{ collapsed }">
+        <USeparator />
+        <FarmsMenu :collapsed="collapsed" />
+        <USeparator />
+        <UNavigationMenu
+          :items="links"
+          :collapsed="collapsed"
+          orientation="vertical"
+          class="px-2"
+        />
+        <UNavigationMenu
+          :items="helpLinks"
+          :collapsed="collapsed"
+          orientation="vertical"
+          class="mt-auto"
+        />
+      </template>
 
       <template #footer>
         <div
