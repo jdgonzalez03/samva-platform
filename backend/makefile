@@ -13,6 +13,9 @@ shell:
 bash:
 	docker compose exec -it backend bash
 
+test:
+	docker compose exec backend python manage.py test
+
 loaddata:
 	docker compose exec backend python manage.py loaddata accounts/fixtures/initial_users.json
 	docker compose exec backend python manage.py loaddata farmer/fixtures/initial_farmers.json
