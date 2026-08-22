@@ -1,0 +1,18 @@
+{
+  "farm": {
+    "menu": {
+      "label": "Farm: {name}",
+      "empty": "No farms",
+      "error": "Farms unavailable.",
+      "retry": "Retry"
+    },
+    "plots": {
+      "title": "Plots",
+      "count": "{count} plot | {count} plots",
+      "none": "This farm has no plots.",
+      "noFarm": "Select a farm to see its plots.",
+      "error": "Plots could not be loaded.",
+      "retry": "Retry"
+    }
+  }
+}

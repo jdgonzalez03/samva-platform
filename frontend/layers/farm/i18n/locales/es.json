@@ -1,0 +1,18 @@
+{
+  "farm": {
+    "menu": {
+      "label": "Finca: {name}",
+      "empty": "Sin fincas",
+      "error": "Fincas no disponibles.",
+      "retry": "Reintentar"
+    },
+    "plots": {
+      "title": "Lotes",
+      "count": "{count} lote | {count} lotes",
+      "none": "Esta finca no tiene lotes.",
+      "noFarm": "Selecciona una finca para ver sus lotes.",
+      "error": "No se pudieron cargar los lotes.",
+      "retry": "Reintentar"
+    }
+  }
+}
