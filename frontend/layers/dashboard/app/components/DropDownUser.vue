@@ -22,6 +22,16 @@ const displayName = computed(() => {
 
 const avatarUrl = computed(() => getImageUrl(props.user.farmer.avatar))
 
+// Initials derived from displayName so the photoless fallback follows the same
+// name-or-email chain as the label. aria-hidden because the label already names
+// the user — otherwise the initials prepend to the button's accessible name.
+const avatar = computed(() => ({
+  src: avatarUrl.value,
+  text: getInitials(...displayName.value.split(' ')),
+  loading: 'lazy' as const,
+  'aria-hidden': 'true',
+}))
+
 const userItems = computed<DropdownMenuItem[][]>(() => [
   [
     {
@@ -95,10 +105,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
   >
     <UButton
       :label="displayName"
-      :avatar="{
-        src: avatarUrl,
-        loading: 'lazy',
-      }"
+      :avatar="avatar"
       trailing-icon="i-lucide-chevrons-up-down"
       color="neutral"
       variant="ghost"
