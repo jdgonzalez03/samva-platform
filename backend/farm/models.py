@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models as gis_models
 from django.db import models
+from django.db.models import Count, Q
 from django.utils.translation import gettext_lazy as _
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtailgeowidget import geocoders
@@ -26,6 +27,13 @@ class Farm(models.Model):
     location = gis_models.PointField(
         blank=True, null=True, help_text=_("Ubicación de la finca"), verbose_name=_("Ubicación")
     )
+    boundary = gis_models.PolygonField(
+        blank=True,
+        null=True,
+        srid=4326,
+        help_text=_("Límite de la finca"),
+        verbose_name=_("Límite"),
+    )
     created_at = models.DateTimeField(
         auto_now_add=True, help_text=_("Fecha de creación"), verbose_name=_("Fecha de creación")
     )
@@ -50,6 +58,14 @@ class Farm(models.Model):
             ],
             heading=_("Ubicación"),
         ),
+        # Its own group: a second, differently-initialised Leaflet map inside the
+        # wagtailgeowidget stack above silently fails to initialise.
+        MultiFieldPanel(
+            [
+                FieldPanel("boundary"),
+            ],
+            heading=_("Límite de la finca"),
+        ),
         MultiFieldPanel(
             [
                 FieldPanel("created_at", read_only=True),
@@ -66,6 +82,18 @@ class Farm(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PlotQuerySet(models.QuerySet):
+    def with_sensor_count(self):
+        # `distinct=True` is deliberately absent: this is the only multi-valued
+        # join on the queryset, so no row fan-out can inflate the count. Adding a
+        # second multi-valued join or aggregate here requires adding it.
+        # `order_by` is explicit because Django drops `Meta.ordering` from GROUP BY
+        # queries, so the annotation alone would leave the rows unordered.
+        return self.annotate(
+            sensor_count=Count("field_sensors", filter=Q(field_sensors__is_active=True))
+        ).order_by("name")
 
 
 class Plot(models.Model):
@@ -108,6 +136,8 @@ class Plot(models.Model):
         help_text=_("Fecha de actualización"),
         verbose_name=_("Fecha de actualización"),
     )
+
+    objects = PlotQuerySet.as_manager()
 
     panels = [
         MultiFieldPanel(
