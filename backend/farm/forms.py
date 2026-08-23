@@ -3,7 +3,7 @@ from django.contrib.gis import forms as gis_forms
 from django.utils.translation import gettext_lazy as _
 from leaflet.forms.widgets import LeafletWidget
 
-from farm.models import Plot
+from farm.models import Farm, Plot
 
 LEAFLET_WIDGET_ATTRS = {
     'map_height': '500px',
@@ -19,6 +19,20 @@ LEAFLET_READONLY_ATTRS = {
     'loadevent': 'DOMContentLoaded',
     'modifiable': False,
 }
+
+
+class FarmAdminForm(forms.ModelForm):
+    boundary = gis_forms.PolygonField(
+        widget=LeafletWidget(attrs=LEAFLET_WIDGET_ATTRS),
+        required=False,
+        label=_("Límite de la finca"),
+        help_text=_("Dibuja el polígono que delimita la finca usando las herramientas del mapa."),
+    )
+
+    class Meta:
+        model = Farm
+        fields = "__all__"
+
 
 class PlotAdminForm(forms.ModelForm):
     geometry = gis_forms.PolygonField(
