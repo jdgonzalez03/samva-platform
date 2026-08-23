@@ -27,6 +27,7 @@ from cms.urls import urlpatterns as cms_urlpatterns
 from core.urls import api_urls as core_api_urls
 from core.urls import urlpatterns as core_urlpatterns
 from farm.urls import urlpatterns as farm_urlpatterns
+from sensors.urls import urlpatterns as sensors_urlpatterns
 
 api_urls = [
     path("core/", include(core_api_urls)),
@@ -39,6 +40,7 @@ urlpatterns = [
     path("api/cms/", include(cms_urlpatterns)),
     path("api/accounts/", include(accounts_urlpatterns)),
     path("api/farm/", include((farm_urlpatterns, "farm"))),
+    path("api/sensors/", include((sensors_urlpatterns, "sensors"))),
     # Default
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
