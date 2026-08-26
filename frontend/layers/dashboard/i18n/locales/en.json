@@ -2,6 +2,7 @@
   "dashboard": {
     "nav": {
       "dashboard": "Dashboard",
+      "history": "History",
       "profile": "Profile"
     },
     "help": {
@@ -16,8 +17,48 @@
       "language": "Language"
     },
     "index": {
-      "title": "Dashboard",
-      "welcome": "Welcome to your dashboard. Soon you will find the status of your farms and sensors here."
+      "title": "Dashboard"
+    },
+    "view": {
+      "label": "Plots view",
+      "map": "Map",
+      "list": "List"
+    },
+    "stats": {
+      "plots": "Plots",
+      "sensors": "Active sensors",
+      "temperature": "Air temperature",
+      "radiation": "Solar radiation",
+      "noData": "No data",
+      "stale": "Outdated",
+      "error": "Weather could not be loaded.",
+      "updated": "Updated {age}"
+    },
+    "map": {
+      "region": "Farm map, {name}",
+      "alternative": "The list view shows the same information as text.",
+      "plotLabel": "{name}, {description}, {sensors}",
+      "unmapped": "{count} plot is not shown on the map | {count} plots are not shown on the map",
+      "noLocation": "This farm has no map location yet.",
+      "basemap": "Basemap",
+      "street": "Street",
+      "satellite": "Satellite",
+      "loading": "Loading the map"
+    },
+    "plots": {
+      "noDescription": "No description",
+      "sensors": "{count} sensor | {count} sensors",
+      "area": "{value} ha",
+      "viewPlot": "View plot",
+      "listLabel": "Farm plots"
+    },
+    "plotDetail": {
+      "title": "{name}",
+      "dump": "Plot data",
+      "back": "Back to dashboard",
+      "notFound": "Plot not found",
+      "notFoundBody": "This plot does not exist or does not belong to your account.",
+      "error": "The plot could not be loaded."
     },
     "profileUnavailable": "Profile unavailable.",
     "retry": "Retry"

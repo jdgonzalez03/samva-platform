@@ -2,6 +2,7 @@
   "dashboard": {
     "nav": {
       "dashboard": "Dashboard",
+      "history": "Historial",
       "profile": "Perfil"
     },
     "help": {
@@ -16,8 +17,48 @@
       "language": "Idioma"
     },
     "index": {
-      "title": "Dashboard",
-      "welcome": "Bienvenido a tu panel. Muy pronto encontrarás aquí el estado de tus fincas y sensores."
+      "title": "Dashboard"
+    },
+    "view": {
+      "label": "Vista de los lotes",
+      "map": "Mapa",
+      "list": "Lista"
+    },
+    "stats": {
+      "plots": "Lotes",
+      "sensors": "Sensores activos",
+      "temperature": "Temperatura del aire",
+      "radiation": "Radiación solar",
+      "noData": "Sin datos",
+      "stale": "Desactualizada",
+      "error": "No se pudo cargar el clima.",
+      "updated": "Actualizado {age}"
+    },
+    "map": {
+      "region": "Mapa de la finca, {name}",
+      "alternative": "La vista de lista muestra la misma información en texto.",
+      "plotLabel": "{name}, {description}, {sensors}",
+      "unmapped": "{count} lote no se muestra en el mapa | {count} lotes no se muestran en el mapa",
+      "noLocation": "Esta finca aún no tiene ubicación en el mapa.",
+      "basemap": "Mapa base",
+      "street": "Calles",
+      "satellite": "Satélite",
+      "loading": "Cargando el mapa"
+    },
+    "plots": {
+      "noDescription": "Sin descripción",
+      "sensors": "{count} sensor | {count} sensores",
+      "area": "{value} ha",
+      "viewPlot": "Ver lote",
+      "listLabel": "Lotes de la finca"
+    },
+    "plotDetail": {
+      "title": "{name}",
+      "dump": "Datos del lote",
+      "back": "Volver al panel",
+      "notFound": "Lote no encontrado",
+      "notFoundBody": "Este lote no existe o no pertenece a tu cuenta.",
+      "error": "No se pudo cargar el lote."
     },
     "profileUnavailable": "Perfil no disponible.",
     "retry": "Reintentar"
