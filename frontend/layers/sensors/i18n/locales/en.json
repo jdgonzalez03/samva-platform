@@ -1,0 +1,83 @@
+{
+  "sensors": {
+    "history": {
+      "title": "Sensor history",
+      "subtitle": "See how your sensor readings evolved and download the data.",
+      "noFarm": "Select a farm to see its history.",
+      "error": "The history could not be loaded.",
+      "retry": "Retry",
+      "filters": {
+        "label": "History filters",
+        "farm": "Farm",
+        "plot": "Plot",
+        "allPlots": "All plots",
+        "variable": "Environmental variable",
+        "allVariables": "All variables",
+        "range": "Date range",
+        "reset": "Clear filters"
+      },
+      "range": {
+        "last24h": "Last 24 hours",
+        "last7d": "Last 7 days",
+        "last30d": "Last 30 days",
+        "custom": "Custom",
+        "from": "From",
+        "to": "To",
+        "calendar": "Range calendar",
+        "pick": "Pick on the calendar",
+        "between": "From {from} to {to}",
+        "invalid": "The custom range is not valid; showing the last 7 days.",
+        "tooLong": "The range cannot exceed 90 days; showing the last 7 days.",
+        "pickWith": "Pick on the calendar. {range}"
+      },
+      "view": {
+        "label": "History view",
+        "chart": "Charts",
+        "table": "Table"
+      },
+      "charts": {
+        "label": "History charts",
+        "alternative": "The Table view shows this same data as text.",
+        "summary": "{name} in {unit}: {readings} readings between {from} and {to}. Minimum {min}, maximum {max}, average {average}.",
+        "noData": "No {name} readings in this range.",
+        "samples": "{count} reading | {count} readings"
+      },
+      "averages": {
+        "label": "Averages per plot",
+        "summary": "Average {name} per plot, in {unit}. {detail}.",
+        "noPlotData": "No readings in this range for: {plots}."
+      },
+      "table": {
+        "caption": "{count} reading from {farm}, newest first. | {count} readings from {farm}, newest first.",
+        "recordedAt": "Date and time",
+        "plot": "Plot",
+        "sensor": "Sensor",
+        "variable": "Variable",
+        "value": "Value",
+        "unit": "Unit",
+        "empty": "There are no readings for these filters."
+      },
+      "pagination": {
+        "label": "Readings pagination",
+        "page": "Page {page}",
+        "first": "First page",
+        "prev": "Previous page",
+        "next": "Next page",
+        "last": "Last page"
+      },
+      "status": {
+        "table": "{count} reading. Page {page} of {pages}. | {count} readings. Page {page} of {pages}.",
+        "charts": "{count} chart. | {count} charts."
+      },
+      "export": {
+        "label": "Export",
+        "csv": "Download CSV",
+        "json": "Download JSON",
+        "done": "Download ready",
+        "errorTitle": "Export failed",
+        "error": "The file could not be generated. Please try again.",
+        "tooLarge": "The selected range exceeds the export maximum: {count} rows against a limit of {limit}. Reduce the range or filter by plot."
+      }
+    }
+  }
+}

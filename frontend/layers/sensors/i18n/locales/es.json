@@ -1,0 +1,83 @@
+{
+  "sensors": {
+    "history": {
+      "title": "Historial de sensores",
+      "subtitle": "Revisa cómo evolucionaron las lecturas de tus sensores y descarga los datos.",
+      "noFarm": "Selecciona una finca para ver su historial.",
+      "error": "No se pudo cargar el historial.",
+      "retry": "Reintentar",
+      "filters": {
+        "label": "Filtros del historial",
+        "farm": "Finca",
+        "plot": "Lote",
+        "allPlots": "Todos los lotes",
+        "variable": "Variable ambiental",
+        "allVariables": "Todas las variables",
+        "range": "Rango de fechas",
+        "reset": "Limpiar filtros"
+      },
+      "range": {
+        "last24h": "Últimas 24 horas",
+        "last7d": "Últimos 7 días",
+        "last30d": "Últimos 30 días",
+        "custom": "Personalizado",
+        "from": "Desde",
+        "to": "Hasta",
+        "calendar": "Calendario de rango",
+        "pick": "Elegir en el calendario",
+        "between": "Del {from} al {to}",
+        "invalid": "El rango personalizado no es válido; se muestran los últimos 7 días.",
+        "tooLong": "El rango no puede superar los 90 días; se muestran los últimos 7 días.",
+        "pickWith": "Elegir en el calendario. {range}"
+      },
+      "view": {
+        "label": "Vista del historial",
+        "chart": "Gráficos",
+        "table": "Tabla"
+      },
+      "charts": {
+        "label": "Gráficos del historial",
+        "alternative": "La vista de Tabla muestra estos mismos datos en forma de texto.",
+        "summary": "{name} en {unit}: {readings} lecturas entre {from} y {to}. Mínimo {min}, máximo {max}, promedio {average}.",
+        "noData": "Sin lecturas de {name} en este rango.",
+        "samples": "{count} lectura | {count} lecturas"
+      },
+      "averages": {
+        "label": "Promedios por lote",
+        "summary": "Promedio de {name} por lote, en {unit}. {detail}.",
+        "noPlotData": "Sin lecturas en este rango para: {plots}."
+      },
+      "table": {
+        "caption": "{count} lectura de {farm}, de la más reciente a la más antigua. | {count} lecturas de {farm}, de la más reciente a la más antigua.",
+        "recordedAt": "Fecha y hora",
+        "plot": "Lote",
+        "sensor": "Sensor",
+        "variable": "Variable",
+        "value": "Valor",
+        "unit": "Unidad",
+        "empty": "No hay lecturas para estos filtros."
+      },
+      "pagination": {
+        "label": "Paginación de las lecturas",
+        "page": "Página {page}",
+        "first": "Primera página",
+        "prev": "Página anterior",
+        "next": "Página siguiente",
+        "last": "Última página"
+      },
+      "status": {
+        "table": "{count} lectura. Página {page} de {pages}. | {count} lecturas. Página {page} de {pages}.",
+        "charts": "{count} gráfico. | {count} gráficos."
+      },
+      "export": {
+        "label": "Exportar",
+        "csv": "Descargar CSV",
+        "json": "Descargar JSON",
+        "done": "Descarga lista",
+        "errorTitle": "No se pudo exportar",
+        "error": "No se pudo generar el archivo. Inténtalo de nuevo.",
+        "tooLarge": "El rango seleccionado supera el máximo exportable: {count} filas frente a un límite de {limit}. Reduce el rango o filtra por lote."
+      }
+    }
+  }
+}
