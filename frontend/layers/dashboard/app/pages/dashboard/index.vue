@@ -6,8 +6,10 @@ definePageMeta({
 
 const { t } = useI18n()
 const { selectedFarm, isPending: farmsPending } = useSelectedFarm()
+const { mode, setMode } = useDashboardViewMode()
 
 const farmId = computed(() => selectedFarm.value?.id ?? null)
+
 const {
   data: plots,
   isPending: plotsPending,
