@@ -9,12 +9,18 @@ const colorMode = useColorMode()
 if (colorMode.preference === 'light') {
   colorMode.preference = 'dark'
 }
-// History/Predictions stay hidden until those pages exist.
+// A plain string to a route the sensors layer owns — the dashboard layer gains
+// no dependency on it.
 const links = computed(() => [
   {
     label: t('dashboard.nav.dashboard'),
     icon: 'i-lucide-layout-dashboard',
     to: localePath('/dashboard'),
+  },
+  {
+    label: t('dashboard.nav.history'),
+    icon: 'i-lucide-history',
+    to: localePath('/dashboard/history'),
   },
   {
     label: t('dashboard.nav.profile'),
