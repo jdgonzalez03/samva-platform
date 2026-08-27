@@ -21,6 +21,10 @@ const refetchPlots = (): void => {
   void refetchPlotsQuery()
 }
 
+const refetchWeather = (): void => {
+  void refetchWeatherQuery()
+}
+
 useHead(() => ({ title: t('dashboard.index.title') }))
 </script>
 
