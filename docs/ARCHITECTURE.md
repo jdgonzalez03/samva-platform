@@ -63,6 +63,10 @@ frontend/
 │   │                   # accountsApi, Profile types, AccountsQueryKey
 │   ├── cms/            # landing page (SSR), cms block components, cmsApi,
 │   │                   # StreamField types
+│   ├── farm/           # FarmsMenu, farm/plot queries + selected-farm state,
+│   │                   # farmApi, Farm/Plot types, FarmQueryKey
+│   ├── sensors/        # /dashboard/history page, history filters/table/charts,
+│   │                   # sensorsApi, history utils, SensorsQueryKey
 │   └── dashboard/      # dashboard layout + index page, DropDownUser, farm widgets
 ├── public/, server/    # stay at root
 └── nuxt.config.ts      # aliases, css path, runtimeConfig, i18n locale metadata
@@ -70,10 +74,14 @@ frontend/
 
 Each layer mirrors the Nuxt 4 structure (`layers/<name>/app/pages|components|composables|middleware|plugins|utils|types|constants`) and has a minimal `nuxt.config.ts` with `$meta: { name: '<layer>' }`. New domains (`farm`, `sensors`, `predictions`) are born as layers.
 
-**Dependency direction**: domain layers depend on `common`, never on each other. Two sanctioned cross-layer exceptions exist (recorded in the feature contract):
+**Dependency direction**: domain layers depend on `common`, never on each other. Sanctioned cross-layer exceptions (each recorded in its feature contract):
 
 1. The auth layer consumes `accountsApi` for login/session restore — exposed as an auto-import by `layers/accounts/nuxt.config.ts` (`imports.dirs`), not a file import.
 2. Type-only imports of `Profile` from `layers/accounts/app/types/profile` in `useAuth` and `DropDownUser` — erased at build, so the runtime dependency direction stays domain → common.
+3. `dashboard` → `farm`: the auto-imported `<FarmsMenu>` component and the `useSelectedFarm`/`useFarmPlotsQuery` composables.
+4. `sensors` → `farm`: the same auto-imported composables plus the type-only `Plot`.
+
+Both farm edges run one way only — `farm` never imports from `dashboard` or `sensors`. The sidebar's "Historial" entry is a `localePath('/dashboard/history')` string, so `dashboard` gains no dependency on `sensors`.
 
 ### HTTP
 
@@ -93,13 +101,13 @@ Each layer mirrors the Nuxt 4 structure (`layers/<name>/app/pages|components|com
 ### i18n
 
 - @nuxtjs/i18n with `strategy: 'prefix_except_default'` and `defaultLocale: 'es'`: `/` = Spanish, `/en/...` = English. Browser detection on first visit at `/`, persisted in the `i18n_redirected` cookie.
-- Root `nuxt.config.ts` declares locale **metadata** only (`code`/`language`/`name`); message files ship **per layer** at `layers/<name>/i18n/locales/{es,en}.json`, each under its own namespace (`common.*`, `auth.*`, `accounts.*`, `dashboard.*`) — the module merges them by locale code.
+- Root `nuxt.config.ts` declares locale **metadata** only (`code`/`language`/`name`); message files ship **per layer** at `layers/<name>/i18n/locales/{es,en}.json`, each under its own namespace (`common.*`, `auth.*`, `accounts.*`, `dashboard.*`, `farm.*`, `sensors.*`) — the module merges them by locale code.
 - Translated surfaces: login, dashboard area (layout, index, dropdown, profile), and the error page. The landing/cms surfaces (Header, Footer, cms blocks) are fixed Spanish and ship no locale files; `/en` still renders them without errors.
 - Navigation is locale-aware (`useLocalePath`/`switchLocalePath`) in middleware, logout, sidebar links, and the error page, so the `/en` prefix survives redirects. Dates format via `Intl` with the active locale. `<html lang>` tracks the locale via `useLocaleHead`.
 
 ## Current state
 
-Last update: 2026-08-19.
+Last update: 2026-08-22.
 
 ### Working today
 
@@ -107,11 +115,12 @@ Last update: 2026-08-19.
 - Login with JWT (email + password), token refresh, and client-side logout.
 - User profile page: view and update profile, with avatar upload (Vue Query mutation + cache invalidation).
 - Dashboard shell: sidebar, layouts, and route protection (auth middleware). The dashboard index page is a simple placeholder body — no map or sensor cards yet.
-- Frontend modular architecture (Nuxt Layers, ADR 0001): migration complete — `common`, `auth`, `accounts`, `cms`, `dashboard`.
+- Frontend modular architecture (Nuxt Layers, ADR 0001): migration complete — `common`, `auth`, `accounts`, `cms`, `farm`, `sensors`, `dashboard`.
 - i18n es/en (`prefix_except_default`, per-layer locale files) with a language switcher on the login page and in the dashboard user dropdown.
 - Designed 404/error page (`frontend/app/error.vue`), translated.
 - Celery Beat polls weather stations (WeatherLink) every 5 minutes.
 - Farms and plots in the backend admin, with map polygons.
+- Sensor history page (`/dashboard/history`, `sensors` layer): farm/plot/variable/date-range filters carried in the URL, Charts vs. Table toggle, 20-row paginated readings table, and CSV/JSON export of the whole filtered set.
 - E2E tests (Playwright): CMS API, landing, auth, profile, i18n.
 
 ### Planned
@@ -119,5 +128,5 @@ Last update: 2026-08-19.
 - Dashboard main page: farm map and sensor cards (`leaflet` and `@unovis` are installed for this work; the current index page is a placeholder).
 - Public sensor API with `x-api-key` per user, so field sensors can push data.
 - Predictions with fuzzy logic (irrigation time), from the `predictions` app to the frontend.
-- Dashboard pages for history and predictions (built as new pages in the `dashboard` layer; the old dead sidebar links were removed).
+- Dashboard page for predictions (born as a `predictions` layer, per ADR 0001 §3).
 - Public weather APIs as extra data sources.
