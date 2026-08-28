@@ -1,5 +1,5 @@
 import { HISTORY_MAX_RANGE_DAYS } from '../constants/history'
-import type { SensorSemanticKey } from '../types/sensors'
+import type { HistoryVariable, SensorSemanticKey } from '../types/sensors'
 
 // ---------------------------------------------------------------------------
 // Options the user can choose in the history filters
@@ -208,4 +208,17 @@ export const getStoredHistoryView = (): HistoryView | null => {
 export const setStoredHistoryView = (view: HistoryView): void => {
   if (!import.meta.client) return
   localStorage.setItem(HISTORY_VIEW_KEY, view)
+}
+
+// `?variable=` filters by semantic key, so two variables sharing one would be
+// the same request twice; the first occurrence wins.
+export const uniqueBySemanticKey = (
+  variables: HistoryVariable[],
+): HistoryVariable[] => {
+  const seen = new Set<SensorSemanticKey>()
+  return variables.filter((variable) => {
+    if (seen.has(variable.semantic_key)) return false
+    seen.add(variable.semantic_key)
+    return true
+  })
 }
