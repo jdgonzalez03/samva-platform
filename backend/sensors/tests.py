@@ -16,7 +16,7 @@ from rest_framework.test import APITestCase
 
 from farm.models import Farm, Plot
 from farmer.models import Farmer
-from sensors.api import READING_ORDER
+from sensors.constants import READING_ORDER
 from sensors.models import (
     EnvironmentalVariable,
     FieldSensor,
@@ -950,7 +950,7 @@ class SensorHistoryExportTests(SensorHistoryTestCase):
         for step in range(3):
             self.record(self.temperature_variable, 20 + step, minutes_ago=step + 1)
 
-        with patch("sensors.api.HISTORY_EXPORT_ROW_CAP", 2):
+        with patch("sensors.utils.HISTORY_EXPORT_ROW_CAP", 2):
             response = self.history("history-export-csv")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -968,7 +968,7 @@ class SensorHistoryExportTests(SensorHistoryTestCase):
         for step in range(3):
             self.record(self.temperature_variable, 20 + step, minutes_ago=step + 1)
 
-        with patch("sensors.api.HISTORY_EXPORT_ROW_CAP", 2):
+        with patch("sensors.utils.HISTORY_EXPORT_ROW_CAP", 2):
             response = self.history("history-export-json")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
