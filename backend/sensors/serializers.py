@@ -3,10 +3,8 @@ from datetime import timedelta
 from django.utils import timezone
 from rest_framework import serializers
 
+from sensors.constants import DEFAULT_HISTORY_RANGE_DAYS, HISTORY_MAX_RANGE_DAYS
 from sensors.models import EnvironmentalVariable, SemanticKey, SensorMeasurement
-
-HISTORY_MAX_RANGE_DAYS = 90
-DEFAULT_HISTORY_RANGE_DAYS = 7
 
 
 class SensorHistoryFilterSerializer(serializers.Serializer):
