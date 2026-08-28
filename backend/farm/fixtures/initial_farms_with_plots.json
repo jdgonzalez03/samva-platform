@@ -7,6 +7,7 @@
       "name": "Finca El Tesoro",
       "address": "Vereda El Tesoro, Km 5 vía Choachí, Bogotá",
       "location": "SRID=4326;POINT (-74.1040 4.5960)",
+      "boundary": "SRID=4326;POLYGON ((-74.1100 4.5900, -74.1010 4.5900, -74.1010 4.5990, -74.1100 4.5990, -74.1100 4.5900))",
       "created_at": "2025-01-20T00:00:00Z",
       "updated_at": "2025-01-20T00:00:00Z"
     }
@@ -19,6 +20,7 @@
       "name": "Finca San Vicente",
       "address": "Vereda San Vicente, Sibaté, Cundinamarca",
       "location": "SRID=4326;POINT (-74.0565 4.5465)",
+      "boundary": null,
       "created_at": "2025-01-20T00:00:00Z",
       "updated_at": "2025-01-20T00:00:00Z"
     }
@@ -31,6 +33,7 @@
       "name": "Finca La Montaña",
       "address": "Corregimiento Santa Elena, Medellín, Antioquia",
       "location": "SRID=4326;POINT (-75.5740 6.2480)",
+      "boundary": "SRID=4326;POLYGON ((-75.5800 6.2420, -75.5680 6.2420, -75.5680 6.2540, -75.5800 6.2540, -75.5800 6.2420))",
       "created_at": "2025-02-01T00:00:00Z",
       "updated_at": "2025-02-01T00:00:00Z"
     }
@@ -43,6 +46,7 @@
       "name": "Finca El Edén",
       "address": "Vereda El Edén, San Pedro de los Milagros, Antioquia",
       "location": "SRID=4326;POINT (-75.6070 6.2980)",
+      "boundary": "SRID=4326;POLYGON ((-75.6130 6.2920, -75.6040 6.2920, -75.6040 6.3010, -75.6130 6.3010, -75.6130 6.2920))",
       "created_at": "2025-02-01T00:00:00Z",
       "updated_at": "2025-02-01T00:00:00Z"
     }
@@ -55,6 +59,7 @@
       "name": "Finca Los Arrayanes",
       "address": "Vereda Arrayanes, Rionegro, Antioquia",
       "location": "SRID=4326;POINT (-75.5255 6.2180)",
+      "boundary": "SRID=4326;POLYGON ((-75.5320 6.2120, -75.5220 6.2120, -75.5220 6.2210, -75.5320 6.2210, -75.5320 6.2120))",
       "created_at": "2025-02-05T00:00:00Z",
       "updated_at": "2025-02-05T00:00:00Z"
     }
@@ -67,6 +72,7 @@
       "name": "Finca El Paraíso",
       "address": "Corregimiento El Hormiguero, Cali, Valle del Cauca",
       "location": "SRID=4326;POINT (-76.5330 3.4485)",
+      "boundary": "SRID=4326;POLYGON ((-76.5400 3.4420, -76.5270 3.4420, -76.5270 3.4550, -76.5400 3.4550, -76.5400 3.4420))",
       "created_at": "2025-02-10T00:00:00Z",
       "updated_at": "2025-02-10T00:00:00Z"
     }
@@ -79,6 +85,7 @@
       "name": "Finca La Esperanza",
       "address": "Vereda La Esperanza, Juan de Acosta, Atlántico",
       "location": "SRID=4326;POINT (-74.8035 10.9780)",
+      "boundary": "SRID=4326;POLYGON ((-74.8100 10.9720, -74.8000 10.9720, -74.8000 10.9810, -74.8100 10.9810, -74.8100 10.9720))",
       "created_at": "2025-02-15T00:00:00Z",
       "updated_at": "2025-02-15T00:00:00Z"
     }
@@ -91,6 +98,7 @@
       "name": "Finca Santa Fe",
       "address": "Vereda Santa Fe, Sabanalarga, Atlántico",
       "location": "SRID=4326;POINT (-74.7540 10.9280)",
+      "boundary": "SRID=4326;POLYGON ((-74.7600 10.9220, -74.7510 10.9220, -74.7510 10.9310, -74.7600 10.9310, -74.7600 10.9220))",
       "created_at": "2025-02-15T00:00:00Z",
       "updated_at": "2025-02-15T00:00:00Z"
     }
@@ -103,6 +111,7 @@
       "name": "Finca El Encanto",
       "address": "Vereda El Encanto, Piedecuesta, Santander",
       "location": "SRID=4326;POINT (-73.1240 7.1180)",
+      "boundary": "SRID=4326;POLYGON ((-73.1300 7.1120, -73.1180 7.1120, -73.1180 7.1240, -73.1300 7.1240, -73.1300 7.1120))",
       "created_at": "2025-03-01T00:00:00Z",
       "updated_at": "2025-03-01T00:00:00Z"
     }
@@ -115,6 +124,7 @@
       "name": "Finca San José",
       "address": "Vereda San José, Girón, Santander",
       "location": "SRID=4326;POINT (-73.1740 7.0780)",
+      "boundary": "SRID=4326;POLYGON ((-73.1800 7.0720, -73.1710 7.0720, -73.1710 7.0810, -73.1800 7.0810, -73.1800 7.0720))",
       "created_at": "2025-03-01T00:00:00Z",
       "updated_at": "2025-03-01T00:00:00Z"
     }
@@ -127,6 +137,7 @@
       "name": "Finca Buenos Aires",
       "address": "Vereda Buenos Aires, Floridablanca, Santander",
       "location": "SRID=4326;POINT (-73.0860 7.1485)",
+      "boundary": "SRID=4326;POLYGON ((-73.0890 7.1420, -73.0800 7.1420, -73.0800 7.1520, -73.0890 7.1520, -73.0890 7.1420))",
       "created_at": "2025-03-05T00:00:00Z",
       "updated_at": "2025-03-05T00:00:00Z"
     }
@@ -139,8 +150,22 @@
       "name": "Finca Las Palmeras",
       "address": "Vereda Las Palmeras, Santa Rosa de Cabal, Risaralda",
       "location": "SRID=4326;POINT (-75.7040 4.8080)",
+      "boundary": "SRID=4326;POLYGON ((-75.7100 4.8020, -75.6985 4.8020, -75.6985 4.8135, -75.7100 4.8135, -75.7100 4.8020))",
       "created_at": "2025-03-10T00:00:00Z",
       "updated_at": "2025-03-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.farm",
+    "pk": 13,
+    "fields": {
+      "owner": 1,
+      "name": "Finca Sin Lotes",
+      "address": "Vereda El Retiro, La Calera, Cundinamarca",
+      "location": "SRID=4326;POINT (-74.0980 4.6020)",
+      "boundary": null,
+      "created_at": "2025-01-20T00:00:00Z",
+      "updated_at": "2025-01-20T00:00:00Z"
     }
   },
   {
@@ -348,7 +373,7 @@
       "description": "Lote en la vega del río",
       "geometry": "SRID=4326;POLYGON ((-74.805 10.977, -74.802 10.977, -74.802 10.979, -74.805 10.979, -74.805 10.977))",
       "centroid": "SRID=4326;POINT (-74.803500 10.978000)",
-      "area_hectares": 7.30,
+      "area_hectares": 7.3,
       "created_at": "2025-02-15T00:00:00Z",
       "updated_at": "2025-02-15T00:00:00Z"
     }
@@ -533,6 +558,20 @@
       "area_hectares": 2.78,
       "created_at": "2025-03-10T00:00:00Z",
       "updated_at": "2025-03-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "farm.plot",
+    "pk": 29,
+    "fields": {
+      "farm": 1,
+      "name": "Lote Sin Mapear",
+      "description": "",
+      "geometry": null,
+      "centroid": null,
+      "area_hectares": null,
+      "created_at": "2025-01-20T00:00:00Z",
+      "updated_at": "2025-01-20T00:00:00Z"
     }
   }
 ]
