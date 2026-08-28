@@ -109,6 +109,7 @@ function clearUser() { user.value = null }
 ### Formatting & lint
 
 - Prettier owns formatting (`npm run format`, format-on-save); ESLint only lints — never add stylistic/formatting rules to `eslint.config.mjs` (conflicts stay disabled via `eslint-config-prettier`).
+- Comments use `//` line syntax only — never JSDoc/`/** */` blocks, even above exported composables or functions.
 
 ### Dependencies
 
