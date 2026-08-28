@@ -1,0 +1,1533 @@
+[
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 1,
+    "fields": {
+      "name": "Temperatura del aire",
+      "semantic_key": "air_temperature",
+      "unit": "°C",
+      "data_type": "float",
+      "description": "Temperatura del aire medida a 2 m sobre el suelo."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 2,
+    "fields": {
+      "name": "Radiación solar",
+      "semantic_key": "solar_radiation",
+      "unit": "W/m²",
+      "data_type": "float",
+      "description": "Radiación solar incidente sobre el cultivo."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 3,
+    "fields": {
+      "name": "Humedad relativa",
+      "semantic_key": "relative_humidity",
+      "unit": "%",
+      "data_type": "float",
+      "description": "Humedad relativa del aire."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 4,
+    "fields": {
+      "name": "Humedad del suelo",
+      "semantic_key": "soil_moisture",
+      "unit": "%",
+      "data_type": "float",
+      "description": "Contenido volumétrico de agua en el suelo."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 5,
+    "fields": {
+      "name": "Presión barométrica",
+      "semantic_key": "other",
+      "unit": "hPa",
+      "data_type": "float",
+      "description": "Presión atmosférica de la estación."
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 1,
+    "fields": {
+      "farm": 1,
+      "name": "Estación El Tesoro Norte",
+      "provider": "other",
+      "station_id": "seed-station-1",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 1,
+    "fields": {
+      "station": 1,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 2,
+    "fields": {
+      "station": 1,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 3,
+    "fields": {
+      "station": 1,
+      "env_variable": 5,
+      "field_key": "bar",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 2,
+    "fields": {
+      "farm": 1,
+      "name": "Estación El Tesoro Sur",
+      "provider": "other",
+      "station_id": "seed-station-2",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 4,
+    "fields": {
+      "station": 2,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 5,
+    "fields": {
+      "station": 2,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 6,
+    "fields": {
+      "station": 2,
+      "env_variable": 5,
+      "field_key": "bar",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 3,
+    "fields": {
+      "farm": 1,
+      "name": "Estación El Tesoro Antigua",
+      "provider": "other",
+      "station_id": "seed-station-3",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": false,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 7,
+    "fields": {
+      "station": 3,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 4,
+    "fields": {
+      "farm": 2,
+      "name": "Estación San Vicente",
+      "provider": "other",
+      "station_id": "seed-station-4",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 8,
+    "fields": {
+      "station": 4,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 5,
+    "fields": {
+      "farm": 3,
+      "name": "Estación La Montaña",
+      "provider": "other",
+      "station_id": "seed-station-5",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 9,
+    "fields": {
+      "station": 5,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 10,
+    "fields": {
+      "station": 5,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 11,
+    "fields": {
+      "station": 5,
+      "env_variable": 3,
+      "field_key": "hum_out",
+      "is_active": false
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 6,
+    "fields": {
+      "farm": 4,
+      "name": "Estación El Edén",
+      "provider": "other",
+      "station_id": "seed-station-6",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 12,
+    "fields": {
+      "station": 6,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 13,
+    "fields": {
+      "station": 6,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 7,
+    "fields": {
+      "farm": 5,
+      "name": "Estación Los Arrayanes",
+      "provider": "other",
+      "station_id": "seed-station-7",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 14,
+    "fields": {
+      "station": 7,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 15,
+    "fields": {
+      "station": 7,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 8,
+    "fields": {
+      "farm": 6,
+      "name": "Estación El Paraíso",
+      "provider": "other",
+      "station_id": "seed-station-8",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 16,
+    "fields": {
+      "station": 8,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 17,
+    "fields": {
+      "station": 8,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 9,
+    "fields": {
+      "farm": 7,
+      "name": "Estación La Esperanza",
+      "provider": "other",
+      "station_id": "seed-station-9",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 18,
+    "fields": {
+      "station": 9,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 19,
+    "fields": {
+      "station": 9,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 10,
+    "fields": {
+      "farm": 8,
+      "name": "Estación Santa Fe",
+      "provider": "other",
+      "station_id": "seed-station-10",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 20,
+    "fields": {
+      "station": 10,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 21,
+    "fields": {
+      "station": 10,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 11,
+    "fields": {
+      "farm": 9,
+      "name": "Estación El Encanto",
+      "provider": "other",
+      "station_id": "seed-station-11",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 22,
+    "fields": {
+      "station": 11,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 23,
+    "fields": {
+      "station": 11,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 12,
+    "fields": {
+      "farm": 10,
+      "name": "Estación San José",
+      "provider": "other",
+      "station_id": "seed-station-12",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 24,
+    "fields": {
+      "station": 12,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 25,
+    "fields": {
+      "station": 12,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 13,
+    "fields": {
+      "farm": 11,
+      "name": "Estación Buenos Aires",
+      "provider": "other",
+      "station_id": "seed-station-13",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 26,
+    "fields": {
+      "station": 13,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 27,
+    "fields": {
+      "station": 13,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstation",
+    "pk": 14,
+    "fields": {
+      "farm": 12,
+      "name": "Estación Las Palmeras",
+      "provider": "other",
+      "station_id": "seed-station-14",
+      "api_key": "seed-not-a-real-key",
+      "api_secret": "seed-not-a-real-secret",
+      "polling_interval_minutes": 15,
+      "is_active": true,
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 28,
+    "fields": {
+      "station": 14,
+      "env_variable": 1,
+      "field_key": "temp_out",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.weatherstationvariableconfiguration",
+    "pk": 29,
+    "fields": {
+      "station": 14,
+      "env_variable": 2,
+      "field_key": "solar_rad",
+      "is_active": true
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 1,
+    "fields": {
+      "plot": 1,
+      "name": "Sensor 1 — Lote 1",
+      "serial_number": "SEED-0001",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 1,
+    "fields": {
+      "sensor": 1,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 2,
+    "fields": {
+      "plot": 1,
+      "name": "Sensor 2 — Lote 1",
+      "serial_number": "SEED-0002",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 2,
+    "fields": {
+      "sensor": 2,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 3,
+    "fields": {
+      "plot": 1,
+      "name": "Sensor 3 — Lote 1",
+      "serial_number": "SEED-0003",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 3,
+    "fields": {
+      "sensor": 3,
+      "env_variable": 1
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 4,
+    "fields": {
+      "plot": 1,
+      "name": "Sensor 4 — Lote 1",
+      "serial_number": "SEED-0004",
+      "is_active": false,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 4,
+    "fields": {
+      "sensor": 4,
+      "env_variable": 2
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 5,
+    "fields": {
+      "plot": 2,
+      "name": "Sensor 1 — Lote 2",
+      "serial_number": "SEED-0005",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 5,
+    "fields": {
+      "sensor": 5,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 6,
+    "fields": {
+      "plot": 3,
+      "name": "Sensor 1 — Lote 3",
+      "serial_number": "SEED-0006",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 6,
+    "fields": {
+      "sensor": 6,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 7,
+    "fields": {
+      "plot": 3,
+      "name": "Sensor 2 — Lote 3",
+      "serial_number": "SEED-0007",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 7,
+    "fields": {
+      "sensor": 7,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 8,
+    "fields": {
+      "plot": 4,
+      "name": "Sensor 1 — Lote 4",
+      "serial_number": "SEED-0008",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 8,
+    "fields": {
+      "sensor": 8,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 9,
+    "fields": {
+      "plot": 5,
+      "name": "Sensor 1 — Lote 5",
+      "serial_number": "SEED-0009",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 9,
+    "fields": {
+      "sensor": 9,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 10,
+    "fields": {
+      "plot": 5,
+      "name": "Sensor 2 — Lote 5",
+      "serial_number": "SEED-0010",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 10,
+    "fields": {
+      "sensor": 10,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 11,
+    "fields": {
+      "plot": 6,
+      "name": "Sensor 1 — Lote 6",
+      "serial_number": "SEED-0011",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 11,
+    "fields": {
+      "sensor": 11,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 12,
+    "fields": {
+      "plot": 7,
+      "name": "Sensor 1 — Lote 7",
+      "serial_number": "SEED-0012",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 12,
+    "fields": {
+      "sensor": 12,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 13,
+    "fields": {
+      "plot": 8,
+      "name": "Sensor 1 — Lote 8",
+      "serial_number": "SEED-0013",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 13,
+    "fields": {
+      "sensor": 13,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 14,
+    "fields": {
+      "plot": 8,
+      "name": "Sensor 2 — Lote 8",
+      "serial_number": "SEED-0014",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 14,
+    "fields": {
+      "sensor": 14,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 15,
+    "fields": {
+      "plot": 9,
+      "name": "Sensor 1 — Lote 9",
+      "serial_number": "SEED-0015",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 15,
+    "fields": {
+      "sensor": 15,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 16,
+    "fields": {
+      "plot": 10,
+      "name": "Sensor 1 — Lote 10",
+      "serial_number": "SEED-0016",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 16,
+    "fields": {
+      "sensor": 16,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 17,
+    "fields": {
+      "plot": 11,
+      "name": "Sensor 1 — Lote 11",
+      "serial_number": "SEED-0017",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 17,
+    "fields": {
+      "sensor": 17,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 18,
+    "fields": {
+      "plot": 11,
+      "name": "Sensor 2 — Lote 11",
+      "serial_number": "SEED-0018",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 18,
+    "fields": {
+      "sensor": 18,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 19,
+    "fields": {
+      "plot": 12,
+      "name": "Sensor 1 — Lote 12",
+      "serial_number": "SEED-0019",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 19,
+    "fields": {
+      "sensor": 19,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 20,
+    "fields": {
+      "plot": 13,
+      "name": "Sensor 1 — Lote 13",
+      "serial_number": "SEED-0020",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 20,
+    "fields": {
+      "sensor": 20,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 21,
+    "fields": {
+      "plot": 13,
+      "name": "Sensor 2 — Lote 13",
+      "serial_number": "SEED-0021",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 21,
+    "fields": {
+      "sensor": 21,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 22,
+    "fields": {
+      "plot": 14,
+      "name": "Sensor 1 — Lote 14",
+      "serial_number": "SEED-0022",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 22,
+    "fields": {
+      "sensor": 22,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 23,
+    "fields": {
+      "plot": 15,
+      "name": "Sensor 1 — Lote 15",
+      "serial_number": "SEED-0023",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 23,
+    "fields": {
+      "sensor": 23,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 24,
+    "fields": {
+      "plot": 15,
+      "name": "Sensor 2 — Lote 15",
+      "serial_number": "SEED-0024",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 24,
+    "fields": {
+      "sensor": 24,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 25,
+    "fields": {
+      "plot": 16,
+      "name": "Sensor 1 — Lote 16",
+      "serial_number": "SEED-0025",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 25,
+    "fields": {
+      "sensor": 25,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 26,
+    "fields": {
+      "plot": 17,
+      "name": "Sensor 1 — Lote 17",
+      "serial_number": "SEED-0026",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 26,
+    "fields": {
+      "sensor": 26,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 27,
+    "fields": {
+      "plot": 18,
+      "name": "Sensor 1 — Lote 18",
+      "serial_number": "SEED-0027",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 27,
+    "fields": {
+      "sensor": 27,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 28,
+    "fields": {
+      "plot": 18,
+      "name": "Sensor 2 — Lote 18",
+      "serial_number": "SEED-0028",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 28,
+    "fields": {
+      "sensor": 28,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 29,
+    "fields": {
+      "plot": 19,
+      "name": "Sensor 1 — Lote 19",
+      "serial_number": "SEED-0029",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 29,
+    "fields": {
+      "sensor": 29,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 30,
+    "fields": {
+      "plot": 20,
+      "name": "Sensor 1 — Lote 20",
+      "serial_number": "SEED-0030",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 30,
+    "fields": {
+      "sensor": 30,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 31,
+    "fields": {
+      "plot": 20,
+      "name": "Sensor 2 — Lote 20",
+      "serial_number": "SEED-0031",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 31,
+    "fields": {
+      "sensor": 31,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 32,
+    "fields": {
+      "plot": 21,
+      "name": "Sensor 1 — Lote 21",
+      "serial_number": "SEED-0032",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 32,
+    "fields": {
+      "sensor": 32,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 33,
+    "fields": {
+      "plot": 22,
+      "name": "Sensor 1 — Lote 22",
+      "serial_number": "SEED-0033",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 33,
+    "fields": {
+      "sensor": 33,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 34,
+    "fields": {
+      "plot": 22,
+      "name": "Sensor 2 — Lote 22",
+      "serial_number": "SEED-0034",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 34,
+    "fields": {
+      "sensor": 34,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 35,
+    "fields": {
+      "plot": 23,
+      "name": "Sensor 1 — Lote 23",
+      "serial_number": "SEED-0035",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 35,
+    "fields": {
+      "sensor": 35,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 36,
+    "fields": {
+      "plot": 24,
+      "name": "Sensor 1 — Lote 24",
+      "serial_number": "SEED-0036",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 36,
+    "fields": {
+      "sensor": 36,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 37,
+    "fields": {
+      "plot": 25,
+      "name": "Sensor 1 — Lote 25",
+      "serial_number": "SEED-0037",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 37,
+    "fields": {
+      "sensor": 37,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 38,
+    "fields": {
+      "plot": 25,
+      "name": "Sensor 2 — Lote 25",
+      "serial_number": "SEED-0038",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 38,
+    "fields": {
+      "sensor": 38,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 39,
+    "fields": {
+      "plot": 26,
+      "name": "Sensor 1 — Lote 26",
+      "serial_number": "SEED-0039",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 39,
+    "fields": {
+      "sensor": 39,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 40,
+    "fields": {
+      "plot": 26,
+      "name": "Sensor 2 — Lote 26",
+      "serial_number": "SEED-0040",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 40,
+    "fields": {
+      "sensor": 40,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 41,
+    "fields": {
+      "plot": 27,
+      "name": "Sensor 1 — Lote 27",
+      "serial_number": "SEED-0041",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 41,
+    "fields": {
+      "sensor": 41,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensor",
+    "pk": 42,
+    "fields": {
+      "plot": 28,
+      "name": "Sensor 1 — Lote 28",
+      "serial_number": "SEED-0042",
+      "is_active": true,
+      "installed_at": "2025-02-01",
+      "created_at": "2025-02-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 42,
+    "fields": {
+      "sensor": 42,
+      "env_variable": 4
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 43,
+    "fields": {
+      "sensor": 1,
+      "env_variable": 2
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 44,
+    "fields": {
+      "sensor": 4,
+      "env_variable": 5
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 45,
+    "fields": {
+      "sensor": 5,
+      "env_variable": 1
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 46,
+    "fields": {
+      "sensor": 5,
+      "env_variable": 2
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 47,
+    "fields": {
+      "sensor": 5,
+      "env_variable": 3
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 48,
+    "fields": {
+      "sensor": 6,
+      "env_variable": 1
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 49,
+    "fields": {
+      "sensor": 7,
+      "env_variable": 2
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 50,
+    "fields": {
+      "sensor": 8,
+      "env_variable": 1
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 51,
+    "fields": {
+      "sensor": 8,
+      "env_variable": 2
+    }
+  },
+  {
+    "model": "sensors.fieldsensorvariable",
+    "pk": 52,
+    "fields": {
+      "sensor": 8,
+      "env_variable": 3
+    }
+  }
+]
