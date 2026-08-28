@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test'
+import { expect, type Locator, type Page } from '@playwright/test'
 
 export const E2E_USER = {
   email: process.env.E2E_USER_EMAIL ?? 'juan.perez@email.com',
@@ -32,13 +32,30 @@ export const T = {
   retry: 'Reintentar',
   // sidebar profile fallback
   profileUnavailable: 'Perfil no disponible.',
-  // farm switcher + dashboard plot count (seed: juan.perez owns both farms,
-  // 2 plots each; farms are ordered by name so El Tesoro is the default)
+  // farm switcher + dashboard stat cards (seed: juan.perez owns three farms,
+  // ordered by name, so El Tesoro is the default selection)
   farmFirst: 'Finca El Tesoro',
   farmSecond: 'Finca San Vicente',
-  plotCount: '2 lotes',
+  statPlots: 'Lotes',
   farmsUnavailable: 'Fincas no disponibles.',
   plotsLoadError: 'No se pudieron cargar los lotes.',
+  // sensor history page (/dashboard/history)
+  navHistory: 'Historial',
+  filterPlot: 'Lote',
+  filterVariable: 'Variable ambiental',
+  filterRange: 'Rango de fechas',
+  filtersReset: 'Limpiar filtros',
+  range30d: 'Últimos 30 días',
+  chartsRegion: 'Gráficos del historial',
+  averagesRegion: 'Promedios por lote',
+  paginationLabel: 'Paginación de las lecturas',
+  // the pagination buttons are named `Página <n>`
+  paginationPage: 'Página',
+  exportLabel: 'Exportar',
+  exportCsv: 'Descargar CSV',
+  // seeded values the history page renders straight from the API (not translated)
+  plotFirst: 'Lote La Colina',
+  varAirTemperature: 'Temperatura del aire',
   // error page (error.vue)
   errorTitle: '404 — Página no encontrada',
   errorHeading: 'Página no encontrada',
@@ -74,6 +91,30 @@ export async function gotoHydrated(page: Page, path: string): Promise<void> {
     const root = document.querySelector('#__nuxt') as { __vue_app__?: unknown } | null
     return Boolean(root?.__vue_app__)
   })
+}
+
+/**
+ * The value rendered inside the dashboard stat card carrying the given visible
+ * title. The title and the value sit in sibling subtrees of the card root, so
+ * the lookup climbs from the label to the card before descending again.
+ */
+export function statCardValue(page: Page, title: string): Locator {
+  return page
+    .getByText(title, { exact: true })
+    .locator('xpath=ancestor::*[@data-slot="root"][1]')
+    .locator('p')
+    .first()
+}
+
+/**
+ * Opens the sidebar farm switcher and picks a farm. The dropdown overlay
+ * aria-hides the rest of the page while open, so it must be dismissed before
+ * anything in the background can be located again.
+ */
+export async function selectFarm(page: Page, farmName: string): Promise<void> {
+  await page.getByRole('button', { name: T.farmFirst }).click()
+  await page.getByRole('menuitemcheckbox', { name: farmName }).click()
+  await page.keyboard.press('Escape')
 }
 
 /**
