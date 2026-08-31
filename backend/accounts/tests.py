@@ -45,3 +45,11 @@ class MeApiSecretTestCase(APITestCase):
         self.assertEqual(self.farmer.api_secret, original_secret)
         self.assertEqual(response.data["farmer"]["api_secret"], original_secret)
         self.assertEqual(response.data["farmer"]["first_name"], "Juan Carlos")
+
+
+class OpenApiSchemaTestCase(APITestCase):
+    def test_schema_generates_and_documents_the_api_secret(self):
+        response = self.client.get(reverse("schema"))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("api_secret", response.content.decode())
