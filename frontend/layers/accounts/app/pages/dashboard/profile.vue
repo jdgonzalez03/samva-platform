@@ -346,6 +346,57 @@ async function handleSubmit() {
                 </p>
               </div>
             </UCard>
+            <!-- API Access -->
+            <UCard>
+              <template #header>
+                <p
+                  class="text-xs font-medium uppercase tracking-widest text-muted"
+                >
+                  {{ t('accounts.profile.apiSecret.title') }}
+                </p>
+              </template>
+
+              <div class="flex flex-col gap-2.5">
+                <p class="text-sm text-muted">
+                  {{ t('accounts.profile.apiSecret.description') }}
+                </p>
+
+                <div class="flex items-center gap-1.5">
+                  <code
+                    class="flex-1 min-w-0 truncate text-sm text-default"
+                    :aria-label="
+                      apiSecretRevealed
+                        ? undefined
+                        : t('accounts.profile.apiSecret.hidden')
+                    "
+                    >{{ apiSecretDisplay }}</code
+                  >
+                  <UButton
+                    color="neutral"
+                    variant="ghost"
+                    size="xs"
+                    :icon="
+                      apiSecretRevealed ? 'i-lucide-eye-off' : 'i-lucide-eye'
+                    "
+                    :aria-label="
+                      apiSecretRevealed
+                        ? t('accounts.profile.apiSecret.hide')
+                        : t('accounts.profile.apiSecret.show')
+                    "
+                    :aria-pressed="apiSecretRevealed"
+                    @click="toggleApiSecret"
+                  />
+                  <UButton
+                    color="neutral"
+                    variant="ghost"
+                    size="xs"
+                    icon="i-lucide-copy"
+                    :aria-label="t('accounts.profile.apiSecret.copy')"
+                    @click="onCopyApiSecret"
+                  />
+                </div>
+              </div>
+            </UCard>
           </div>
 
           <div class="flex flex-col gap-4">
