@@ -3,7 +3,7 @@
     "model": "auth.user",
     "pk": 1,
     "fields": {
-      "password": "pbkdf2_sha256$720000$ba3c2ab08fc1aa22ca1aae32$2Z/8bVd1Oh2C5WIpv/ob70/bLZigGvTBlONMU2s+ct0=",
+      "password": "pbkdf2_sha256$1200000$zRjWV0MVHHpzv8thLzOt3d$//Ay4ZKQ9f9IaMzYY7krwI+9vivwsVtznN1epM+v0p8=",
       "last_login": null,
       "is_superuser": false,
       "username": "juan_perez",
@@ -21,7 +21,7 @@
     "model": "auth.user",
     "pk": 2,
     "fields": {
-      "password": "pbkdf2_sha256$720000$ba3c2ab08fc1aa22ca1aae32$2Z/8bVd1Oh2C5WIpv/ob70/bLZigGvTBlONMU2s+ct0=",
+      "password": "pbkdf2_sha256$1200000$zRjWV0MVHHpzv8thLzOt3d$//Ay4ZKQ9f9IaMzYY7krwI+9vivwsVtznN1epM+v0p8=",
       "last_login": null,
       "is_superuser": false,
       "username": "maria_lopez",
@@ -39,7 +39,7 @@
     "model": "auth.user",
     "pk": 3,
     "fields": {
-      "password": "pbkdf2_sha256$720000$ba3c2ab08fc1aa22ca1aae32$2Z/8bVd1Oh2C5WIpv/ob70/bLZigGvTBlONMU2s+ct0=",
+      "password": "pbkdf2_sha256$1200000$zRjWV0MVHHpzv8thLzOt3d$//Ay4ZKQ9f9IaMzYY7krwI+9vivwsVtznN1epM+v0p8=",
       "last_login": null,
       "is_superuser": false,
       "username": "carlos_gomez",
@@ -57,7 +57,7 @@
     "model": "auth.user",
     "pk": 4,
     "fields": {
-      "password": "pbkdf2_sha256$720000$ba3c2ab08fc1aa22ca1aae32$2Z/8bVd1Oh2C5WIpv/ob70/bLZigGvTBlONMU2s+ct0=",
+      "password": "pbkdf2_sha256$1200000$zRjWV0MVHHpzv8thLzOt3d$//Ay4ZKQ9f9IaMzYY7krwI+9vivwsVtznN1epM+v0p8=",
       "last_login": null,
       "is_superuser": false,
       "username": "ana_martinez",
@@ -75,7 +75,7 @@
     "model": "auth.user",
     "pk": 5,
     "fields": {
-      "password": "pbkdf2_sha256$720000$ba3c2ab08fc1aa22ca1aae32$2Z/8bVd1Oh2C5WIpv/ob70/bLZigGvTBlONMU2s+ct0=",
+      "password": "pbkdf2_sha256$1200000$zRjWV0MVHHpzv8thLzOt3d$//Ay4ZKQ9f9IaMzYY7krwI+9vivwsVtznN1epM+v0p8=",
       "last_login": null,
       "is_superuser": false,
       "username": "pedro_rodriguez",
@@ -93,7 +93,7 @@
     "model": "auth.user",
     "pk": 6,
     "fields": {
-      "password": "pbkdf2_sha256$720000$ba3c2ab08fc1aa22ca1aae32$2Z/8bVd1Oh2C5WIpv/ob70/bLZigGvTBlONMU2s+ct0=",
+      "password": "pbkdf2_sha256$1200000$zRjWV0MVHHpzv8thLzOt3d$//Ay4ZKQ9f9IaMzYY7krwI+9vivwsVtznN1epM+v0p8=",
       "last_login": null,
       "is_superuser": false,
       "username": "lucia_fernandez",

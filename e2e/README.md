@@ -53,12 +53,11 @@ env vars, with defaults matching the seeded fixture user:
 | Env var             | Default                |
 | ------------------- | ---------------------- |
 | `E2E_USER_EMAIL`    | `juan.perez@email.com` |
-| `E2E_USER_PASSWORD` | `E2eSmoke_2026!`       |
+| `E2E_USER_PASSWORD` | `Test@1234!`           |
 
-The fixture (`backend/accounts/fixtures/initial_users.json`) ships no plaintext
-password, so after `loaddata` the password must be set once via the Django shell
-(`make shell`): `User.objects.get(email='juan.perez@email.com').set_password('E2eSmoke_2026!')`
-(then `.save()`).
+The fixture (`backend/accounts/fixtures/initial_users.json`) ships the hash of
+`Test@1234!` for every seeded user, so `make loaddata` leaves login (and this
+suite) working with no extra setup.
 
 ## Locale pinning
 

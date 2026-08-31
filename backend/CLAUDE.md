@@ -2,6 +2,7 @@
 
 ## Dev environment
 - Backend development runs on `backend/docker-compose.yml` (project "backend": postgres, rabbitmq broker, backend, celery, flower): `cd backend && docker compose up -d backend`, then the `make` targets in `backend/makefile` exec into that stack. The root `docker-compose.dev.yml` exists only to simulate the production deployment config — never use it for day-to-day backend development.
+- Every seeded user in `accounts/fixtures/initial_users.json` has the password `Test@1234!` (the fixture ships its hash), so `make loaddata` leaves login and the e2e suite working; if that hash ever changes, regenerate it in-container (`make_password` via `make shell`) and keep `e2e/frontend/helpers.ts` + `e2e/README.md` in sync.
 
 ## Django Apps
 

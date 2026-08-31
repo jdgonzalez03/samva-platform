@@ -2,7 +2,7 @@ import { expect, type Locator, type Page } from '@playwright/test'
 
 export const E2E_USER = {
   email: process.env.E2E_USER_EMAIL ?? 'juan.perez@email.com',
-  password: process.env.E2E_USER_PASSWORD ?? 'E2eSmoke_2026!',
+  password: process.env.E2E_USER_PASSWORD ?? 'Test@1234!',
 }
 
 /**
