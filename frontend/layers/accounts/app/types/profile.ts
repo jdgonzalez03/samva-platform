@@ -18,6 +18,7 @@ export interface FarmerProfile {
   address: string | null
   avatar: string | null
   is_active: boolean
+  api_secret: string
   organization: OrganizationProfile | null
   created_at: string
 }
