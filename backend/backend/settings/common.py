@@ -51,6 +51,7 @@ PROJECT_APPS = [
 ADDONS_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular',
     'leaflet',
     'corsheaders',
     'django_celery_results',
@@ -159,6 +160,14 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "SAMVA Platform API",
+    "DESCRIPTION": "API de la plataforma SAMVA",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 # Security settings
