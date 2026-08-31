@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate
 
+from drf_spectacular.utils import extend_schema
+
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework import status
@@ -16,6 +18,7 @@ from farmer.serializers import FarmerUpdateSerializer
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(request=LoginSerializer, responses={200: None, 401: None})
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -48,10 +51,12 @@ class LoginView(APIView):
 class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(responses=MeSerializer)
     def get(self, request):
         serializer = MeSerializer(request.user)
         return Response(serializer.data)
 
+    @extend_schema(request=FarmerUpdateSerializer, responses=MeSerializer)
     def patch(self, request):
         farmer = request.user.farmer
         serializer = FarmerUpdateSerializer(
