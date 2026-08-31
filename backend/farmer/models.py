@@ -1,3 +1,6 @@
+import secrets
+
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
@@ -5,6 +8,10 @@ from django.contrib.auth import get_user_model
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 
 # Create your models here.
+
+
+def generate_api_secret():
+    return f"smv_{secrets.token_urlsafe(32)}"
 
 class DocumentType(models.TextChoices):
     CC = 'CC', _('Cédula de Ciudadanía')
