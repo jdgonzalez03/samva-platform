@@ -97,6 +97,36 @@ test.describe('Perfil de usuario', () => {
     await expect(firstName).not.toHaveValue('')
   })
 
+  test('el secreto de API se muestra enmascarado, se revela, se copia y se vuelve a ocultar', async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+    await loginAs(page)
+    await gotoHydrated(page, '/dashboard/profile')
+
+    await expect(page.getByText(T.apiSecretTitle, { exact: true })).toBeVisible()
+    // Masked by default: the real token (seeded with the smv_ prefix) is not
+    // rendered anywhere on the page.
+    await expect(page.getByText(/smv_/)).toHaveCount(0)
+
+    await page.getByRole('button', { name: T.showApiSecret }).click()
+    const secret = page.getByText(/^smv_/)
+    await expect(secret).toBeVisible()
+    const revealed = (await secret.textContent())!.trim()
+
+    await page.getByRole('button', { name: T.copyApiSecret }).click()
+    await expect(
+      page.getByText(T.apiSecretCopiedToast, { exact: true }).first(),
+    ).toBeVisible()
+    const clipboard = await page.evaluate(() => navigator.clipboard.readText())
+    expect(clipboard).toBe(revealed)
+
+    // The toggle swaps its accessible name once revealed.
+    await page.getByRole('button', { name: T.hideApiSecret }).click()
+    await expect(page.getByText(/smv_/)).toHaveCount(0)
+  })
+
   test('si el perfil no carga al iniciar sesión, el sidebar muestra el fallback y Reintentar recupera', async ({
     page,
   }) => {
