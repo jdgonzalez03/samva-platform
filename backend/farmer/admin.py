@@ -10,6 +10,16 @@ class FarmerAdmin(admin.ModelAdmin):
     search_fields = ('first_name', 'last_name', 'user__email')
     list_filter = ('is_active', 'created_at', 'updated_at')
     ordering = ('-created_at',)
+    actions = ('regenerate_api_secret',)
+
+    @admin.action(description=_('Regenerar secreto de API'))
+    def regenerate_api_secret(self, request, queryset):
+        for farmer in queryset:
+            farmer.regenerate_api_secret()
+        self.message_user(
+            request,
+            _('Se regeneró el secreto de API de %d agricultor(es).') % queryset.count(),
+        )
 
 
 @admin.register(Organization)
