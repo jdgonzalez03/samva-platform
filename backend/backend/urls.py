@@ -18,6 +18,7 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -41,6 +42,9 @@ urlpatterns = [
     path("api/accounts/", include((accounts_urlpatterns, "accounts"))),
     path("api/farm/", include((farm_urlpatterns, "farm"))),
     path("api/sensors/", include((sensors_urlpatterns, "sensors"))),
+    # API documentation
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     # Default
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
