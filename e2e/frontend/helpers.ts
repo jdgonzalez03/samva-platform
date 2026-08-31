@@ -30,6 +30,12 @@ export const T = {
   changeAvatar: 'Cambiar foto de perfil',
   profileLoadError: 'No pudimos cargar tu perfil. Inténtalo de nuevo.',
   retry: 'Reintentar',
+  // profile page — API access card
+  apiSecretTitle: 'Acceso API',
+  showApiSecret: 'Mostrar secreto de API',
+  hideApiSecret: 'Ocultar secreto de API',
+  copyApiSecret: 'Copiar secreto de API',
+  apiSecretCopiedToast: 'Secreto copiado',
   // sidebar profile fallback
   profileUnavailable: 'Perfil no disponible.',
   // farm switcher + dashboard stat cards (seed: juan.perez owns three farms,
