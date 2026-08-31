@@ -38,7 +38,7 @@ urlpatterns = [
     path("api/", include(api_urls)),
     path("api/core/", include(core_urlpatterns)),
     path("api/cms/", include(cms_urlpatterns)),
-    path("api/accounts/", include(accounts_urlpatterns)),
+    path("api/accounts/", include((accounts_urlpatterns, "accounts"))),
     path("api/farm/", include((farm_urlpatterns, "farm"))),
     path("api/sensors/", include((sensors_urlpatterns, "sensors"))),
     # Default
