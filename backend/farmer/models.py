@@ -120,6 +120,14 @@ class Farmer(models.Model):
         help_text=_('Indica si el agricultor está activo'),
         verbose_name=_('Activo')
     )
+    api_secret = models.CharField(
+        max_length=64,
+        unique=True,
+        editable=False,
+        default=generate_api_secret,
+        help_text=_('Token secreto para autenticar los sensores de campo del agricultor'),
+        verbose_name=_('Secreto de API')
+    )
     created_at = models.DateTimeField(
         auto_now_add=True,
         help_text=_('Fecha de creación del agricultor')
@@ -150,6 +158,9 @@ class Farmer(models.Model):
         ], heading=_('Información de contacto')),
         FieldPanel('is_active'),
         MultiFieldPanel([
+            FieldPanel('api_secret', read_only=True),
+        ], heading=_('Acceso API')),
+        MultiFieldPanel([
             FieldPanel('created_at', read_only=True),
             FieldPanel('updated_at', read_only=True),
         ], heading=_('Metadata')),
@@ -158,6 +169,10 @@ class Farmer(models.Model):
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    def regenerate_api_secret(self):
+        self.api_secret = generate_api_secret()
+        self.save(update_fields=['api_secret', 'updated_at'])
 
 
 class Organization(models.Model):
