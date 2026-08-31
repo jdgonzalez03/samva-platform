@@ -14,6 +14,18 @@
       "nit": "NIT",
       "personalInformation": "Personal Information",
       "location": "Location",
+      "apiSecret": {
+        "title": "API Access",
+        "description": "Use this secret to authenticate your field sensors.",
+        "hidden": "API secret hidden",
+        "show": "Show API secret",
+        "hide": "Hide API secret",
+        "copy": "Copy API secret",
+        "copiedTitle": "Secret copied",
+        "copiedDescription": "The API secret was copied to the clipboard.",
+        "copyErrorTitle": "Could not copy",
+        "copyErrorDescription": "Copy the secret manually."
+      },
       "fields": {
         "email": "Email",
         "emailPlaceholder": "you{'@'}example.com",
