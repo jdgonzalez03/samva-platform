@@ -31,11 +31,13 @@ class FarmerSerializer(serializers.ModelSerializer):
             'city',
             'department', 
             'address', 
-            'avatar', 
+            'avatar',
             'is_active',
+            'api_secret',
             'organization',
             'created_at',
         ]
+        read_only_fields = ['api_secret']
 
 
 class FarmerUpdateSerializer(serializers.ModelSerializer):
