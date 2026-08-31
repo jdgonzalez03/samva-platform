@@ -26,6 +26,7 @@
       "department": "Cundinamarca",
       "address": "Cra 7 # 45-67, Chapinero",
       "is_active": true,
+      "api_secret": "smv_nJERQFGt_GluDWUYDhFEJZk8DmYJbxqybtgnFH9Ki30",
       "created_at": "2025-01-15T00:00:00Z",
       "updated_at": "2025-01-15T00:00:00Z"
     }
@@ -47,6 +48,7 @@
       "department": "Antioquia",
       "address": "Cl 50 # 65-32, Laureles",
       "is_active": true,
+      "api_secret": "smv_UDaVZdbwCwgpGtrAg2gIPJTtJ6HeGT111jARSknWrKc",
       "created_at": "2025-01-15T00:00:00Z",
       "updated_at": "2025-01-15T00:00:00Z"
     }
@@ -68,6 +70,7 @@
       "department": "Valle del Cauca",
       "address": "Av 3N # 20-15, San Vicente",
       "is_active": true,
+      "api_secret": "smv_VAk_RcWpgOBoY_4pKQMOpHcvybHN5aQ9za7UwIWOXBI",
       "created_at": "2025-01-15T00:00:00Z",
       "updated_at": "2025-01-15T00:00:00Z"
     }
@@ -89,6 +92,7 @@
       "department": "Atlántico",
       "address": "Cra 55 # 74-12, El Prado",
       "is_active": true,
+      "api_secret": "smv_7N-p28Iqftqkk8bIRvDU9Vdl-56Z0qyvYxFYgqrVj14",
       "created_at": "2025-01-15T00:00:00Z",
       "updated_at": "2025-01-15T00:00:00Z"
     }
@@ -110,6 +114,7 @@
       "department": "Santander",
       "address": "Cl 36 # 27-08, Cabecera del Llano",
       "is_active": true,
+      "api_secret": "smv_ODU6rKo2oIEy_Z5LL7lhAjv1eqGxKEC3hU97Fl6hoT0",
       "created_at": "2025-01-15T00:00:00Z",
       "updated_at": "2025-01-15T00:00:00Z"
     }
@@ -131,6 +136,7 @@
       "department": "Risaralda",
       "address": "Av Circunvalar # 15-42, Jardín",
       "is_active": true,
+      "api_secret": "smv_9dOGEvz9dVnHbxcfscAsrSiQ0YG2j9HJy3CnRY0LTZ8",
       "created_at": "2025-01-15T00:00:00Z",
       "updated_at": "2025-01-15T00:00:00Z"
     }
