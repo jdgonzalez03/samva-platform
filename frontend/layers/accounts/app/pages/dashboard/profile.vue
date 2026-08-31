@@ -80,6 +80,40 @@ function retryLoad() {
   void refetch()
 }
 
+const apiSecretRevealed = ref(false)
+
+const apiSecretDisplay = computed(() => {
+  if (!apiSecretRevealed.value) return '••••••••••••••••'
+  return user.value?.farmer?.api_secret ?? ''
+})
+
+function toggleApiSecret() {
+  apiSecretRevealed.value = !apiSecretRevealed.value
+}
+
+async function copyApiSecret() {
+  const secret = user.value?.farmer?.api_secret
+  if (!secret) return
+  try {
+    await navigator.clipboard.writeText(secret)
+    toast.add({
+      title: t('accounts.profile.apiSecret.copiedTitle'),
+      description: t('accounts.profile.apiSecret.copiedDescription'),
+      color: 'success',
+    })
+  } catch {
+    toast.add({
+      title: t('accounts.profile.apiSecret.copyErrorTitle'),
+      description: t('accounts.profile.apiSecret.copyErrorDescription'),
+      color: 'error',
+    })
+  }
+}
+
+function onCopyApiSecret() {
+  void copyApiSecret()
+}
+
 function onAvatarSelected(event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
