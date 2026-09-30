@@ -45,6 +45,9 @@ export const T = {
   statPlots: 'Lotes',
   farmsUnavailable: 'Fincas no disponibles.',
   plotsLoadError: 'No se pudieron cargar los lotes.',
+  // dashboard map (street basemap attribution links to OSM's copyright page)
+  mapRegion: 'Mapa de la finca, Finca El Tesoro',
+  osmAttribution: 'OpenStreetMap',
   // sensor history page (/dashboard/history)
   navHistory: 'Historial',
   filterPlot: 'Lote',
