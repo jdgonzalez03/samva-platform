@@ -24,3 +24,26 @@ test.describe('Sidebar del dashboard', () => {
     await expect(trigger).toHaveAccessibleName(T.userDisplayName)
   })
 })
+
+test.describe('Mapa del dashboard', () => {
+  test('el mapa base de calles carga tiles de OpenStreetMap y muestra su atribución', async ({
+    page,
+  }) => {
+    // Tiles are stubbed so the spec never depends on (or loads) the real tile
+    // server; recording the requests still proves which provider the map asks.
+    const tileRequests: string[] = []
+    await page.route('https://tile.openstreetmap.org/**', (route) => {
+      tileRequests.push(route.request().url())
+      return route.fulfill({ contentType: 'image/png', body: Buffer.alloc(0) })
+    })
+
+    await loginAs(page)
+    await gotoHydrated(page, '/dashboard?view=map')
+
+    const map = page.getByRole('region', { name: T.mapRegion })
+    await expect(
+      map.getByRole('link', { name: T.osmAttribution }),
+    ).toHaveAttribute('href', 'https://www.openstreetmap.org/copyright')
+    await expect.poll(() => tileRequests.length).toBeGreaterThan(0)
+  })
+})
