@@ -51,6 +51,21 @@ npm install
 npm run dev   # http://localhost:3000
 ```
 
+## Test users
+
+`make loaddata` seeds these users from `backend/accounts/fixtures/initial_users.json`. All of them use the password `Test@1234!` and log in with their email.
+
+| Email | Username |
+|---|---|
+| juan.perez@email.com | juan_perez |
+| maria.lopez@email.com | maria_lopez |
+| carlos.gomez@email.com | carlos_gomez |
+| ana.martinez@email.com | ana_martinez |
+| pedro.rodriguez@email.com | pedro_rodriguez |
+| lucia.fernandez@email.com | lucia_fernandez |
+
+They are regular users, not staff, so they can't open the admin panels (use `admin` / `admin` for those). The e2e suite logs in as `juan.perez@email.com` by default.
+
 ## Common commands (Makefile)
 
 Run these from the repository root. They use `docker-compose.dev.yml`.

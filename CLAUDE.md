@@ -27,6 +27,8 @@ Two top-level sections: **Guidelines** (rules to follow when changing the system
 ### E2E
 - Any multi-step user-facing feature (clicks, UI state changes, navigation) needs a Playwright test in `e2e/frontend/<module>.spec.ts` matching the frontend layer name; API-level tests go in `e2e/backend/`. The layout is flat — there is no `e2e/tests/` directory.
 - Reuse `e2e/frontend/helpers.ts`: `loginAs` (logs in through the real form as the seeded user) and `gotoHydrated` (navigates and waits for hydration); every UI string a spec selects by lives in the exported `T` map, never inline in the spec.
+- Stub third-party map tile hosts with `page.route` in any spec that renders the map — specs must never depend on an external tile server.
+- `e2e/` has no Prettier config of its own; check spec formatting with `npx prettier --config frontend/.prettierrc`, otherwise Prettier's defaults (double quotes, semicolons) report false diffs.
 - A spec never asserts that a planned feature is absent, and never borrows a future route as its 404 fixture — both break on the day that feature ships, turning a green suite red for no defect.
 
 ### Build vs. reuse
