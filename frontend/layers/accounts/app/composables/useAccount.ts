@@ -31,3 +31,13 @@ export const useUpdateProfileMutation = () => {
       queryClient.invalidateQueries({ queryKey: [AccountsQueryKey.ROOT] }),
   })
 }
+
+export const useRegenerateApiSecretMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: () => accountsApi.regenerateApiSecret(),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: [AccountsQueryKey.ROOT] }),
+  })
+}

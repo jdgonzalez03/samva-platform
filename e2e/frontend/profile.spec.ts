@@ -106,6 +106,10 @@ test.describe('Perfil de usuario', () => {
     await gotoHydrated(page, '/dashboard/profile')
 
     await expect(page.getByText(T.apiSecretTitle, { exact: true })).toBeVisible()
+    await expect(page.getByRole('link', { name: T.apiDocsLink })).toHaveAttribute(
+      'href',
+      /\/api\/docs\/$/,
+    )
     // Masked by default: the real token (seeded with the smv_ prefix) is not
     // rendered anywhere on the page.
     await expect(page.getByText(/smv_/)).toHaveCount(0)
@@ -125,6 +129,36 @@ test.describe('Perfil de usuario', () => {
     // The toggle swaps its accessible name once revealed.
     await page.getByRole('button', { name: T.hideApiSecret }).click()
     await expect(page.getByText(/smv_/)).toHaveCount(0)
+  })
+
+  test('regenerar el secreto de API pide confirmación y muestra el nuevo secreto', async ({
+    page,
+  }) => {
+    await loginAs(page)
+    await gotoHydrated(page, '/dashboard/profile')
+
+    await page.getByRole('button', { name: T.showApiSecret }).click()
+    const secret = page.getByText(/^smv_/)
+    const original = (await secret.textContent())!.trim()
+
+    // Cancelling leaves the secret as it was.
+    await page.getByRole('button', { name: T.regenerateApiSecret }).click()
+    const dialog = page.getByRole('dialog', { name: T.regenerateApiSecretDialog })
+    await expect(dialog).toBeVisible()
+    await dialog.getByRole('button', { name: T.regenerateApiSecretCancel }).click()
+    await expect(dialog).toBeHidden()
+    await expect(secret).toHaveText(original)
+
+    await page.getByRole('button', { name: T.regenerateApiSecret }).click()
+    await dialog
+      .getByRole('button', { name: T.regenerateApiSecretConfirm, exact: true })
+      .click()
+    await expect(dialog).toBeHidden()
+    await expect(
+      page.getByText(T.apiSecretRegeneratedToast, { exact: true }).first(),
+    ).toBeVisible()
+    await expect(secret).not.toHaveText(original)
+    await expect(secret).toHaveText(/^smv_/)
   })
 
   test('si el perfil no carga al iniciar sesión, el sidebar muestra el fallback y Reintentar recupera', async ({

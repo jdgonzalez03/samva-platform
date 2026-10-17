@@ -1,8 +1,14 @@
 import { fetcher } from '#api/fetcher'
-import type { Profile, UpdateProfilePayload } from '../../types/profile'
+import type {
+  ApiSecret,
+  Profile,
+  UpdateProfilePayload,
+} from '../../types/profile'
 
 export const accountsApi = {
   getMe: () => fetcher.get<Profile>('accounts/me/'),
+  regenerateApiSecret: () =>
+    fetcher.post<ApiSecret>('accounts/me/api-secret/regenerate/'),
   updateProfile: (payload: UpdateProfilePayload) => {
     const hasFiles = payload.avatar
 

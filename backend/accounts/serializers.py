@@ -17,3 +17,7 @@ class MeSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
+
+
+class ApiSecretSerializer(serializers.Serializer):
+    api_secret = serializers.CharField(read_only=True)

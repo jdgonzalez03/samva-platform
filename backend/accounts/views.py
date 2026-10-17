@@ -6,12 +6,14 @@ from drf_spectacular.utils import extend_schema
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
-from .serializers import LoginSerializer, MeSerializer
+from .serializers import ApiSecretSerializer, LoginSerializer, MeSerializer
+from farmer.models import Farmer
 from farmer.serializers import FarmerUpdateSerializer
 
 # Create your views here.
@@ -68,3 +70,18 @@ class MeView(APIView):
         serializer.save()
 
         return Response(MeSerializer(request.user).data)
+
+
+class ApiSecretRegenerateView(APIView):
+    """Issues a new API secret; every device still sending the old one starts getting 401."""
+
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(request=None, responses=ApiSecretSerializer)
+    def post(self, request):
+        farmer = Farmer.objects.filter(user=request.user).first()
+        if farmer is None:
+            raise NotFound("This account has no farmer profile.")
+
+        farmer.regenerate_api_secret()
+        return Response(ApiSecretSerializer(farmer).data)

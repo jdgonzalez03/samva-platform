@@ -3,11 +3,16 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 app_name = "accounts"
 
-from .views import LoginView, MeView
+from .views import ApiSecretRegenerateView, LoginView, MeView
 
 urlpatterns = [
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("login/", LoginView.as_view(), name="login"),
     path("me/", MeView.as_view(), name="me"),
+    path(
+        "me/api-secret/regenerate/",
+        ApiSecretRegenerateView.as_view(),
+        name="api-secret-regenerate",
+    ),
 ]

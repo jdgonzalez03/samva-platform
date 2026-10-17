@@ -48,6 +48,10 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api',
       mediaBase: process.env.NUXT_PUBLIC_MEDIA_BASE || 'http://localhost:8000',
+      // Swagger is served by Django and not proxied under the frontend's `/api`.
+      apiDocsUrl:
+        process.env.NUXT_PUBLIC_API_DOCS_URL ||
+        'http://localhost:8000/api/docs/',
     },
   },
 

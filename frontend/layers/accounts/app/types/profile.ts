@@ -29,6 +29,10 @@ export interface Profile {
   farmer: FarmerProfile
 }
 
+export interface ApiSecret {
+  api_secret: string
+}
+
 export interface UpdateProfilePayload {
   first_name?: string
   last_name?: string

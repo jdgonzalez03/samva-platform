@@ -114,6 +114,36 @@ function onCopyApiSecret() {
   void copyApiSecret()
 }
 
+const apiDocsUrl = useRuntimeConfig().public.apiDocsUrl
+
+const regenerateApiSecretMutation = useRegenerateApiSecretMutation()
+const regenerating = computed(() => regenerateApiSecretMutation.isPending.value)
+const regenerateConfirmOpen = ref(false)
+
+async function regenerateApiSecret() {
+  try {
+    await regenerateApiSecretMutation.mutateAsync()
+    regenerateConfirmOpen.value = false
+    // Revealed so the user can copy the new secret straight into their devices.
+    apiSecretRevealed.value = true
+    toast.add({
+      title: t('accounts.profile.apiSecret.regeneratedTitle'),
+      description: t('accounts.profile.apiSecret.regeneratedDescription'),
+      color: 'success',
+    })
+  } catch {
+    toast.add({
+      title: t('accounts.profile.apiSecret.regenerateErrorTitle'),
+      description: t('accounts.profile.apiSecret.regenerateErrorDescription'),
+      color: 'error',
+    })
+  }
+}
+
+function onConfirmRegenerateApiSecret() {
+  void regenerateApiSecret()
+}
+
 function onAvatarSelected(event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
@@ -394,6 +424,21 @@ async function handleSubmit() {
                 <p class="text-sm text-muted">
                   {{ t('accounts.profile.apiSecret.description') }}
                 </p>
+                <ULink
+                  :to="apiDocsUrl"
+                  target="_blank"
+                  class="inline-flex items-center gap-1 text-sm text-primary underline"
+                >
+                  {{ t('accounts.profile.apiSecret.docs') }}
+                  <UIcon
+                    name="i-lucide-external-link"
+                    class="size-3.5"
+                    aria-hidden="true"
+                  />
+                  <span class="sr-only">{{
+                    t('accounts.profile.apiSecret.opensInNewTab')
+                  }}</span>
+                </ULink>
 
                 <div class="flex items-center gap-1.5">
                   <code
@@ -428,7 +473,44 @@ async function handleSubmit() {
                     :aria-label="t('accounts.profile.apiSecret.copy')"
                     @click="onCopyApiSecret"
                   />
+                  <UButton
+                    color="neutral"
+                    variant="ghost"
+                    size="xs"
+                    icon="i-lucide-refresh-cw"
+                    :aria-label="t('accounts.profile.apiSecret.regenerate')"
+                    @click="regenerateConfirmOpen = true"
+                  />
                 </div>
+
+                <UModal
+                  v-model:open="regenerateConfirmOpen"
+                  :title="
+                    t('accounts.profile.apiSecret.regenerateConfirmTitle')
+                  "
+                  :description="
+                    t('accounts.profile.apiSecret.regenerateConfirmDescription')
+                  "
+                  :dismissible="!regenerating"
+                  :ui="{ footer: 'justify-end' }"
+                >
+                  <template #footer="{ close }">
+                    <UButton
+                      color="neutral"
+                      variant="outline"
+                      :label="t('accounts.profile.apiSecret.regenerateCancel')"
+                      :disabled="regenerating"
+                      @click="close"
+                    />
+                    <UButton
+                      color="error"
+                      icon="i-lucide-refresh-cw"
+                      :label="t('accounts.profile.apiSecret.regenerateConfirm')"
+                      :loading="regenerating"
+                      @click="onConfirmRegenerateApiSecret"
+                    />
+                  </template>
+                </UModal>
               </div>
             </UCard>
           </div>

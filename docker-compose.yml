@@ -41,6 +41,7 @@ services:
     environment:
       NUXT_API_BASE_SERVER: http://backend:8000/api
       NUXT_PUBLIC_API_BASE: /api
+      NUXT_PUBLIC_API_DOCS_URL: /api/docs/
     depends_on:
       - backend
   

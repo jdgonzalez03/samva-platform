@@ -24,7 +24,18 @@
         "copiedTitle": "Secreto copiado",
         "copiedDescription": "El secreto de API se copió al portapapeles.",
         "copyErrorTitle": "No se pudo copiar",
-        "copyErrorDescription": "Copia el secreto manualmente."
+        "copyErrorDescription": "Copia el secreto manualmente.",
+        "regenerate": "Regenerar secreto de API",
+        "regenerateConfirmTitle": "¿Regenerar el secreto de API?",
+        "regenerateConfirmDescription": "El secreto actual dejará de funcionar de inmediato. Tus sensores no podrán enviar datos hasta que los configures con el nuevo secreto.",
+        "regenerateCancel": "Cancelar",
+        "regenerateConfirm": "Regenerar",
+        "regeneratedTitle": "Secreto regenerado",
+        "regeneratedDescription": "Actualiza tus sensores con el nuevo secreto.",
+        "regenerateErrorTitle": "No se pudo regenerar",
+        "regenerateErrorDescription": "El secreto actual sigue activo. Inténtalo de nuevo.",
+        "docs": "Ver documentación de la API",
+        "opensInNewTab": "(se abre en una pestaña nueva)"
       },
       "fields": {
         "email": "Correo electrónico",
