@@ -1,232 +1,251 @@
+"""
+Fuzzy (Mamdani) model that predicts how many minutes a plot should be irrigated.
+
+Inputs are averages of recent sensor readings:
+
+- soil moisture (%), air temperature (°C) and solar radiation (W/m²).
+
+The membership functions and the 27 rules come from the agronomic study the
+model is based on; change them only together with the study's authors.
+
+Each universe is sampled as ``np.arange(low, high, 1.0)``, which stops one step
+short of ``high`` (e.g. temperature reaches 24, not 25, and irrigation time 31,
+not 32). skfuzzy clips inputs to the sampled universe, and the centroid is
+computed over it, so widening a universe changes the predictions.
+"""
+
+from dataclasses import dataclass
+from typing import Literal
+
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 
-from typing import Any, Optional, Union
+
+@dataclass(frozen=True)
+class MembershipFunction:
+    shape: Literal['trap', 'tri']
+    points: tuple[float, ...]
+
+    def evaluate(self, universe: np.ndarray) -> np.ndarray:
+        if self.shape == 'trap':
+            return fuzz.trapmf(universe, list(self.points))
+        return fuzz.trimf(universe, list(self.points))
 
 
-# Mapping from crisp value to dominant linguistic label
-OUTPUT_THRESHOLDS: list[tuple[float, str]] = [
-    (4,   "Nothing"),
-    (10,  "VeryLittle"),
-    (18,  "Little"),
-    (26,  "Long"),
-    (32,  "VeryLong"),
-]
+@dataclass(frozen=True)
+class FuzzyVariable:
+    unit: str
+    bounds: tuple[float, float]
+    terms: dict[str, MembershipFunction]
+
+    @property
+    def universe(self) -> np.ndarray:
+        return np.arange(*self.bounds, 1.0)
+
+    def clip(self, value: float) -> float:
+        low, high = self.bounds
+        return min(max(value, low), high)
 
 
-def _crisp_to_label(value: float) -> str:
-    """Map a crisp output value to its dominant linguistic label."""
-    for threshold, label in OUTPUT_THRESHOLDS:
-        if value <= threshold:
-            return label
-    return "VeryLong"
+def trap(*points: float) -> MembershipFunction:
+    return MembershipFunction('trap', points)
 
 
-def _check_in_range(name: str, value: float, bounds: tuple[float, float]) -> None:
-    """Raise ValueError if *value* falls outside *bounds* (inclusive)."""
-    lo, hi = bounds
-    if not lo <= value <= hi:
-        raise ValueError(
-            f"{name} must be in [{lo}, {hi}], got {value}"
-        )
+def tri(*points: float) -> MembershipFunction:
+    return MembershipFunction('tri', points)
 
 
-class FuzzyIrrigationEngine:
+INPUTS: dict[str, FuzzyVariable] = {
+    'moisture': FuzzyVariable(
+        unit='%',
+        bounds=(0.0, 52.56),
+        terms={
+            'low': trap(-20.0, -20.0, 15.0, 30.0),
+            'medium': tri(15.0, 30.0, 45.0),
+            'high': trap(30.0, 45.0, 65.0, 65.0),
+        },
+    ),
+    'temperature': FuzzyVariable(
+        unit='°C',
+        bounds=(0.0, 25.0),
+        terms={
+            'low': trap(-2.0, -2.0, 10.0, 15.0),
+            'medium': tri(10.0, 15.0, 20.0),
+            'high': trap(15.0, 20.0, 25.0, 25.0),
+        },
+    ),
+    'radiation': FuzzyVariable(
+        unit='W/m²',
+        bounds=(0.0, 3500.0),
+        terms={
+            'low': trap(-10.0, -10.0, 10.0, 200.0),
+            'medium': trap(10.0, 200.0, 1000.0, 1400.0),
+            'high': trap(1000.0, 1400.0, 3550.0, 3550.0),
+        },
+    ),
+}
+
+OUTPUT = FuzzyVariable(
+    unit='min',
+    bounds=(0.0, 32.0),
+    terms={
+        'nothing': trap(-20.0, -20.0, 0.0, 8.0),
+        'very_little': tri(0.0, 8.0, 16.0),
+        'little': tri(8.0, 16.0, 24.0),
+        'long': tri(16.0, 24.0, 32.0),
+        'very_long': trap(24.0, 32.0, 40.0, 40.0),
+    },
+)
+
+# (moisture, temperature, radiation) → irrigation time
+RULES: dict[tuple[str, str, str], str] = {
+    ('low', 'low', 'low'): 'very_long',
+    ('low', 'low', 'medium'): 'very_long',
+    ('low', 'low', 'high'): 'very_long',
+    ('low', 'medium', 'low'): 'long',
+    ('low', 'medium', 'medium'): 'long',
+    ('low', 'medium', 'high'): 'little',
+    ('low', 'high', 'low'): 'very_long',
+    ('low', 'high', 'medium'): 'very_little',
+    ('low', 'high', 'high'): 'nothing',
+    ('medium', 'low', 'low'): 'little',
+    ('medium', 'low', 'medium'): 'little',
+    ('medium', 'low', 'high'): 'little',
+    ('medium', 'medium', 'low'): 'little',
+    ('medium', 'medium', 'medium'): 'little',
+    ('medium', 'medium', 'high'): 'very_little',
+    ('medium', 'high', 'low'): 'long',
+    ('medium', 'high', 'medium'): 'very_little',
+    ('medium', 'high', 'high'): 'nothing',
+    ('high', 'low', 'low'): 'nothing',
+    ('high', 'low', 'medium'): 'nothing',
+    ('high', 'low', 'high'): 'nothing',
+    ('high', 'medium', 'low'): 'nothing',
+    ('high', 'medium', 'medium'): 'nothing',
+    ('high', 'medium', 'high'): 'nothing',
+    ('high', 'high', 'low'): 'nothing',
+    ('high', 'high', 'medium'): 'nothing',
+    ('high', 'high', 'high'): 'nothing',
+}
+
+
+@dataclass(frozen=True)
+class IrrigationResult:
+    minutes: float
+    label: str
+    # Degree (0–1) to which each input belongs to each of its terms.
+    input_memberships: dict[str, dict[str, float]]
+    # Firing strength (0–1) of each output term after rule aggregation.
+    output_activation: dict[str, float]
+    # Inputs that were outside their bounds and were clipped to them.
+    clipped_inputs: list[str]
+
+
+def predict_irrigation(
+    moisture: float, temperature: float, radiation: float
+) -> IrrigationResult:
+    raw_inputs = {
+        'moisture': moisture,
+        'temperature': temperature,
+        'radiation': radiation,
+    }
+    inputs = {name: INPUTS[name].clip(value) for name, value in raw_inputs.items()}
+    clipped_inputs = [name for name in inputs if inputs[name] != raw_inputs[name]]
+
+    # skfuzzy stores every simulation's state on the system's own objects, so a
+    # system shared across calls would grow with each distinct input and is not
+    # thread-safe; building one per prediction costs well under 100 ms.
+    antecedents, consequent, system = _build_control_system()
+    simulation = ctrl.ControlSystemSimulation(system)
+    for name, value in inputs.items():
+        simulation.input[name] = value
+    simulation.compute()
+
+    minutes = round(float(simulation.output['irrigation_time']), 2)
+    return IrrigationResult(
+        minutes=minutes,
+        label=_dominant_output_term(minutes),
+        input_memberships={
+            name: _term_degrees(antecedent, simulation)
+            for name, antecedent in antecedents.items()
+        },
+        output_activation=_term_degrees(consequent, simulation),
+        clipped_inputs=clipped_inputs,
+    )
+
+
+def input_term_degrees(name: str, value: float) -> dict[str, float]:
+    """Degree of a single reading in each term of the model input `name`.
+
+    Uses the same sampled universe and clipping as the inference, so a reading
+    is classified exactly as the prediction would see it.
     """
-    Fuzzy logic engine for irrigation time prediction.
-
-    Uses three inputs (soil moisture, air temperature, solar radiation)
-    to infer an irrigation duration via 27 Mamdani-style rules.
-
-    Usage:
-        engine = FuzzyIrrigationEngine()
-        result = engine.run(moisture=32.0, temperature=18.5, radiation=850.0)
-    """
-
-    INPUT_RANGES: dict[str, tuple[float, float]] = {
-        "moisture": (0.0, 52.56),
-        "temperature": (0.0, 25.0),
-        "radiation": (0.0, 3500.0),
+    variable = INPUTS[name]
+    universe = variable.universe
+    # skfuzzy clips to the sampled universe, which ends one step short of the bounds.
+    clipped = min(max(value, universe[0]), universe[-1])
+    return {
+        term: round(float(fuzz.interp_membership(universe, mf.evaluate(universe), clipped)), 3)
+        for term, mf in variable.terms.items()
     }
 
-    def __init__(self) -> None:
-        self._control_system: Optional[ctrl.ControlSystem] = None
-        self._antecedents: dict[str, ctrl.Antecedent] = {}
-        self._consequents: dict[str, ctrl.Consequent] = {}
 
-
-    def run(self, moisture: float, temperature: float, radiation: float) -> dict[str, Any]:
-        """
-        Run fuzzy inference and return the result.
-
-        Parameters
-        ----------
-        moisture : float - Average soil moisture (0–52.56).
-        temperature : float - Average air temperature (0–25 °C).
-        radiation : float - Average solar radiation (0–3500 W/m²).
-
-        Returns
-        -------
-        dict
-            {
-                "irrigation_time_minutes": float,
-                "output_label": str,
-                "chart_data": { ... }
-            }
-        """
-        self._validate_inputs(moisture, temperature, radiation)
-        self._build_system()
-
-        sim = ctrl.ControlSystemSimulation(self._control_system)
-
-        sim.input["Moisture"] = moisture
-        sim.input["Temperature"] = temperature
-        sim.input["Radiation"] = radiation
-        sim.compute()
-
-        crisp_value = round(float(sim.output["IrrTime"]), 2)
-
-        return {
-            "irrigation_time_minutes": crisp_value,
-            "output_label": _crisp_to_label(crisp_value),
-            "chart_data": self._build_chart_data(
-                sim, crisp_value, moisture, temperature, radiation,
-            ),
+def membership_definitions() -> dict:
+    """Shape of every membership function, enough for a client to plot them."""
+    variables = {**INPUTS, 'irrigation_time': OUTPUT}
+    return {
+        name: {
+            'unit': variable.unit,
+            'bounds': list(variable.bounds),
+            'terms': {
+                term: {'shape': mf.shape, 'points': list(mf.points)}
+                for term, mf in variable.terms.items()
+            },
         }
+        for name, variable in variables.items()
+    }
 
 
-    def _validate_inputs(self, moisture: float, temperature: float, radiation: float):
-        """Raise ValueError if any input is outside its expected range."""
-        _check_in_range("moisture", moisture, self.INPUT_RANGES["moisture"])
-        _check_in_range("temperature", temperature, self.INPUT_RANGES["temperature"])
-        _check_in_range("radiation", radiation, self.INPUT_RANGES["radiation"])
-
-    def _build_system(self) -> None:
-        """Build fuzzy variables, membership functions and rules once."""
-        if self._control_system is not None:
-            return
-
-        self._build_variables()
-        rules = self._build_rules()
-        self._control_system = ctrl.ControlSystem(rules)
-
-    def _build_variables(self) -> None:
-        """Create antecedents, consequents and their membership functions."""
-        # -- Antecedents --
-        Moisture = ctrl.Antecedent(np.arange(0.0, 52.56, 1.0), "Moisture")
-        Temperature = ctrl.Antecedent(np.arange(0.0, 25.0, 1.0), "Temperature")
-        Radiation = ctrl.Antecedent(np.arange(0.0, 3500.0, 1.0), "Radiation")
-
-        # -- Consequent --
-        IrrTime = ctrl.Consequent(np.arange(0.0, 32.0, 1.0), "IrrTime")
-
-        # Moisture membership functions
-        Moisture["LowM"] = fuzz.trapmf(Moisture.universe, [-20.0, -20.0, 15.0, 30.0])
-        Moisture["MediumM"] = fuzz.trimf(Moisture.universe, [15.0, 30.0, 45.0])
-        Moisture["HighM"] = fuzz.trapmf(Moisture.universe, [30.0, 45.0, 65.0, 65.0])
-
-        # Temperature membership functions
-        Temperature["LowT"] = fuzz.trapmf(Temperature.universe, [-2.0, -2.0, 10.0, 15.0])
-        Temperature["MediumT"] = fuzz.trimf(Temperature.universe, [10.0, 15.0, 20.0])
-        Temperature["HighT"] = fuzz.trapmf(Temperature.universe, [15.0, 20.0, 25.0, 25.0])
-
-        # Radiation membership functions
-        Radiation["LowR"] = fuzz.trapmf(Radiation.universe, [-10.0, -10.0, 10.0, 200.0])
-        Radiation["MediumR"] = fuzz.trapmf(Radiation.universe, [10.0, 200.0, 1000.0, 1400.0])
-        Radiation["HighR"] = fuzz.trapmf(Radiation.universe, [1000.0, 1400.0, 3550.0, 3550.0])
-
-        # Irrigation time membership functions
-        IrrTime["Nothing"] = fuzz.trapmf(IrrTime.universe, [-20.0, -20.0, 0.0, 8.0])
-        IrrTime["VeryLittle"] = fuzz.trimf(IrrTime.universe, [0.0, 8.0, 16.0])
-        IrrTime["Little"] = fuzz.trimf(IrrTime.universe, [8.0, 16.0, 24.0])
-        IrrTime["Long"] = fuzz.trimf(IrrTime.universe, [16.0, 24.0, 32.0])
-        IrrTime["VeryLong"] = fuzz.trapmf(IrrTime.universe, [24.0, 32.0, 40.0, 40.0])
-
-        self._antecedents = {
-            "Moisture": Moisture,
-            "Temperature": Temperature,
-            "Radiation": Radiation,
-        }
-        self._consequents = {"IrrTime": IrrTime}
-
-    def _build_rules(self) -> list[ctrl.Rule]:
-        """Build the 27 Mamdani-style rules (3 × 3 × 3 combinations)."""
-        M = self._antecedents["Moisture"]
-        T = self._antecedents["Temperature"]
-        R = self._antecedents["Radiation"]
-        O = self._consequents["IrrTime"]
-
-        return [
-            ctrl.Rule(M["LowM"] & T["LowT"] & R["LowR"], O["VeryLong"]),
-            ctrl.Rule(M["LowM"] & T["LowT"] & R["MediumR"], O["VeryLong"]),
-            ctrl.Rule(M["LowM"] & T["LowT"] & R["HighR"], O["VeryLong"]),
-            ctrl.Rule(M["LowM"] & T["MediumT"] & R["LowR"], O["Long"]),
-            ctrl.Rule(M["LowM"] & T["MediumT"] & R["MediumR"], O["Long"]),
-            ctrl.Rule(M["LowM"] & T["MediumT"] & R["HighR"], O["Little"]),
-            ctrl.Rule(M["LowM"] & T["HighT"] & R["LowR"], O["VeryLong"]),
-            ctrl.Rule(M["LowM"] & T["HighT"] & R["MediumR"], O["VeryLittle"]),
-            ctrl.Rule(M["LowM"] & T["HighT"] & R["HighR"], O["Nothing"]),
-            ctrl.Rule(M["MediumM"] & T["LowT"] & R["LowR"], O["Little"]),
-            ctrl.Rule(M["MediumM"] & T["LowT"] & R["MediumR"], O["Little"]),
-            ctrl.Rule(M["MediumM"] & T["LowT"] & R["HighR"], O["Little"]),
-            ctrl.Rule(M["MediumM"] & T["MediumT"] & R["LowR"], O["Little"]),
-            ctrl.Rule(M["MediumM"] & T["MediumT"] & R["MediumR"], O["Little"]),
-            ctrl.Rule(M["MediumM"] & T["MediumT"] & R["HighR"], O["VeryLittle"]),
-            ctrl.Rule(M["MediumM"] & T["HighT"] & R["LowR"], O["Long"]),
-            ctrl.Rule(M["MediumM"] & T["HighT"] & R["MediumR"], O["VeryLittle"]),
-            ctrl.Rule(M["MediumM"] & T["HighT"] & R["HighR"], O["Nothing"]),
-            ctrl.Rule(M["HighM"] & T["LowT"] & R["LowR"], O["Nothing"]),
-            ctrl.Rule(M["HighM"] & T["LowT"] & R["MediumR"], O["Nothing"]),
-            ctrl.Rule(M["HighM"] & T["LowT"] & R["HighR"], O["Nothing"]),
-            ctrl.Rule(M["HighM"] & T["MediumT"] & R["LowR"], O["Nothing"]),
-            ctrl.Rule(M["HighM"] & T["MediumT"] & R["MediumR"], O["Nothing"]),
-            ctrl.Rule(M["HighM"] & T["MediumT"] & R["HighR"], O["Nothing"]),
-            ctrl.Rule(M["HighM"] & T["HighT"] & R["LowR"], O["Nothing"]),
-            ctrl.Rule(M["HighM"] & T["HighT"] & R["MediumR"], O["Nothing"]),
-            ctrl.Rule(M["HighM"] & T["HighT"] & R["HighR"], O["Nothing"]),
-        ]
-
-    @staticmethod
-    def _extract_mf_data(fuzzy_var) -> dict:
-        """
-        Extract (x, y) points for every membership function of a fuzzy variable.
-
-        Returns a dict suitable for JSON serialisation and Chart.js rendering.
-        """
-        universe = fuzzy_var.universe.tolist()
-        return {
-            term_name: {
-                "x": universe,
-                "y": mf.mf.tolist(),
-            }
-            for term_name, mf in fuzzy_var.terms.items()
-        }
-
-    def _build_chart_data(
-        self, sim: ctrl.ControlSystemSimulation, crisp_value: float, moisture: float, temperature: float,radiation: float ) -> dict:
-        """Build chart data with membership curves and activated output area."""
-        activated_y = (
-            sim.output_membership_values.tolist()
-            if hasattr(sim, "output_membership_values")
-            else self._consequents["IrrTime"]["Nothing"].mf.tolist()
+def _build_control_system() -> tuple[
+    dict[str, ctrl.Antecedent], ctrl.Consequent, ctrl.ControlSystem
+]:
+    antecedents = {
+        name: _with_terms(ctrl.Antecedent(variable.universe, name), variable)
+        for name, variable in INPUTS.items()
+    }
+    consequent = _with_terms(
+        ctrl.Consequent(OUTPUT.universe, 'irrigation_time'), OUTPUT
+    )
+    rules = [
+        ctrl.Rule(
+            antecedents['moisture'][moisture]
+            & antecedents['temperature'][temperature]
+            & antecedents['radiation'][radiation],
+            consequent[output],
         )
+        for (moisture, temperature, radiation), output in RULES.items()
+    ]
+    return antecedents, consequent, ctrl.ControlSystem(rules)
 
-        return {
-            "moisture": self._extract_mf_data(self._antecedents["Moisture"]),
-            "temperature": self._extract_mf_data(self._antecedents["Temperature"]),
-            "radiation": self._extract_mf_data(self._antecedents["Radiation"]),
-            "output": {
-                **self._extract_mf_data(self._consequents["IrrTime"]),
-                "activated": {
-                    "x": self._consequents["IrrTime"].universe.tolist(),
-                    "y": activated_y,
-                },
-            },
-            "crisp_value": crisp_value,
-            "inputs": {
-                "moisture": moisture,
-                "temperature": temperature,
-                "radiation": radiation,
-            },
-        }
+
+def _with_terms(fuzzy_var, variable: FuzzyVariable):
+    for term, mf in variable.terms.items():
+        fuzzy_var[term] = mf.evaluate(fuzzy_var.universe)
+    return fuzzy_var
+
+
+def _term_degrees(fuzzy_var, simulation) -> dict[str, float]:
+    return {
+        term: round(float(fuzzy_var.terms[term].membership_value[simulation]), 3)
+        for term in fuzzy_var.terms
+    }
+
+
+def _dominant_output_term(minutes: float) -> str:
+    universe = OUTPUT.universe
+    degrees = {
+        term: fuzz.interp_membership(universe, mf.evaluate(universe), minutes)
+        for term, mf in OUTPUT.terms.items()
+    }
+    return max(degrees, key=degrees.get)

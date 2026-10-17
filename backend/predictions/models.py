@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 
 
@@ -49,13 +48,31 @@ class IrrigationPrediction(models.Model):
     output_label = models.CharField(
         max_length=20, blank=True,
         verbose_name=_('Output label'),
-        help_text=_('Fuzzy output label: Nothing / VeryLittle / Little / Long / VeryLong'),
+        help_text=_('Dominant output term: nothing / very_little / little / long / very_long'),
     )
 
-    chart_data = models.JSONField(
-        null=True, blank=True,
-        verbose_name=_('Chart data'),
-        help_text=_('Membership points to render in the frontend'),
+    input_memberships = models.JSONField(
+        default=dict, blank=True,
+        verbose_name=_('Input memberships'),
+        help_text=_('Degree (0–1) of each input in each of its fuzzy terms'),
+    )
+    output_activation = models.JSONField(
+        default=dict, blank=True,
+        verbose_name=_('Output activation'),
+        help_text=_('Firing strength (0–1) of each output term'),
+    )
+    clipped_inputs = models.JSONField(
+        default=list, blank=True,
+        verbose_name=_('Clipped inputs'),
+        help_text=_('Inputs outside the model range that were clipped to its bounds'),
+    )
+    input_sources = models.JSONField(
+        default=dict, blank=True,
+        verbose_name=_('Input sources'),
+        help_text=_(
+            'Average of each input per source (field sensors, weather station); '
+            'null when the source had no readings'
+        ),
     )
 
     llm_explanation = models.TextField(
@@ -93,7 +110,10 @@ class IrrigationPrediction(models.Model):
             FieldPanel('output_label'),
         ], heading=_('Output')),
         MultiFieldPanel([
-            FieldPanel('chart_data'),
+            FieldPanel('input_memberships'),
+            FieldPanel('output_activation'),
+            FieldPanel('clipped_inputs'),
+            FieldPanel('input_sources'),
             FieldPanel('llm_explanation'),
         ], heading=_('Details')),
         MultiFieldPanel([
@@ -105,7 +125,7 @@ class IrrigationPrediction(models.Model):
     class Meta:
         verbose_name = _('Irrigation prediction')
         verbose_name_plural = _('Irrigation predictions')
-        ordering = ['-requested_at']
+        ordering = ['-requested_at', '-id']
 
     def __str__(self):
         return f'{self.plot.name} — {self.status} [{self.requested_at:%Y-%m-%d %H:%M}]'

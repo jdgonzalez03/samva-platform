@@ -1,0 +1,78 @@
+{
+  "predictions": {
+    "title": "Predicciones",
+    "subtitle": "Modelos que estiman qué hacer en tus lotes a partir de las lecturas de sus sensores.",
+    "modelsError": "No se pudieron cargar los modelos de predicción.",
+    "retry": "Reintentar",
+    "models": {
+      "fuzzyIrrigation": {
+        "title": "Riego con lógica difusa",
+        "description": "Estima cuántos minutos regar un lote según la humedad del suelo, la temperatura y la radiación solar recientes."
+      }
+    },
+    "fuzzy": {
+      "title": "Lógica difusa: riego",
+      "subtitle": "Calcula el tiempo de riego de un lote con el promedio reciente de sus sensores.",
+      "noFarm": "Selecciona una finca para calcular una predicción.",
+      "noPlots": "Esta finca no tiene lotes.",
+      "plot": "Lote",
+      "window": "Promedio de",
+      "hoursOption": "Últimas {hours} h",
+      "calculate": "Calcular predicción",
+      "empty": "Elige un lote y calcula una predicción para ver el resultado.",
+      "error": "No se pudo calcular la predicción.",
+      "missing": "No disponible en este momento: {variables}",
+      "missingVariables": {
+        "soil_moisture": "humedad del suelo",
+        "air_temperature": "temperatura del aire",
+        "solar_radiation": "radiación solar"
+      },
+      "result": {
+        "title": "Tiempo de riego recomendado",
+        "minutes": "{value} min",
+        "computedAt": "Calculado el {date} con el promedio de las últimas {hours} h."
+      },
+      "labels": {
+        "nothing": "Sin riego",
+        "very_little": "Muy poco",
+        "little": "Poco",
+        "long": "Largo",
+        "very_long": "Muy largo"
+      },
+      "inputs": {
+        "title": "Condiciones del lote",
+        "moisture": "Humedad del suelo",
+        "temperature": "Temperatura del aire",
+        "radiation": "Radiación solar"
+      },
+      "sources": {
+        "field": "Sensores de campo:",
+        "station": "Estación:",
+        "used": "Usado:",
+        "none": "sin datos"
+      },
+      "terms": {
+        "low": "Baja",
+        "medium": "Media",
+        "high": "Alta"
+      },
+      "membership": "Pertenencia a «{term}»",
+      "clipped": "Fuera del rango del modelo ({min}–{max} {unit}): se calculó con el valor límite.",
+      "chart": {
+        "title": "Activación de los grupos de riego",
+        "description": "Cada curva es un grupo de riego; el área sombreada muestra cuánto se activó cada uno y la línea marca el resultado.",
+        "axis": "Minutos de riego",
+        "alternative": "Activación por grupo: {list}."
+      },
+      "history": {
+        "title": "Predicciones anteriores",
+        "empty": "Todavía no hay predicciones para este lote.",
+        "error": "No se pudo cargar el historial de predicciones.",
+        "date": "Fecha",
+        "minutes": "Minutos",
+        "label": "Grupo",
+        "window": "Periodo"
+      }
+    }
+  }
+}

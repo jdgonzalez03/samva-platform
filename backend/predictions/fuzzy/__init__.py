@@ -1,5 +1,13 @@
-from predictions.fuzzy.irrigation import FuzzyIrrigationEngine
+from predictions.fuzzy.irrigation import (
+    IrrigationResult,
+    input_term_degrees,
+    membership_definitions,
+    predict_irrigation,
+)
 
 __all__ = [
-    "FuzzyIrrigationEngine",
+    'IrrigationResult',
+    'input_term_degrees',
+    'membership_definitions',
+    'predict_irrigation',
 ]

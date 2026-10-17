@@ -1,0 +1,78 @@
+{
+  "predictions": {
+    "title": "Predictions",
+    "subtitle": "Models that estimate what to do on your plots from their sensor readings.",
+    "modelsError": "The prediction models could not be loaded.",
+    "retry": "Retry",
+    "models": {
+      "fuzzyIrrigation": {
+        "title": "Fuzzy logic irrigation",
+        "description": "Estimates how many minutes to irrigate a plot from its recent soil moisture, temperature and solar radiation."
+      }
+    },
+    "fuzzy": {
+      "title": "Fuzzy logic: irrigation",
+      "subtitle": "Calculate a plot's irrigation time from the recent average of its sensors.",
+      "noFarm": "Select a farm to calculate a prediction.",
+      "noPlots": "This farm has no plots.",
+      "plot": "Plot",
+      "window": "Average of",
+      "hoursOption": "Last {hours} h",
+      "calculate": "Calculate prediction",
+      "empty": "Pick a plot and calculate a prediction to see the result.",
+      "error": "The prediction could not be calculated.",
+      "missing": "Not available right now: {variables}",
+      "missingVariables": {
+        "soil_moisture": "soil moisture",
+        "air_temperature": "air temperature",
+        "solar_radiation": "solar radiation"
+      },
+      "result": {
+        "title": "Recommended irrigation time",
+        "minutes": "{value} min",
+        "computedAt": "Calculated on {date} from the average of the last {hours} h."
+      },
+      "labels": {
+        "nothing": "No irrigation",
+        "very_little": "Very little",
+        "little": "Little",
+        "long": "Long",
+        "very_long": "Very long"
+      },
+      "inputs": {
+        "title": "Plot conditions",
+        "moisture": "Soil moisture",
+        "temperature": "Air temperature",
+        "radiation": "Solar radiation"
+      },
+      "sources": {
+        "field": "Field sensors:",
+        "station": "Station:",
+        "used": "Used:",
+        "none": "no data"
+      },
+      "terms": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "membership": "Membership in “{term}”",
+      "clipped": "Outside the model range ({min}–{max} {unit}): the limit value was used.",
+      "chart": {
+        "title": "Irrigation group activation",
+        "description": "Each curve is an irrigation group; the shaded area shows how much each one fired and the line marks the result.",
+        "axis": "Irrigation minutes",
+        "alternative": "Activation per group: {list}."
+      },
+      "history": {
+        "title": "Previous predictions",
+        "empty": "There are no predictions for this plot yet.",
+        "error": "The prediction history could not be loaded.",
+        "date": "Date",
+        "minutes": "Minutes",
+        "label": "Group",
+        "window": "Period"
+      }
+    }
+  }
+}

@@ -28,6 +28,7 @@ from cms.urls import urlpatterns as cms_urlpatterns
 from core.urls import api_urls as core_api_urls
 from core.urls import urlpatterns as core_urlpatterns
 from farm.urls import urlpatterns as farm_urlpatterns
+from predictions.urls import urlpatterns as predictions_urlpatterns
 from sensors.urls import urlpatterns as sensors_urlpatterns
 
 api_urls = [
@@ -42,6 +43,7 @@ urlpatterns = [
     path("api/accounts/", include((accounts_urlpatterns, "accounts"))),
     path("api/farm/", include((farm_urlpatterns, "farm"))),
     path("api/sensors/", include((sensors_urlpatterns, "sensors"))),
+    path("api/predictions/", include((predictions_urlpatterns, "predictions"))),
     # API documentation
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
