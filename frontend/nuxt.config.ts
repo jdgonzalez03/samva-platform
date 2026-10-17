@@ -4,7 +4,46 @@ import { fileURLToPath } from 'url'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/ui', '@nuxt/icon', '@nuxt/eslint', '@nuxtjs/i18n'],
+  modules: [
+    '@nuxt/ui',
+    '@nuxt/icon',
+    '@nuxt/eslint',
+    '@nuxtjs/i18n',
+    '@vite-pwa/nuxt',
+  ],
+  pwa: {
+    registerType: 'autoUpdate',
+    // Icons, favicon and their <head> links are generated from public/logo.svg
+    // by pwa-assets.config.ts at build time.
+    pwaAssets: { config: true },
+    manifest: {
+      name: 'SAMVA',
+      short_name: 'SAMVA',
+      description:
+        'Monitoreo de sensores y predicción de riego para fincas agrícolas.',
+      lang: 'es',
+      start_url: '/dashboard',
+      scope: '/',
+      display: 'standalone',
+      theme_color: '#171717',
+      background_color: '#171717',
+    },
+    workbox: {
+      // Pages are server-rendered per user, so only the static build assets are
+      // precached; navigations and /api/ always go to the network, which keeps
+      // the dashboard from showing stale sensor readings as current.
+      navigateFallback: null,
+      globPatterns: ['**/*.{js,css,png,svg,ico,woff2}'],
+    },
+    client: {
+      installPrompt: true,
+    },
+  },
+  icon: {
+    // Off the default `/api/_nuxt_icon`: nginx sends every `/api/` request to
+    // Django, so icons not inlined by SSR would 404 behind the proxy.
+    localApiEndpoint: '/_nuxt_icon',
+  },
   i18n: {
     defaultLocale: 'es',
     strategy: 'prefix_except_default',

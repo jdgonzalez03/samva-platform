@@ -12,6 +12,7 @@ const uiLocale = computed(() => (locale.value === 'en' ? en : es))
 </script>
 
 <template>
+  <NuxtPwaAssets />
   <UApp :locale="uiLocale">
     <NuxtLayout>
       <NuxtPage />
