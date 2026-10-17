@@ -9,6 +9,7 @@ For the full picture of how the system is built, read [docs/ARCHITECTURE.md](doc
 - **Backend**: Django + Wagtail + Django REST Framework + Celery + PostGIS + JWT
 - **Frontend**: Nuxt 4 + Nuxt UI v4 + Tailwind CSS 4 + TypeScript
 - **E2E**: Playwright
+- **AI**: scikit-fuzzy (irrigation model) + Ollama with a local LLM (chat assistant)
 - **Infra**: Docker Compose, Nginx, RabbitMQ
 
 Exact versions live in `backend/requirements.txt` and `frontend/package.json`.
@@ -42,6 +43,15 @@ Then you have:
 - Django admin: http://localhost:8000/django-admin/
 
 The container runs migrations and creates a superuser (`admin` / `admin`) at start.
+
+The chat assistant needs its language model downloaded once into the `ollama` service:
+
+```bash
+cd backend
+make assistant-model   # pulls llama3.2:3b (~2 GB)
+```
+
+In Docker the model runs on CPU, which is slow on a laptop. On macOS you can install [Ollama](https://ollama.com) natively, run `ollama pull llama3.2:3b`, and start the backend with `OLLAMA_URL=http://host.docker.internal:11434` to use the GPU.
 
 Start the frontend in another terminal:
 
