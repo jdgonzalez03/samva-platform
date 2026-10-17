@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.contrib.gis import forms as gis_forms
@@ -15,13 +16,14 @@ from farm.forms import FarmAdminForm
 from farm.models import Farm, Plot
 from farm.wagtail_hooks import WagtailFarmAdmin
 from farmer.models import Farmer
+from predictions.models import IrrigationPrediction
 from sensors.models import (
     EnvironmentalVariable,
     FieldSensor,
+    FieldSensorVariable,
     SemanticKey,
+    SensorMeasurement,
     WeatherMeasurement,
-    WeatherSnapshot,
-    WeatherStation,
     WeatherStationVariableConfiguration,
 )
 
@@ -481,198 +483,6 @@ class PlotDetailTests(GeoAPITestCaseMixin, APITestCase):
             self.client.get(reverse("farm:plot-detail", args=[self.plot.pk]))
 
 
-class FarmWeatherTests(GeoAPITestCaseMixin, APITestCase):
-    """AC22/AC33 plus the absent-key semantics of the weather endpoint."""
-
-    @classmethod
-    def setUpTestData(cls):
-        cls.user, cls.farmer = cls.create_farmer("juan")
-        cls.other_user, cls.other_farmer = cls.create_farmer("maria")
-
-        cls.farm = Farm.objects.create(
-            owner=cls.farmer, name="Finca El Tesoro", address="Vereda El Tesoro"
-        )
-        cls.stationless_farm = Farm.objects.create(
-            owner=cls.farmer, name="Finca Sin Lotes", address="Vereda C"
-        )
-        cls.other_farm = Farm.objects.create(
-            owner=cls.other_farmer, name="Finca La Montaña", address="Vereda El Roble"
-        )
-
-        cls.temperature = EnvironmentalVariable.objects.create(
-            name="Temperatura del aire",
-            semantic_key=SemanticKey.AIR_TEMPERATURE,
-            unit="°C",
-        )
-        cls.radiation = EnvironmentalVariable.objects.create(
-            name="Radiación solar",
-            semantic_key=SemanticKey.SOLAR_RADIATION,
-            unit="W/m²",
-        )
-        cls.pressure = EnvironmentalVariable.objects.create(
-            name="Presión barométrica",
-            semantic_key=SemanticKey.OTHER,
-            unit="hPa",
-        )
-        cls.now = timezone.now()
-
-    @classmethod
-    def make_station(cls, farm=None, name="Estación", is_active=True):
-        return WeatherStation.objects.create(
-            farm=farm or cls.farm,
-            name=name,
-            station_id=f"seed-{name}",
-            api_key="seed-not-a-real-key",
-            is_active=is_active,
-        )
-
-    @classmethod
-    def configure(cls, station, variable, is_active=True):
-        return WeatherStationVariableConfiguration.objects.create(
-            station=station,
-            env_variable=variable,
-            field_key=f"{variable.semantic_key}-{station.pk}",
-            is_active=is_active,
-        )
-
-    @classmethod
-    def record(cls, station_variable, value, minutes_ago=0):
-        snapshot, _ = WeatherSnapshot.objects.get_or_create(
-            station=station_variable.station,
-            recorded_at=cls.now - timedelta(minutes=minutes_ago),
-        )
-        return WeatherMeasurement.objects.create(
-            snapshot=snapshot, station_variable=station_variable, value=value
-        )
-
-    def weather(self, farm=None):
-        self.client.force_authenticate(user=self.user)
-        return self.client.get(reverse("farm:farm-weather", args=[(farm or self.farm).pk]))
-
-    def test_an_entry_carries_exactly_value_unit_and_recorded_at(self):
-        self.record(self.configure(self.make_station(), self.temperature), "27.40")
-
-        payload = self.weather().json()
-
-        self.assertEqual(set(payload.keys()), {"air_temperature"})
-        entry = payload["air_temperature"]
-        self.assertEqual(set(entry.keys()), {"value", "unit", "recorded_at"})
-        self.assertIsInstance(entry["value"], float)
-        self.assertEqual(entry["value"], 27.4)
-        self.assertEqual(entry["unit"], "°C")
-        self.assertTrue(entry["recorded_at"].endswith("Z"))
-
-    def test_the_newest_reading_across_active_stations_wins(self):
-        old = self.configure(self.make_station(name="Vieja"), self.temperature)
-        new = self.configure(self.make_station(name="Nueva"), self.temperature)
-        self.record(old, "18.00", minutes_ago=60)
-        self.record(new, "27.40", minutes_ago=3)
-
-        self.assertEqual(self.weather().json()["air_temperature"]["value"], 27.4)
-
-    def test_a_tie_on_recorded_at_breaks_on_the_highest_station_id(self):
-        first = self.configure(self.make_station(name="Primera"), self.temperature)
-        second = self.configure(self.make_station(name="Segunda"), self.temperature)
-        self.record(first, "18.00", minutes_ago=5)
-        self.record(second, "27.40", minutes_ago=5)
-
-        self.assertEqual(self.weather().json()["air_temperature"]["value"], 27.4)
-
-    def test_an_inactive_station_is_ignored_even_with_the_newest_reading(self):
-        active = self.configure(self.make_station(name="Activa"), self.temperature)
-        inactive = self.configure(
-            self.make_station(name="Apagada", is_active=False), self.temperature
-        )
-        self.record(active, "18.00", minutes_ago=60)
-        self.record(inactive, "27.40", minutes_ago=1)
-
-        self.assertEqual(self.weather().json()["air_temperature"]["value"], 18.0)
-
-    def test_an_inactive_variable_configuration_is_ignored(self):
-        station = self.make_station()
-        self.record(self.configure(station, self.temperature, is_active=False), "27.40")
-
-        self.assertEqual(self.weather().json(), {})
-
-    def test_a_null_value_leaves_the_key_absent(self):
-        station = self.make_station()
-        self.record(self.configure(station, self.temperature), None)
-
-        payload = self.weather().json()
-
-        self.assertEqual(payload, {})
-        self.assertNotIn("air_temperature", payload)
-
-    def test_a_null_value_does_not_hide_an_older_usable_reading(self):
-        station_variable = self.configure(self.make_station(), self.temperature)
-        self.record(station_variable, "27.40", minutes_ago=30)
-        self.record(station_variable, None, minutes_ago=1)
-
-        self.assertEqual(self.weather().json()["air_temperature"]["value"], 27.4)
-
-    def test_the_other_semantic_key_never_appears(self):
-        station = self.make_station()
-        self.record(self.configure(station, self.pressure), "1013.00")
-        self.record(self.configure(station, self.temperature), "27.40")
-
-        self.assertEqual(set(self.weather().json().keys()), {"air_temperature"})
-
-    def test_an_unconfigured_variable_is_absent_rather_than_null(self):
-        station = self.make_station()
-        self.record(self.configure(station, self.temperature), "27.40")
-
-        payload = self.weather().json()
-
-        self.assertNotIn("solar_radiation", payload)
-        self.assertEqual(list(payload), ["air_temperature"])
-
-    def test_a_farm_without_stations_returns_an_empty_object(self):
-        response = self.weather(farm=self.stationless_farm)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), {})
-
-    def test_query_count_does_not_grow_with_the_number_of_stations(self):
-        single = self.configure(self.make_station(name="Única"), self.temperature)
-        self.record(single, "27.40", minutes_ago=3)
-        self.client.force_authenticate(user=self.user)
-
-        # The two queries are the farm ownership lookup and the DISTINCT ON measurement query.
-        with self.assertNumQueries(2):
-            self.client.get(reverse("farm:farm-weather", args=[self.farm.pk]))
-
-        for index in range(2):
-            extra = self.configure(
-                self.make_station(name=f"Extra {index}"), self.radiation
-            )
-            self.record(extra, "612.00", minutes_ago=index + 1)
-
-        with self.assertNumQueries(2):
-            response = self.client.get(reverse("farm:farm-weather", args=[self.farm.pk]))
-
-        self.assertEqual(set(response.json().keys()), {"air_temperature", "solar_radiation"})
-
-    def test_another_farmers_farm_is_404(self):
-        self.client.force_authenticate(user=self.user)
-
-        response = self.client.get(reverse("farm:farm-weather", args=[self.other_farm.pk]))
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertEqual(response.json(), {"detail": "Not found."})
-
-    def test_an_unknown_farm_is_404(self):
-        self.client.force_authenticate(user=self.user)
-
-        response = self.client.get(reverse("farm:farm-weather", args=[999999]))
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_weather_requires_authentication(self):
-        response = self.client.get(reverse("farm:farm-weather", args=[self.farm.pk]))
-
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
 class SeedDataContractTests(APITestCase):
     """The dev/E2E seed must expose the unhappy paths, not only the happy one.
 
@@ -724,18 +534,21 @@ class SeedDataContractTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), [])
 
-    def test_the_seeded_weather_covers_fresh_stale_and_missing_readings(self):
-        fresh = self.client.get(reverse("farm:farm-weather", args=[1])).json()
-        stale = self.client.get(reverse("farm:farm-weather", args=[2])).json()
-        stationless = self.client.get(reverse("farm:farm-weather", args=[13])).json()
+    def test_the_seeded_stations_cover_online_stale_inactive_and_missing(self):
+        def statuses(farm_id):
+            stations = self.client.get(reverse("sensors:farm-stations", args=[farm_id])).json()
+            return {station["name"]: station["status"] for station in stations}
 
-        self.assertEqual(set(fresh), {"air_temperature", "solar_radiation"})
-        self.assertLess(self.age_minutes(fresh["air_temperature"]), 30)
-
-        self.assertEqual(set(stale), {"air_temperature"})
-        self.assertGreater(self.age_minutes(stale["air_temperature"]), 30)
-
-        self.assertEqual(stationless, {})
+        self.assertEqual(
+            statuses(1),
+            {
+                "Estación El Tesoro Antigua": "inactive",
+                "Estación El Tesoro Norte": "online",
+                "Estación El Tesoro Sur": "online",
+            },
+        )
+        self.assertEqual(statuses(2), {"Estación San Vicente": "stale"})
+        self.assertEqual(statuses(13), {})
 
     def test_the_seeded_readings_never_come_from_an_inactive_station(self):
         inactive_station_variables = WeatherStationVariableConfiguration.objects.filter(
@@ -748,10 +561,6 @@ class SeedDataContractTests(APITestCase):
                 station_variable__in=inactive_station_variables
             ).exists()
         )
-
-    def age_minutes(self, reading):
-        recorded_at = datetime.fromisoformat(reading["recorded_at"])
-        return (timezone.now() - recorded_at).total_seconds() / 60
 
 
 class PlotListOrderingTests(GeoAPITestCaseMixin, APITestCase):
@@ -849,3 +658,324 @@ class FarmAdminFormTests(TestCase):
 
         self.assertTrue(form.is_valid(), form.errors)
         self.assertIsNone(form.save().boundary)
+
+
+class PlotOverviewTests(GeoAPITestCaseMixin, APITestCase):
+    """Current conditions, hourly series, sensors and last irrigation of one plot."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user, farmer = cls.create_farmer("juan")
+        _, other_farmer = cls.create_farmer("maria")
+        farm = Farm.objects.create(owner=farmer, name="Finca El Tesoro", address="Vereda")
+        other_farm = Farm.objects.create(owner=other_farmer, name="Finca Ajena", address="Vereda")
+        cls.plot = Plot.objects.create(farm=farm, name="Lote Norte")
+        cls.other_plot = Plot.objects.create(farm=other_farm, name="Lote Ajeno")
+
+        cls.sensor = FieldSensor.objects.create(plot=cls.plot, name="Sensor 1")
+        cls.inactive_sensor = FieldSensor.objects.create(
+            plot=cls.plot, name="Sensor apagado", is_active=False
+        )
+        cls.channels = {}
+        for key, unit in (
+            (SemanticKey.SOIL_MOISTURE, "%"),
+            (SemanticKey.AIR_TEMPERATURE, "°C"),
+            (SemanticKey.RELATIVE_HUMIDITY, "%"),
+        ):
+            variable = EnvironmentalVariable.objects.create(name=key, semantic_key=key, unit=unit)
+            cls.channels[key] = FieldSensorVariable.objects.create(
+                sensor=cls.sensor, env_variable=variable
+            )
+        cls.inactive_moisture = FieldSensorVariable.objects.create(
+            sensor=cls.inactive_sensor,
+            env_variable=cls.channels[SemanticKey.SOIL_MOISTURE].env_variable,
+        )
+        cls.now = timezone.now().replace(microsecond=0)
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
+
+    def record(self, key, value, minutes_ago, channel=None):
+        SensorMeasurement.objects.create(
+            sensor_variable=channel or self.channels[key],
+            value=Decimal(str(value)),
+            recorded_at=self.now - timedelta(minutes=minutes_ago),
+        )
+
+    def overview(self, plot=None):
+        return self.client.get(reverse("farm:plot-overview", args=[(plot or self.plot).pk]))
+
+    def conditions_by_key(self, response):
+        return {row["semantic_key"]: row for row in response.json()["conditions"]}
+
+    def test_conditions_hold_the_latest_reading_and_its_24h_change(self):
+        self.record(SemanticKey.SOIL_MOISTURE, 25, minutes_ago=5)
+        self.record(SemanticKey.SOIL_MOISTURE, 40, minutes_ago=60)
+        self.record(SemanticKey.SOIL_MOISTURE, 31, minutes_ago=24 * 60 + 10)
+
+        condition = self.conditions_by_key(self.overview())[SemanticKey.SOIL_MOISTURE]
+
+        self.assertEqual(condition["value"], 25.0)
+        self.assertEqual(condition["unit"], "%")
+        self.assertEqual(condition["change_24h"], -6.0)
+
+    def test_change_is_null_without_a_reading_around_24h_ago(self):
+        self.record(SemanticKey.SOIL_MOISTURE, 25, minutes_ago=5)
+        self.record(SemanticKey.SOIL_MOISTURE, 31, minutes_ago=3 * 24 * 60)
+
+        condition = self.conditions_by_key(self.overview())[SemanticKey.SOIL_MOISTURE]
+
+        self.assertIsNone(condition["change_24h"])
+
+    def test_model_inputs_are_classified_with_the_fuzzy_terms(self):
+        self.record(SemanticKey.SOIL_MOISTURE, 40, minutes_ago=5)
+        self.record(SemanticKey.AIR_TEMPERATURE, 17, minutes_ago=5)
+        self.record(SemanticKey.RELATIVE_HUMIDITY, 80, minutes_ago=5)
+
+        conditions = self.conditions_by_key(self.overview())
+
+        moisture = conditions[SemanticKey.SOIL_MOISTURE]
+        self.assertEqual(moisture["level"], "high")
+        self.assertEqual(moisture["level_degrees"], {"low": 0.0, "medium": 0.333, "high": 0.667})
+        self.assertEqual(conditions[SemanticKey.AIR_TEMPERATURE]["level"], "medium")
+        self.assertIsNone(conditions[SemanticKey.RELATIVE_HUMIDITY]["level"])
+        self.assertIsNone(conditions[SemanticKey.RELATIVE_HUMIDITY]["level_degrees"])
+
+    def test_conditions_follow_the_display_order(self):
+        for key in self.channels:
+            self.record(key, 10, minutes_ago=5)
+
+        keys = [row["semantic_key"] for row in self.overview().json()["conditions"]]
+
+        self.assertEqual(
+            keys,
+            [SemanticKey.SOIL_MOISTURE, SemanticKey.AIR_TEMPERATURE, SemanticKey.RELATIVE_HUMIDITY],
+        )
+
+    def test_inactive_sensors_do_not_feed_the_conditions(self):
+        self.record(SemanticKey.SOIL_MOISTURE, 25, minutes_ago=30)
+        self.record(SemanticKey.SOIL_MOISTURE, 99, minutes_ago=1, channel=self.inactive_moisture)
+
+        condition = self.conditions_by_key(self.overview())[SemanticKey.SOIL_MOISTURE]
+
+        self.assertEqual(condition["value"], 25.0)
+
+    def test_series_are_hourly_over_the_last_week(self):
+        self.record(SemanticKey.SOIL_MOISTURE, 20, minutes_ago=10)
+        self.record(SemanticKey.SOIL_MOISTURE, 30, minutes_ago=3 * 24 * 60)
+        self.record(SemanticKey.SOIL_MOISTURE, 50, minutes_ago=8 * 24 * 60)
+
+        series = self.overview().json()["series"]
+
+        self.assertEqual(len(series), 1)
+        self.assertEqual(series[0]["bucket_seconds"], 3600)
+        self.assertEqual([point["value"] for point in series[0]["points"]], [30.0, 20.0])
+        for point in series[0]["points"]:
+            self.assertRegex(point["t"], r":00:00Z$")
+
+    def test_lists_the_plot_sensors_with_their_status(self):
+        response = self.overview()
+
+        sensors = {row["name"]: row["status"] for row in response.json()["sensors"]}
+        self.assertEqual(sensors, {"Sensor 1": "never_seen", "Sensor apagado": "inactive"})
+
+    def test_includes_the_latest_irrigation_prediction(self):
+        self.assertIsNone(self.overview().json()["irrigation"])
+        for minutes in (5, 12):
+            IrrigationPrediction.objects.create(
+                plot=self.plot,
+                avg_moisture=1,
+                avg_temperature=1,
+                avg_radiation=1,
+                irrigation_time_minutes=minutes,
+            )
+
+        irrigation = self.overview().json()["irrigation"]
+
+        self.assertEqual(irrigation["irrigation_time_minutes"], 12.0)
+
+    def test_empty_plot_returns_empty_sections(self):
+        payload = self.overview().json()
+
+        self.assertEqual(payload["conditions"], [])
+        self.assertEqual(payload["series"], [])
+
+    def test_plot_of_another_user_returns_404(self):
+        self.assertEqual(self.overview(self.other_plot).status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_requires_authentication(self):
+        self.client.force_authenticate(user=None)
+
+        self.assertEqual(self.overview().status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class FarmOverviewTests(GeoAPITestCaseMixin, APITestCase):
+    """Farm-wide conditions, per-plot summaries and sensors behind the dashboard."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user, farmer = cls.create_farmer("juan")
+        _, other_farmer = cls.create_farmer("maria")
+        cls.farm = Farm.objects.create(owner=farmer, name="Finca El Tesoro", address="Vereda")
+        cls.other_farm = Farm.objects.create(
+            owner=other_farmer, name="Finca Ajena", address="Vereda"
+        )
+        cls.north = Plot.objects.create(farm=cls.farm, name="Lote Norte")
+        cls.south = Plot.objects.create(farm=cls.farm, name="Lote Sur")
+        cls.empty = Plot.objects.create(farm=cls.farm, name="Lote Vacío")
+        foreign_plot = Plot.objects.create(farm=cls.other_farm, name="Lote Ajeno")
+
+        cls.moisture = EnvironmentalVariable.objects.create(
+            name="Humedad del suelo", semantic_key=SemanticKey.SOIL_MOISTURE, unit="%"
+        )
+        cls.channels = {}
+        for plot in (cls.north, cls.south, foreign_plot):
+            sensor = FieldSensor.objects.create(plot=plot, name=f"Sensor {plot.name}")
+            cls.channels[plot.pk] = FieldSensorVariable.objects.create(
+                sensor=sensor, env_variable=cls.moisture
+            )
+        cls.now = timezone.now().replace(microsecond=0)
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
+
+    def record(self, plot, value, minutes_ago):
+        SensorMeasurement.objects.create(
+            sensor_variable=self.channels[plot.pk],
+            value=Decimal(str(value)),
+            recorded_at=self.now - timedelta(minutes=minutes_ago),
+        )
+
+    def overview(self, farm=None):
+        return self.client.get(reverse("farm:farm-overview", args=[(farm or self.farm).pk]))
+
+    def plots_by_name(self, payload):
+        return {plot["name"]: plot for plot in payload["plots"]}
+
+    def test_farm_conditions_average_the_latest_reading_of_each_plot(self):
+        self.record(self.north, 20, minutes_ago=5)
+        self.record(self.north, 90, minutes_ago=60)
+        self.record(self.south, 40, minutes_ago=10)
+
+        [moisture] = self.overview().json()["conditions"]
+
+        self.assertEqual(moisture["value"], 30.0)
+        self.assertEqual(moisture["level"], "medium")
+
+    def test_farm_change_averages_the_plots_that_have_one(self):
+        self.record(self.north, 20, minutes_ago=5)
+        self.record(self.north, 30, minutes_ago=24 * 60 + 10)
+        self.record(self.south, 40, minutes_ago=5)
+
+        [moisture] = self.overview().json()["conditions"]
+
+        self.assertEqual(moisture["change_24h"], -10.0)
+
+    def test_every_plot_is_summarised_even_without_readings(self):
+        self.record(self.north, 20, minutes_ago=5)
+        IrrigationPrediction.objects.create(
+            plot=self.south,
+            avg_moisture=1,
+            avg_temperature=1,
+            avg_radiation=1,
+            irrigation_time_minutes=7,
+        )
+
+        plots = self.plots_by_name(self.overview().json())
+
+        self.assertEqual(list(plots), ["Lote Norte", "Lote Sur", "Lote Vacío"])
+        self.assertEqual(plots["Lote Norte"]["conditions"][0]["value"], 20.0)
+        self.assertIsNotNone(plots["Lote Norte"]["latest_reading_at"])
+        self.assertEqual(plots["Lote Sur"]["irrigation"]["irrigation_time_minutes"], 7.0)
+        self.assertEqual(plots["Lote Vacío"]["conditions"], [])
+        self.assertIsNone(plots["Lote Vacío"]["latest_reading_at"])
+        self.assertIsNone(plots["Lote Vacío"]["irrigation"])
+
+    def test_plot_series_are_hourly_per_variable(self):
+        self.record(self.north, 20, minutes_ago=10)
+        self.record(self.north, 30, minutes_ago=3 * 60)
+
+        plots = self.plots_by_name(self.overview().json())
+
+        [series] = plots["Lote Norte"]["series"]
+        self.assertEqual(series["semantic_key"], SemanticKey.SOIL_MOISTURE)
+        self.assertEqual([point["value"] for point in series["points"]], [30.0, 20.0])
+        self.assertEqual(plots["Lote Sur"]["series"], [])
+
+    def test_lists_the_farm_sensors_only(self):
+        names = [sensor["name"] for sensor in self.overview().json()["sensors"]]
+
+        self.assertEqual(names, ["Sensor Lote Norte", "Sensor Lote Sur"])
+
+    def test_farm_of_another_user_returns_404(self):
+        self.assertEqual(self.overview(self.other_farm).status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_requires_authentication(self):
+        self.client.force_authenticate(user=None)
+
+        self.assertEqual(self.overview().status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class PlotSummaryListTests(GeoAPITestCaseMixin, APITestCase):
+    """"Mis lotes": every plot the user owns, across farms, with light stats."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user, farmer = cls.create_farmer("juan")
+        _, other_farmer = cls.create_farmer("maria")
+        tesoro = Farm.objects.create(owner=farmer, name="Finca El Tesoro", address="Vereda")
+        vicente = Farm.objects.create(owner=farmer, name="Finca San Vicente", address="Vereda")
+        foreign = Farm.objects.create(owner=other_farmer, name="Finca Ajena", address="Vereda")
+        cls.north = Plot.objects.create(farm=tesoro, name="Lote Norte", geometry=a_polygon())
+        cls.vicente_plot = Plot.objects.create(farm=vicente, name="Lote Alto")
+        Plot.objects.create(farm=foreign, name="Lote Ajeno")
+
+        moisture = EnvironmentalVariable.objects.create(
+            name="Humedad del suelo", semantic_key=SemanticKey.SOIL_MOISTURE, unit="%"
+        )
+        sensor = FieldSensor.objects.create(plot=cls.north, name="Sensor 1")
+        FieldSensor.objects.create(plot=cls.north, name="Sensor apagado", is_active=False)
+        cls.channel = FieldSensorVariable.objects.create(sensor=sensor, env_variable=moisture)
+
+    def setUp(self):
+        self.client.force_authenticate(user=self.user)
+
+    def summaries(self):
+        return self.client.get(reverse("farm:plot-summary-list")).json()
+
+    def test_lists_the_user_plots_of_every_farm_ordered_by_farm(self):
+        names = [(row["farm"]["name"], row["name"]) for row in self.summaries()]
+
+        self.assertEqual(
+            names, [("Finca El Tesoro", "Lote Norte"), ("Finca San Vicente", "Lote Alto")]
+        )
+
+    def test_each_plot_carries_its_stats_and_latest_readings(self):
+        SensorMeasurement.objects.create(
+            sensor_variable=self.channel,
+            value=Decimal("12"),
+            recorded_at=timezone.now() - timedelta(minutes=5),
+        )
+
+        north, alto = self.summaries()
+
+        self.assertEqual(north["sensor_count"], 1)
+        # The model derives the area from the polygon on save.
+        self.north.refresh_from_db()
+        self.assertEqual(north["area_hectares"], f"{self.north.area_hectares:.2f}")
+        self.assertTrue(north["has_geometry"])
+        self.assertEqual(north["conditions"][0]["value"], 12.0)
+        self.assertEqual(north["conditions"][0]["level"], "low")
+        self.assertIsNotNone(north["latest_reading_at"])
+        self.assertEqual(alto["conditions"], [])
+        self.assertIsNone(alto["latest_reading_at"])
+        self.assertFalse(alto["has_geometry"])
+        self.assertIsNone(alto["irrigation"])
+
+    def test_requires_authentication(self):
+        self.client.force_authenticate(user=None)
+
+        response = self.client.get(reverse("farm:plot-summary-list"))
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+

@@ -2,6 +2,9 @@ import json
 
 from rest_framework import serializers
 
+from predictions.serializers import IrrigationPredictionSerializer
+from sensors.serializers import FieldSensorSerializer, HistorySeriesSerializer
+
 from .models import Farm, Plot
 
 
@@ -88,3 +91,63 @@ class PlotDetailSerializer(PlotSerializer):
             'created_at',
             'updated_at',
         ]
+
+
+class PlotConditionSerializer(serializers.Serializer):
+    semantic_key = serializers.CharField()
+    name = serializers.CharField()
+    unit = serializers.CharField()
+    value = serializers.FloatField()
+    recorded_at = serializers.DateTimeField()
+    change_24h = serializers.FloatField(allow_null=True)
+    level = serializers.CharField(allow_null=True)
+    level_degrees = serializers.DictField(child=serializers.FloatField(), allow_null=True)
+
+
+class PlotOverviewSerializer(serializers.Serializer):
+    generated_at = serializers.DateTimeField()
+    conditions = PlotConditionSerializer(many=True)
+    series = HistorySeriesSerializer(many=True)
+    sensors = FieldSensorSerializer(many=True)
+    irrigation = IrrigationPredictionSerializer(allow_null=True)
+
+
+class PlotSeriesPointSerializer(serializers.Serializer):
+    t = serializers.DateTimeField()
+    value = serializers.FloatField()
+
+
+class PlotVariableSeriesSerializer(serializers.Serializer):
+    semantic_key = serializers.CharField()
+    points = PlotSeriesPointSerializer(many=True)
+
+
+class FarmPlotSummarySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    latest_reading_at = serializers.DateTimeField(allow_null=True)
+    conditions = PlotConditionSerializer(many=True)
+    series = PlotVariableSeriesSerializer(many=True)
+    irrigation = IrrigationPredictionSerializer(allow_null=True)
+
+
+class FarmOverviewSerializer(serializers.Serializer):
+    generated_at = serializers.DateTimeField()
+    conditions = PlotConditionSerializer(many=True)
+    series = HistorySeriesSerializer(many=True)
+    plots = FarmPlotSummarySerializer(many=True)
+    sensors = FieldSensorSerializer(many=True)
+
+
+class PlotSummarySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    description = serializers.CharField()
+    area_hectares = serializers.DecimalField(max_digits=10, decimal_places=2, allow_null=True)
+    sensor_count = serializers.IntegerField()
+    has_geometry = serializers.BooleanField()
+    farm = FarmSummarySerializer()
+    latest_reading_at = serializers.DateTimeField(allow_null=True)
+    conditions = PlotConditionSerializer(many=True)
+    irrigation = IrrigationPredictionSerializer(allow_null=True)
+

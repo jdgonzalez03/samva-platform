@@ -2,9 +2,11 @@ from django.urls import path
 
 from farm.api import (
     FarmListAPIView,
+    FarmOverviewAPIView,
     FarmPlotListAPIView,
-    FarmWeatherAPIView,
     PlotDetailAPIView,
+    PlotOverviewAPIView,
+    PlotSummaryListAPIView,
 )
 
 app_name = "farm"
@@ -17,13 +19,19 @@ urlpatterns = [
         name='farm-plot-list',
     ),
     path(
-        'farms/<int:farm_id>/weather/',
-        FarmWeatherAPIView.as_view(),
-        name='farm-weather',
+        'farms/<int:farm_id>/overview/',
+        FarmOverviewAPIView.as_view(),
+        name='farm-overview',
     ),
+    path('plots/', PlotSummaryListAPIView.as_view(), name='plot-summary-list'),
     path(
         'plots/<int:plot_id>/',
         PlotDetailAPIView.as_view(),
         name='plot-detail',
+    ),
+    path(
+        'plots/<int:plot_id>/overview/',
+        PlotOverviewAPIView.as_view(),
+        name='plot-overview',
     ),
 ]

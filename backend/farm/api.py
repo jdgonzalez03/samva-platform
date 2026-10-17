@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -5,8 +6,15 @@ from rest_framework.views import APIView
 
 from core.utils import get_owned_or_404
 from farm.models import Farm, Plot
-from farm.serializers import FarmSerializer, PlotDetailSerializer, PlotSerializer
-from sensors.models import SemanticKey, WeatherMeasurement
+from farm.serializers import (
+    FarmOverviewSerializer,
+    FarmSerializer,
+    PlotDetailSerializer,
+    PlotOverviewSerializer,
+    PlotSerializer,
+    PlotSummarySerializer,
+)
+from farm.utils import build_farm_overview, build_plot_overview, build_plot_summaries
 
 
 class FarmListAPIView(generics.ListAPIView):
@@ -46,40 +54,32 @@ class PlotDetailAPIView(generics.RetrieveAPIView):
         )
 
 
-class FarmWeatherAPIView(APIView):
+class PlotOverviewAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(responses=PlotOverviewSerializer)
+    def get(self, request, plot_id):
+        plot = get_owned_or_404(
+            Plot.objects.select_related('farm'),
+            pk=plot_id,
+            farm__owner__user=request.user,
+        )
+        return Response(PlotOverviewSerializer(build_plot_overview(plot)).data)
+
+
+class FarmOverviewAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(responses=FarmOverviewSerializer)
     def get(self, request, farm_id):
         farm = get_owned_or_404(Farm.objects.all(), pk=farm_id, owner__user=request.user)
+        return Response(FarmOverviewSerializer(build_farm_overview(farm)).data)
 
-        # One `DISTINCT ON` (PostgreSQL-only, and this project is PostGIS) keeps the
-        # endpoint at a constant two queries instead of O(stations x variables).
-        latest_per_key = (
-            WeatherMeasurement.objects.filter(
-                station_variable__station__farm=farm,
-                station_variable__station__is_active=True,
-                station_variable__is_active=True,
-                value__isnull=False,
-            )
-            .exclude(station_variable__env_variable__semantic_key=SemanticKey.OTHER)
-            .select_related('snapshot', 'station_variable__env_variable')
-            .order_by(
-                'station_variable__env_variable__semantic_key',
-                '-snapshot__recorded_at',
-                '-station_variable__station_id',
-            )
-            .distinct('station_variable__env_variable__semantic_key')
-        )
 
-        # A key with no usable reading is omitted entirely: absence is the only
-        # "no data" signal on the wire, so a farm without readings returns `{}`.
-        return Response(
-            {
-                measurement.station_variable.env_variable.semantic_key: {
-                    'value': float(measurement.value),
-                    'unit': measurement.station_variable.env_variable.unit,
-                    'recorded_at': measurement.snapshot.recorded_at,
-                }
-                for measurement in latest_per_key
-            }
-        )
+class PlotSummaryListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(responses=PlotSummarySerializer(many=True))
+    def get(self, request):
+        return Response(PlotSummarySerializer(build_plot_summaries(request.user), many=True).data)
+
