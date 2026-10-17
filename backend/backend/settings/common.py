@@ -70,6 +70,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+    'core.middleware.AdminTimeZoneMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -130,6 +131,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
+# Dates are stored and served by the API in UTC; only the Django admin shows them in local time.
+ADMIN_TIME_ZONE = 'America/Bogota'
+ADMIN_TIME_ZONE_PATH = '/django-admin/'
 USE_I18N = True
 USE_TZ = True
 
