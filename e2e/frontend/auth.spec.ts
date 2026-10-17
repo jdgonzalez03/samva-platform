@@ -15,11 +15,10 @@ test.describe('Autenticación', () => {
         .or(page.getByRole('status'))
         .filter({ hasText: T.loginSuccessToast }),
     ).toBeVisible()
-    // The sidebar links to the history page; predictions have no page yet.
+    // The sidebar links to the history page.
     await expect(
       page.getByRole('link', { name: T.navHistory, exact: true }),
     ).toHaveAttribute('href', '/dashboard/history')
-    await expect(page.getByRole('link', { name: /predic/i })).toHaveCount(0)
   })
 
   test('la validación del email expone el error traducido vía aria-invalid y aria-describedby', async ({
