@@ -24,6 +24,7 @@ ignore = [
 [lint.isort]
 known-first-party = [
     "accounts",
+    "assistant",
     "backend",
     "cms",
     "core",

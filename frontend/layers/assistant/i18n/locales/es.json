@@ -1,0 +1,65 @@
+{
+  "assistant": {
+    "title": "Asistente",
+    "emptyTitle": "¿En qué te ayudo hoy?",
+    "subtitle": "Pregúntame por tus fincas, lotes, sensores o la prescripción de riego de un lote. Consulto tus datos para responder.",
+    "tips": {
+      "title": "Consejos para obtener mejores respuestas",
+      "close": "Ocultar consejos",
+      "items": [
+        "Escribe el nombre del lote tal como aparece en \"Mis lotes\".",
+        "Haz una pregunta a la vez: las respuestas son más precisas.",
+        "Las acciones con lápiz dejan la pregunta escrita para que completes el lote antes de enviarla.",
+        "Bajo cada respuesta puedes desplegar los datos que consultó el asistente para comprobar las cifras.",
+        "Si las respuestas empiezan a confundirse, inicia una \"Nueva conversación\"."
+      ]
+    },
+    "quickActionsLabel": "Acciones rápidas",
+    "quickActions": {
+      "farms": {
+        "label": "¿Cuántas fincas tengo?",
+        "prompt": "¿Cuántas fincas tengo?"
+      },
+      "plots": {
+        "label": "¿Qué lotes tengo?",
+        "prompt": "¿Qué lotes tengo y cuánto miden?"
+      },
+      "sensors": {
+        "label": "¿Hay algún sensor caído?",
+        "prompt": "¿Hay algún sensor caído?"
+      },
+      "conditions": {
+        "label": "Condiciones de un lote",
+        "prompt": "¿Cómo están las condiciones del lote "
+      },
+      "latestIrrigation": {
+        "label": "Última prescripción de riego",
+        "prompt": "¿Cuál es la última prescripción de riego del lote "
+      },
+      "calculateIrrigation": {
+        "label": "Calcular riego",
+        "prompt": "Calcula el riego del lote "
+      }
+    },
+    "placeholder": "Escribe tu pregunta…",
+    "send": "Enviar pregunta",
+    "newChat": "Nueva conversación",
+    "retry": "Reintentar",
+    "disclaimer": "El asistente usa un modelo de lenguaje local y puede equivocarse. Revisa las cifras en su vista correspondiente.",
+    "toolFailed": "sin resultado",
+    "tools": {
+      "list_farms": "Consultó tus fincas",
+      "list_plots": "Consultó tus lotes",
+      "get_plot_conditions": "Consultó las condiciones del lote",
+      "list_sensors": "Consultó tus sensores",
+      "get_latest_irrigation": "Consultó la última prescripción de riego",
+      "calculate_irrigation": "Calculó una prescripción de riego",
+      "unknown": "Usó la herramienta {name}"
+    },
+    "errors": {
+      "unavailable": "El asistente no está disponible en este momento.",
+      "throttled": "Hiciste muchas preguntas seguidas. Espera un minuto e inténtalo de nuevo.",
+      "generic": "No se pudo obtener una respuesta."
+    }
+  }
+}

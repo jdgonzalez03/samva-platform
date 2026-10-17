@@ -38,6 +38,13 @@ services:
     ports:
       - "127.0.0.1:1883:1883"
 
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "127.0.0.1:11434:11434"
+
   backend:
     build: *backend-build
     volumes:
@@ -47,8 +54,13 @@ services:
     depends_on:
       - postgres
       - broker
+      - ollama
     environment:
       <<: *common-env
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:3b}
+      OLLAMA_TIMEOUT_SECONDS: ${OLLAMA_TIMEOUT_SECONDS:-120}
+      OLLAMA_KEEP_ALIVE: ${OLLAMA_KEEP_ALIVE:-30m}
       WAGTAILADMIN_BASE_URL: http://localhost
       DJANGO_SUPERUSER_USERNAME: admin
       DJANGO_SUPERUSER_PASSWORD: admin
@@ -115,3 +127,4 @@ services:
 volumes:
   postgres_data:
   mqtt_data:
+  ollama_data:

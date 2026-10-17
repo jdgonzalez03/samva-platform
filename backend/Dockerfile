@@ -36,4 +36,5 @@ RUN DJANGO_SETTINGS_MODULE=backend.settings.prod \
     python manage.py collectstatic --noinput --clear
 EXPOSE 8000
 ENTRYPOINT ["sh", "-c", "python manage.py migrate --noinput && exec \"$@\"", "--"]
-CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+# The assistant waits on the local LLM, which on CPU can exceed gunicorn's 30 s default.
+CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "180"]

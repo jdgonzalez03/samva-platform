@@ -1,0 +1,65 @@
+{
+  "assistant": {
+    "title": "Assistant",
+    "emptyTitle": "How can I help you today?",
+    "subtitle": "Ask me about your farms, plots, sensors or a plot's irrigation prescription. I look up your data to answer.",
+    "tips": {
+      "title": "Tips for better answers",
+      "close": "Hide tips",
+      "items": [
+        "Write the plot name as it appears in \"My plots\".",
+        "Ask one question at a time: answers are more accurate.",
+        "Actions with a pencil fill in the question so you can complete the plot before sending it.",
+        "Under each answer you can expand the data the assistant looked up to check the figures.",
+        "If the answers start getting confused, start a \"New conversation\"."
+      ]
+    },
+    "quickActionsLabel": "Quick actions",
+    "quickActions": {
+      "farms": {
+        "label": "How many farms do I have?",
+        "prompt": "How many farms do I have?"
+      },
+      "plots": {
+        "label": "Which plots do I have?",
+        "prompt": "Which plots do I have and how big are they?"
+      },
+      "sensors": {
+        "label": "Is any sensor down?",
+        "prompt": "Is any sensor down?"
+      },
+      "conditions": {
+        "label": "A plot's conditions",
+        "prompt": "What are the current conditions of the plot "
+      },
+      "latestIrrigation": {
+        "label": "Latest irrigation prescription",
+        "prompt": "What is the latest irrigation prescription of the plot "
+      },
+      "calculateIrrigation": {
+        "label": "Calculate irrigation",
+        "prompt": "Calculate the irrigation of the plot "
+      }
+    },
+    "placeholder": "Type your question…",
+    "send": "Send question",
+    "newChat": "New conversation",
+    "retry": "Retry",
+    "disclaimer": "The assistant runs a local language model and can make mistakes. Check the figures in their own view.",
+    "toolFailed": "no result",
+    "tools": {
+      "list_farms": "Looked up your farms",
+      "list_plots": "Looked up your plots",
+      "get_plot_conditions": "Looked up the plot's conditions",
+      "list_sensors": "Looked up your sensors",
+      "get_latest_irrigation": "Looked up the latest irrigation prescription",
+      "calculate_irrigation": "Calculated an irrigation prescription",
+      "unknown": "Used the {name} tool"
+    },
+    "errors": {
+      "unavailable": "The assistant is not available right now.",
+      "throttled": "You asked many questions in a row. Wait a minute and try again.",
+      "generic": "Could not get an answer."
+    }
+  }
+}

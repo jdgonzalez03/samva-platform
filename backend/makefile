@@ -42,5 +42,9 @@ mqtt-restart:
 simulate-lora:
 	docker compose exec backend python scripts/simulate_lora_node.py $(ARGS)
 
+# Downloads the assistant's LLM into the ollama volume (once; it survives restarts)
+assistant-model:
+	docker compose exec ollama ollama pull $${OLLAMA_MODEL:-llama3.2:3b}
+
 lint:
 	docker compose exec backend ruff check .

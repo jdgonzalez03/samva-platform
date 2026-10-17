@@ -46,6 +46,7 @@ PROJECT_APPS = [
     'farm',
     'sensors',
     'predictions',
+    'assistant',
 ]
 
 ADDONS_APPS = [
@@ -167,6 +168,8 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_RATES": {
         "sensor_ingest": "120/min",
+        # Each chat turn runs a local LLM on the server's CPU for several seconds.
+        "assistant_chat": "20/min",
     },
 }
 
@@ -266,3 +269,10 @@ def mqtt_ingest_config(source, environ):
 MQTT_SOURCE = mqtt_source(os.environ)
 MQTT_INGEST = mqtt_ingest_config(MQTT_SOURCE, os.environ)
 
+
+# Assistant (chatbot): a local Ollama server running a tool-calling model.
+OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://ollama:11434').rstrip('/')
+OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'llama3.2:3b')
+# On CPU the first turn also loads the model into memory, which alone can take ~20 s.
+OLLAMA_TIMEOUT_SECONDS = int(os.environ.get('OLLAMA_TIMEOUT_SECONDS', '120'))
+OLLAMA_KEEP_ALIVE = os.environ.get('OLLAMA_KEEP_ALIVE', '30m')

@@ -10,6 +10,11 @@ services:
     ports:
       - "5432:5432"
 
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+
   backend:
     build:
       context: ./backend
@@ -17,7 +22,10 @@ services:
       target: production
     depends_on:
       - postgres
+      - ollama
     environment:
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:3b}
       DJANGO_SETTINGS_MODULE: backend.settings.prod
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -57,3 +65,4 @@ services:
 
 volumes:
   postgres_data:
+  ollama_data:
