@@ -5,4 +5,6 @@ export enum SensorsQueryKey {
   READINGS = 'readings',
   SERIES = 'series',
   PLOT_AVERAGES = 'plotAverages',
+  DEVICES = 'devices',
+  STATION = 'station',
 }

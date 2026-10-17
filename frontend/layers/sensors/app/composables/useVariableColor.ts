@@ -4,13 +4,16 @@ import type { SensorSemanticKey } from '../types/sensors'
 
 // Selected per mode, never an automatic flip: the light step falls outside the
 // dark lightness band and loses its contrast against the dark surface.
-export function useVariableColor(
+// A key the backend adds before the client knows it falls back to `other`.
+export const useVariableColor = (
   semanticKey: MaybeRefOrGetter<SensorSemanticKey>,
-): ComputedRef<string> {
+): ComputedRef<string> => {
   const colorMode = useColorMode()
 
   return computed(() => {
     const mode = colorMode.value === 'dark' ? 'dark' : 'light'
-    return VARIABLE_COLORS[toValue(semanticKey)][mode]
+    return (VARIABLE_COLORS[toValue(semanticKey)] ?? VARIABLE_COLORS.other)[
+      mode
+    ]
   })
 }

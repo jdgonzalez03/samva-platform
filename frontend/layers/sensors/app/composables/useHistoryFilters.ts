@@ -98,6 +98,7 @@ export const useHistoryFilters = () => {
     ),
   )
   const rangeIssue = computed(() => resolvedRange.value.issue)
+  const isLiveRange = computed(() => resolvedRange.value.live)
 
   const filters = computed<HistoryQueryFilters>(() => ({
     // Absent, never `null`: the backend reads a missing key as "all".
@@ -213,6 +214,7 @@ export const useHistoryFilters = () => {
     filters,
     filtersReady,
     rangeIssue,
+    isLiveRange,
     hasActiveFilters,
     setView,
     setPlot,

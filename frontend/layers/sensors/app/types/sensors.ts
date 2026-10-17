@@ -1,3 +1,5 @@
+import type { WeatherStation } from '../../../farm/app/types/farm'
+
 /**
  * The choices `?variable=` accepts. `semantic_key` is a *presentation* key: it
  * is not unique in the backend's variable table, so it can never identify a
@@ -8,6 +10,14 @@ export type SensorSemanticKey =
   | 'air_temperature'
   | 'solar_radiation'
   | 'relative_humidity'
+  | 'leaf_temperature'
+  | 'soil_temperature'
+  | 'soil_water_tension'
+  | 'co2'
+  | 'battery_voltage'
+  | 'battery_current'
+  | 'solar_panel_voltage'
+  | 'solar_panel_current'
   | 'other'
 
 export interface HistoryVariable {
@@ -62,6 +72,13 @@ export interface HistorySeries {
   points: SeriesPoint[]
 }
 
+// The series plus the window they were requested for, which a live poll slides.
+export interface HistorySeriesResult {
+  date_from: string
+  date_to: string
+  series: HistorySeries[]
+}
+
 export interface PlotAverage {
   plot_id: number
   plot_name: string
@@ -94,3 +111,52 @@ export interface ExportErrorPayload {
   count?: number
   limit?: number
 }
+
+export type FieldSensorStatus = 'online' | 'offline' | 'never_seen' | 'inactive'
+
+export interface FieldSensorVariable {
+  semantic_key: SensorSemanticKey
+  name: string
+  unit: string
+}
+
+export interface FieldSensor {
+  id: number
+  name: string
+  // Empty when the sensor has not been registered with its hardware serial yet.
+  serial_number: string
+  plot_id: number
+  plot_name: string
+  is_active: boolean
+  installed_at: string | null
+  last_seen_at: string | null
+  status: FieldSensorStatus
+  variables: FieldSensorVariable[]
+}
+
+export interface WeatherStationVariable {
+  variable_id: number
+  semantic_key: SensorSemanticKey
+  name: string
+  unit: string
+}
+
+export interface WeatherStationDetail extends WeatherStation {
+  variables: WeatherStationVariable[]
+}
+
+// A station reading: the history row minus the plot and sensor it came from.
+export type StationReading = Omit<
+  SensorReading,
+  'plot_id' | 'plot_name' | 'sensor_id' | 'sensor_name'
+>
+
+export interface StationReadingsPage {
+  count: number
+  page: number
+  page_size: number
+  results: StationReading[]
+}
+
+// The station endpoints take the history range without a plot.
+export type StationQueryFilters = Omit<HistoryQueryFilters, 'plot'>

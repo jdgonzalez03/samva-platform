@@ -1,6 +1,6 @@
 import type { ExportErrorPayload, ExportFormat } from '../types/sensors'
 
-const slugify = (value: string): string =>
+const slugify = (value: string, fallback: string): string =>
   value
     .normalize('NFD')
     // Strip the combining marks NFD just split off, so "Tesoro" survives and
@@ -8,7 +8,7 @@ const slugify = (value: string): string =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '') || 'finca'
+    .replace(/^-+|-+$/g, '') || fallback
 
 // `YYYYMMDD` of the **local** calendar day an instant falls on. Formatting in
 // UTC would name a Bogotá evening after the following day, so the file would
@@ -26,19 +26,24 @@ const compactLocalDate = (ms: number): string => {
 // `date_to` is the exclusive end of the window, so the name is taken from the
 // instant just before it — otherwise a range ending at midnight would be named
 // after a day it does not contain.
+//
+// `prefix`/`fallback` name the source: the farm-wide history by default, or
+// `historial-estacion-<slug>` for one weather station.
 export const buildExportFilename = (
-  farmName: string,
+  sourceName: string,
   fileFormat: ExportFormat,
   dateFrom: string,
   dateTo: string,
+  { prefix = 'historial-sensores', fallback = 'finca' } = {},
 ): string => {
+  const base = `${prefix}-${slugify(sourceName, fallback)}`
   const startMs = Date.parse(dateFrom)
   const endMs = Date.parse(dateTo)
   if (Number.isNaN(startMs) || Number.isNaN(endMs)) {
-    return `historial-sensores-${slugify(farmName)}.${fileFormat}`
+    return `${base}.${fileFormat}`
   }
 
-  return `historial-sensores-${slugify(farmName)}-${compactLocalDate(startMs)}_${compactLocalDate(endMs - 1)}.${fileFormat}`
+  return `${base}-${compactLocalDate(startMs)}_${compactLocalDate(endMs - 1)}.${fileFormat}`
 }
 
 const readPayload = (raw: unknown): ExportErrorPayload | null => {

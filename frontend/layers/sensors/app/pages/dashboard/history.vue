@@ -2,6 +2,7 @@
 import type { TabsItem } from '@nuxt/ui'
 import { CHART_HEIGHT_CLASS, HISTORY_PAGE_SIZE } from '../../constants/history'
 import type { ExportFormat } from '../../types/sensors'
+import { historyRequestFilters } from '../../utils/history-filters'
 
 definePageMeta({
   middleware: ['auth'],
@@ -31,6 +32,7 @@ const {
   filters,
   filtersReady,
   rangeIssue,
+  isLiveRange,
   hasActiveFilters,
   setView,
   setPlot,
@@ -70,21 +72,32 @@ const {
   isError: readingsError,
   error: readingsErrorObject,
   refetch: refetchReadingsQuery,
-} = useHistoryReadingsQuery(farmId, filters, page, isTableQueryEnabled)
+} = useHistoryReadingsQuery(
+  farmId,
+  filters,
+  isLiveRange,
+  page,
+  isTableQueryEnabled,
+)
 
 const {
   data: series,
   isPending: seriesPending,
   isError: seriesError,
   refetch: refetchSeriesQuery,
-} = useHistorySeriesQuery(farmId, filters, isChartQueryEnabled)
+} = useHistorySeriesQuery(farmId, filters, isLiveRange, isChartQueryEnabled)
 
 const {
   data: averages,
   isPending: averagesPending,
   isError: averagesError,
   refetch: refetchAveragesQuery,
-} = useHistoryPlotAveragesQuery(farmId, filters, isChartQueryEnabled)
+} = useHistoryPlotAveragesQuery(
+  farmId,
+  filters,
+  isLiveRange,
+  isChartQueryEnabled,
+)
 
 const { exportHistory, isExporting, exportError } = useHistoryExport()
 
@@ -92,7 +105,7 @@ const plotList = computed(() => plots.value ?? [])
 const variableList = computed(() => variables.value ?? [])
 const readings = computed(() => readingsPage.value?.results ?? [])
 const readingsCount = computed(() => readingsPage.value?.count ?? 0)
-const seriesList = computed(() => series.value ?? [])
+const seriesList = computed(() => series.value?.series ?? [])
 const averagesList = computed(() => averages.value ?? [])
 
 const pageCount = computed(() =>
@@ -102,6 +115,18 @@ const pageCount = computed(() =>
 const readingsErrorStatus = computed(
   () =>
     (readingsErrorObject.value as { status?: number } | null)?.status ?? null,
+)
+
+// A failed background poll keeps the data already on screen; the error state is
+// only for a view that has nothing to show, and the next poll retries anyway.
+const readingsFailed = computed(
+  () => readingsError.value && readingsPage.value === undefined,
+)
+const seriesFailed = computed(
+  () => seriesError.value && series.value === undefined,
+)
+const averagesFailed = computed(
+  () => averagesError.value && averages.value === undefined,
 )
 
 // A page past the last one: either the count already says so, or DRF answered
@@ -144,12 +169,12 @@ const numberFormatter = computed(() => new Intl.NumberFormat(locale.value))
 // result without yanking the caret away from the control the user just used
 // (2.4.3, 4.1.3). Empty while pending, so only settled counts are read out.
 //
-const liveStatus = computed(() => {
+const describeStatus = (): string => {
   if (isTableView.value) {
     if (readingsPending.value || readingsIsPlaceholder.value) return ''
     // A count of zero over a page that does not exist is not a result worth
     // announcing; the alert or the bounce to page 1 speaks instead.
-    if (readingsError.value || isPageOutOfRange.value) return ''
+    if (readingsFailed.value || isPageOutOfRange.value) return ''
     return t(
       'sensors.history.status.table',
       {
@@ -172,7 +197,30 @@ const liveStatus = computed(() => {
     { count: chartCount.value },
     chartCount.value,
   )
-})
+}
+
+// Refreshed when a request the user caused settles — never on the counts
+// alone, which a live poll changes every minute and would make a screen reader
+// re-read the status unprompted.
+const liveStatus = shallowRef('')
+watch(
+  [
+    view,
+    displayMode,
+    page,
+    locale,
+    readingsPending,
+    readingsIsPlaceholder,
+    readingsFailed,
+    isPageOutOfRange,
+    seriesPending,
+    averagesPending,
+  ],
+  () => {
+    liveStatus.value = describeStatus()
+  },
+  { immediate: true },
+)
 
 const viewItems = computed<TabsItem[]>(() => [
   {
@@ -205,7 +253,12 @@ const refetchAverages = (): void => {
 const onExport = (fileFormat: ExportFormat): void => {
   const farm = selectedFarm.value
   if (!farm) return
-  void exportHistory(fileFormat, farm.id, farm.name, filters.value)
+  void exportHistory(
+    fileFormat,
+    farm.id,
+    farm.name,
+    historyRequestFilters(filters.value, isLiveRange.value, Date.now()),
+  )
 }
 
 useHead(() => ({ title: t('sensors.history.title') }))
@@ -302,7 +355,7 @@ useHead(() => ({ title: t('sensors.history.title') }))
                     </div>
 
                     <div
-                      v-else-if="averagesError"
+                      v-else-if="averagesFailed"
                       role="alert"
                       class="flex flex-wrap items-center gap-2 text-sm text-muted"
                     >
@@ -342,7 +395,7 @@ useHead(() => ({ title: t('sensors.history.title') }))
                     </div>
 
                     <div
-                      v-else-if="seriesError"
+                      v-else-if="seriesFailed"
                       role="alert"
                       class="flex flex-wrap items-center gap-2 text-sm text-muted"
                     >
@@ -367,8 +420,8 @@ useHead(() => ({ title: t('sensors.history.title') }))
                     <SensorsHistoryChartGrid
                       v-else
                       :series="seriesList"
-                      :range-from="filters.date_from"
-                      :range-to="filters.date_to"
+                      :range-from="series?.date_from ?? filters.date_from"
+                      :range-to="series?.date_to ?? filters.date_to"
                     />
                   </template>
                 </div>
@@ -387,7 +440,7 @@ useHead(() => ({ title: t('sensors.history.title') }))
                   </div>
 
                   <div
-                    v-else-if="readingsError"
+                    v-else-if="readingsFailed"
                     role="alert"
                     class="flex flex-wrap items-center gap-2 text-sm text-muted"
                   >
@@ -405,7 +458,7 @@ useHead(() => ({ title: t('sensors.history.title') }))
 
                   <SensorsHistoryTable
                     v-else
-                    :farm-name="selectedFarm.name"
+                    :subject="selectedFarm.name"
                     :readings="readings"
                     :count="readingsCount"
                     :page="page"

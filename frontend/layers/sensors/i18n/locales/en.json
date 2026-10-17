@@ -17,6 +17,8 @@
         "reset": "Clear filters"
       },
       "range": {
+        "last1h": "Last hour",
+        "last6h": "Last 6 hours",
         "last24h": "Last 24 hours",
         "last7d": "Last 7 days",
         "last30d": "Last 30 days",
@@ -77,6 +79,58 @@
         "errorTitle": "Export failed",
         "error": "The file could not be generated. Please try again.",
         "tooLarge": "The selected range exceeds the export maximum: {count} rows against a limit of {limit}. Reduce the range or filter by plot."
+      }
+    },
+    "devices": {
+      "title": "My sensors",
+      "subtitle": "Configure each device with its serial and with the API secret from your {profile}. A sensor turns “Offline” when it sends no data for 45 minutes.",
+      "profileLink": "profile",
+      "noFarm": "Select a farm to see its sensors.",
+      "error": "We couldn't load the sensors. Please try again.",
+      "retry": "Retry",
+      "empty": "This farm has no registered sensors yet.",
+      "table": {
+        "caption": "Sensors of {farm}",
+        "name": "Sensor",
+        "serial": "Serial",
+        "plot": "Plot",
+        "variables": "Variables",
+        "status": "Status",
+        "lastSeen": "Last data",
+        "noSerial": "No serial",
+        "never": "Never"
+      },
+      "status": {
+        "online": "Online",
+        "offline": "Offline",
+        "never_seen": "No data yet",
+        "inactive": "Inactive"
+      }
+    },
+    "stations": {
+      "title": "Weather stations",
+      "subtitle": "Stations of {farm}. A station shows «No recent data» when it has not reported for 30 minutes.",
+      "noFarm": "Select a farm to see its stations.",
+      "error": "We couldn't load the stations. Please try again.",
+      "retry": "Retry",
+      "empty": "This farm has no weather stations.",
+      "detail": {
+        "loading": "Weather station",
+        "back": "Back to stations",
+        "backToList": "View all stations",
+        "notFound": "Station not found",
+        "notFoundBody": "This station does not exist or does not belong to your account.",
+        "error": "The station could not be loaded.",
+        "provider": "Provider: {provider}",
+        "range": "Period",
+        "conditions": "Current conditions",
+        "charts": "Charts",
+        "chartsAlternative": "The readings table shows the same data as text.",
+        "noData": "There are no readings in this period.",
+        "readings": "Readings"
+      },
+      "export": {
+        "tooLarge": "The selected period exceeds the export limit: {count} rows against a limit of {limit}. Pick a shorter period."
       }
     }
   }

@@ -7,6 +7,8 @@ const props = defineProps<{
   series: HistorySeries[]
   rangeFrom: string
   rangeTo: string
+  // Where the same numbers live as text; defaults to the history Table view.
+  alternative?: string
 }>()
 
 const { t, locale } = useI18n()
@@ -69,7 +71,7 @@ const charts = computed(() =>
     <!-- Visible, not sr-only: everyone benefits from being told where the same
          numbers live in readable form (1.1.1). -->
     <p class="text-sm text-muted">
-      {{ t('sensors.history.charts.alternative') }}
+      {{ alternative ?? t('sensors.history.charts.alternative') }}
     </p>
 
     <div class="grid gap-4 sm:grid-cols-2">

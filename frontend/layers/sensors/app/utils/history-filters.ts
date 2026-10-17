@@ -1,5 +1,9 @@
 import { HISTORY_MAX_RANGE_DAYS } from '../constants/history'
-import type { HistoryVariable, SensorSemanticKey } from '../types/sensors'
+import type {
+  HistoryQueryFilters,
+  HistoryVariable,
+  SensorSemanticKey,
+} from '../types/sensors'
 
 // ---------------------------------------------------------------------------
 // Options the user can choose in the history filters
@@ -11,12 +15,14 @@ export const HISTORY_VIEWS: HistoryView[] = ['chart', 'table']
 
 export const DEFAULT_HISTORY_VIEW: HistoryView = 'chart'
 
-export type HistoryRangePreset = '24h' | '7d' | '30d' | 'custom'
+export type HistoryRangePreset = '1h' | '6h' | '24h' | '7d' | '30d' | 'custom'
 
-// A preset that is not 'custom' (it has a fixed number of days).
+// A preset that is not 'custom' (it has a fixed span).
 type FixedRangePreset = Exclude<HistoryRangePreset, 'custom'>
 
 export const HISTORY_RANGE_PRESETS: HistoryRangePreset[] = [
+  '1h',
+  '6h',
   '24h',
   '7d',
   '30d',
@@ -25,11 +31,19 @@ export const HISTORY_RANGE_PRESETS: HistoryRangePreset[] = [
 
 export const DEFAULT_RANGE_PRESET: FixedRangePreset = '7d'
 
-// How many days each preset looks back from "now".
-const PRESET_DAYS: Record<FixedRangePreset, number> = {
-  '24h': 1,
-  '7d': 7,
-  '30d': 30,
+// One hour in milliseconds (60 * 60 * 1000).
+const HOUR_MS = 3_600_000
+
+// One day in milliseconds (24 * 60 * 60 * 1000).
+const DAY_MS = 24 * HOUR_MS
+
+// How far back each preset looks from "now".
+const PRESET_SPAN_MS: Record<FixedRangePreset, number> = {
+  '1h': HOUR_MS,
+  '6h': 6 * HOUR_MS,
+  '24h': DAY_MS,
+  '7d': 7 * DAY_MS,
+  '30d': 30 * DAY_MS,
 }
 
 export const SENSOR_SEMANTIC_KEYS: SensorSemanticKey[] = [
@@ -37,11 +51,16 @@ export const SENSOR_SEMANTIC_KEYS: SensorSemanticKey[] = [
   'air_temperature',
   'solar_radiation',
   'relative_humidity',
+  'leaf_temperature',
+  'soil_temperature',
+  'soil_water_tension',
+  'co2',
+  'battery_voltage',
+  'battery_current',
+  'solar_panel_voltage',
+  'solar_panel_current',
   'other',
 ]
-
-// One day in milliseconds (24 * 60 * 60 * 1000).
-const DAY_MS = 86_400_000
 
 // localStorage key where we remember the last view the user chose.
 const HISTORY_VIEW_KEY = 'sensorsHistoryView'
@@ -133,18 +152,21 @@ export interface ResolvedRange {
   // Not null when the custom dates could not be used and we fell back to the
   // default preset. Tells the UI which message to show.
   issue: RangeIssue
+  // True when the window ends at "now" (a preset, or the preset a bad custom
+  // range fell back to): new readings keep landing in it, so it is polled.
+  live: boolean
 }
 
-// Range for a fixed preset: from N days ago until now.
+// Range for a fixed preset: from its span ago until now.
 const presetRange = (
   preset: FixedRangePreset,
   anchorMs: number,
 ): ResolvedRange => {
-  const days = PRESET_DAYS[preset]
   return {
-    date_from: new Date(anchorMs - days * DAY_MS).toISOString(),
+    date_from: new Date(anchorMs - PRESET_SPAN_MS[preset]).toISOString(),
     date_to: new Date(anchorMs).toISOString(),
     issue: null,
+    live: true,
   }
 }
 
@@ -156,7 +178,7 @@ const fallbackRange = (anchorMs: number, issue: RangeIssue): ResolvedRange => ({
 
 // Turns the range chosen by the user into `date_from` and `date_to` for the API.
 //
-// - For a fixed preset ('24h', '7d', '30d') the range ends at `anchorMs` (now).
+// - For a fixed preset ('1h', '6h', '24h', '7d', '30d') the range ends at `anchorMs` (now).
 // - For 'custom', `from` and `to` are calendar days in the user's local time.
 //   The range goes from the start of `from` to the start of the day AFTER `to`.
 //   This way the whole `to` day is included, because the backend uses
@@ -192,6 +214,43 @@ export const resolveRange = (
     date_from: new Date(startMs).toISOString(),
     date_to: new Date(endMs).toISOString(),
     issue: null,
+    live: false,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Live windows: what a history request is cached under and what it sends
+// ---------------------------------------------------------------------------
+
+// A live window is keyed by its span, never by its instants: every poll slides
+// the instants, and keying on them would strand each poll in a cache entry of
+// its own (and show a skeleton for it).
+export const historyCacheKey = (
+  filters: HistoryQueryFilters,
+  live: boolean,
+): Partial<HistoryQueryFilters> & { span_ms?: number } => {
+  if (!live) return filters
+  return {
+    ...(filters.plot !== undefined ? { plot: filters.plot } : {}),
+    ...(filters.variable !== undefined ? { variable: filters.variable } : {}),
+    span_ms: Date.parse(filters.date_to) - Date.parse(filters.date_from),
+  }
+}
+
+// The filters a request actually sends. A live window keeps its span but ends
+// at the moment of the request, so a poll reaches the readings that arrived
+// after the page was opened instead of re-asking for the same instants.
+export const historyRequestFilters = (
+  filters: HistoryQueryFilters,
+  live: boolean,
+  nowMs: number,
+): HistoryQueryFilters => {
+  if (!live) return filters
+  const spanMs = Date.parse(filters.date_to) - Date.parse(filters.date_from)
+  return {
+    ...filters,
+    date_from: new Date(nowMs - spanMs).toISOString(),
+    date_to: new Date(nowMs).toISOString(),
   }
 }
 

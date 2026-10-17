@@ -17,6 +17,8 @@
         "reset": "Limpiar filtros"
       },
       "range": {
+        "last1h": "Última hora",
+        "last6h": "Últimas 6 horas",
         "last24h": "Últimas 24 horas",
         "last7d": "Últimos 7 días",
         "last30d": "Últimos 30 días",
@@ -77,6 +79,58 @@
         "errorTitle": "No se pudo exportar",
         "error": "No se pudo generar el archivo. Inténtalo de nuevo.",
         "tooLarge": "El rango seleccionado supera el máximo exportable: {count} filas frente a un límite de {limit}. Reduce el rango o filtra por lote."
+      }
+    },
+    "devices": {
+      "title": "Mis sensores",
+      "subtitle": "Configura cada dispositivo con su serial y con el secreto de API de tu {profile}. Un sensor pasa a «Sin conexión» si no envía datos en 45 minutos.",
+      "profileLink": "perfil",
+      "noFarm": "Selecciona una finca para ver sus sensores.",
+      "error": "No pudimos cargar los sensores. Inténtalo de nuevo.",
+      "retry": "Reintentar",
+      "empty": "Esta finca aún no tiene sensores registrados.",
+      "table": {
+        "caption": "Sensores de {farm}",
+        "name": "Sensor",
+        "serial": "Serial",
+        "plot": "Lote",
+        "variables": "Variables",
+        "status": "Estado",
+        "lastSeen": "Último dato",
+        "noSerial": "Sin serial",
+        "never": "Nunca"
+      },
+      "status": {
+        "online": "En línea",
+        "offline": "Sin conexión",
+        "never_seen": "Sin datos aún",
+        "inactive": "Inactivo"
+      }
+    },
+    "stations": {
+      "title": "Estaciones meteorológicas",
+      "subtitle": "Estaciones de {farm}. Una estación pasa a «Sin datos recientes» si no reporta en 30 minutos.",
+      "noFarm": "Selecciona una finca para ver sus estaciones.",
+      "error": "No pudimos cargar las estaciones. Inténtalo de nuevo.",
+      "retry": "Reintentar",
+      "empty": "Esta finca no tiene estaciones meteorológicas.",
+      "detail": {
+        "loading": "Estación meteorológica",
+        "back": "Volver a estaciones",
+        "backToList": "Ver todas las estaciones",
+        "notFound": "Estación no encontrada",
+        "notFoundBody": "Esta estación no existe o no pertenece a tu cuenta.",
+        "error": "No se pudo cargar la estación.",
+        "provider": "Proveedor: {provider}",
+        "range": "Periodo",
+        "conditions": "Condiciones actuales",
+        "charts": "Gráficas",
+        "chartsAlternative": "La tabla de lecturas muestra estos mismos datos en forma de texto.",
+        "noData": "No hay lecturas en este periodo.",
+        "readings": "Lecturas"
+      },
+      "export": {
+        "tooLarge": "El periodo seleccionado supera el máximo exportable: {count} filas frente a un límite de {limit}. Elige un periodo más corto."
       }
     }
   }

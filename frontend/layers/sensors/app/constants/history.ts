@@ -26,6 +26,14 @@ export const VARIABLE_ICONS: Record<SensorSemanticKey, string> = {
   relative_humidity: 'i-lucide-droplets',
   soil_moisture: 'i-lucide-sprout',
   solar_radiation: 'i-lucide-sun',
+  leaf_temperature: 'i-lucide-leaf',
+  soil_temperature: 'i-lucide-thermometer-sun',
+  soil_water_tension: 'i-lucide-shovel',
+  co2: 'i-lucide-wind',
+  battery_voltage: 'i-lucide-battery-medium',
+  battery_current: 'i-lucide-battery-charging',
+  solar_panel_voltage: 'i-lucide-solar-panel',
+  solar_panel_current: 'i-lucide-zap',
   other: 'i-lucide-gauge',
 }
 
@@ -34,11 +42,12 @@ export const VARIABLE_ICONS: Record<SensorSemanticKey, string> = {
 //
 // These are decorative: no chart ever plots two variables in the same axes, and
 // each figure carries its own title and unit, so identity never rests on hue
-// (1.4.1). Validated as an ordered set against both surfaces — lightness band,
-// chroma floor, CVD and normal-vision separation of adjacent slots, and ≥3:1
-// contrast on the dark surface. The two light steps below 3:1 ride the relief
-// rule: every figure has a visible label and the Table view is the full textual
-// alternative.
+// (1.4.1). Validated as an ordered set, in the key order below, against both
+// surfaces — lightness band, chroma floor, CVD and normal-vision separation of
+// adjacent slots, and ≥3:1 contrast on the dark surface. Thirteen hues cannot
+// all be told apart pairwise, which is why no figure may ever rely on them for
+// identity. The three light steps below 3:1 ride the relief rule: every figure
+// has a visible label and the Table view is the full textual alternative.
 export const VARIABLE_COLORS: Record<
   SensorSemanticKey,
   { light: string; dark: string }
@@ -48,4 +57,12 @@ export const VARIABLE_COLORS: Record<
   soil_moisture: { light: '#1baf7a', dark: '#199e70' },
   solar_radiation: { light: '#eda100', dark: '#c98500' },
   other: { light: '#4a3aa7', dark: '#9085e9' },
+  leaf_temperature: { light: '#008300', dark: '#008300' },
+  soil_temperature: { light: '#e34948', dark: '#e66767' },
+  soil_water_tension: { light: '#8b4a1c', dark: '#a0522d' },
+  co2: { light: '#0e8fa3', dark: '#1fa5b8' },
+  battery_voltage: { light: '#c2185b', dark: '#c81e60' },
+  battery_current: { light: '#9b3fb5', dark: '#b866d1' },
+  solar_panel_voltage: { light: '#7a8f00', dark: '#7f9400' },
+  solar_panel_current: { light: '#e87ba4', dark: '#d55181' },
 }

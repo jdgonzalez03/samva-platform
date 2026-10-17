@@ -1,16 +1,25 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import { HISTORY_PAGE_SIZE } from '../../constants/history'
-import type { SensorReading } from '../../types/sensors'
+import type { SensorReading, StationReading } from '../../types/sensors'
 
-const props = defineProps<{
-  farmName: string
-  readings: SensorReading[]
-  count: number
-  pending: boolean
-  isPlaceholder: boolean
-  showPlotColumn: boolean
-}>()
+// A sensor reading carries its plot and sensor; a station reading has neither.
+type HistoryTableRow = StationReading &
+  Partial<Pick<SensorReading, 'plot_name' | 'sensor_name'>>
+
+const props = withDefaults(
+  defineProps<{
+    // Whose readings these are (a farm or a station), named in the caption.
+    subject: string
+    readings: HistoryTableRow[]
+    count: number
+    pending: boolean
+    isPlaceholder: boolean
+    showPlotColumn: boolean
+    showSensorColumn?: boolean
+  }>(),
+  { showSensorColumn: true },
+)
 
 const page = defineModel<number>('page', { required: true })
 
@@ -30,17 +39,24 @@ const numberFormatter = computed(
 
 // Sorting is server-side or nothing: TanStack's client sort would reorder only
 // the twenty rows on screen and quietly claim to have sorted the whole set.
-const columns = computed<TableColumn<SensorReading>[]>(() => [
+const columns = computed<TableColumn<HistoryTableRow>[]>(() => [
   { accessorKey: 'recorded_at', header: t('sensors.history.table.recordedAt') },
   ...(props.showPlotColumn
     ? [
         {
           accessorKey: 'plot_name',
           header: t('sensors.history.table.plot'),
-        } satisfies TableColumn<SensorReading>,
+        } satisfies TableColumn<HistoryTableRow>,
       ]
     : []),
-  { accessorKey: 'sensor_name', header: t('sensors.history.table.sensor') },
+  ...(props.showSensorColumn
+    ? [
+        {
+          accessorKey: 'sensor_name',
+          header: t('sensors.history.table.sensor'),
+        } satisfies TableColumn<HistoryTableRow>,
+      ]
+    : []),
   { accessorKey: 'variable_name', header: t('sensors.history.table.variable') },
   {
     accessorKey: 'value',
@@ -55,7 +71,7 @@ const columns = computed<TableColumn<SensorReading>[]>(() => [
 const caption = computed(() =>
   t(
     'sensors.history.table.caption',
-    { farm: props.farmName, count: numberFormatter.value.format(props.count) },
+    { farm: props.subject, count: numberFormatter.value.format(props.count) },
     props.count,
   ),
 )

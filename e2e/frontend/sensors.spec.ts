@@ -1,6 +1,19 @@
 import { readFileSync } from 'node:fs'
 import { test, expect, type Page } from '@playwright/test'
-import { gotoHydrated, loginAs, selectFarm, T } from './helpers'
+import {
+  apiAccessToken,
+  apiSecretOf,
+  gotoHydrated,
+  ingestReading,
+  LIVE_REFRESH_MS,
+  loginAs,
+  LORA_USER,
+  selectFarm,
+  STUB_FARM,
+  STUB_PLOT,
+  stubSession,
+  T,
+} from './helpers'
 
 const HISTORY_PATH = '/dashboard/history'
 
@@ -15,6 +28,9 @@ const VARIABLE_COUNT = 4
 
 /** `semantic_key` of `T.varAirTemperature`, as it travels in the URL. */
 const AIR_TEMPERATURE_KEY = 'air_temperature'
+
+/** `semantic_key` of `T.varCo2`, one of the variables the LoRa demo probes add. */
+const CO2_KEY = 'co2'
 
 /** Header row of the CSV export, fixed by the contract (never translated). */
 const CSV_HEADER = 'recorded_at,plot,sensor,variable,semantic_key,value,unit'
@@ -206,5 +222,161 @@ test.describe('Historial de sensores', () => {
     await expect(
       page.getByRole('region', { name: T.chartsRegion }).locator('figure'),
     ).toHaveCount(1)
+  })
+})
+
+// Needs the seeded readings inside the default window (`make seed-sensors`).
+test.describe('Historial de las sondas LoRa', () => {
+  test('una variable nueva de las sondas se puede elegir y graficar', async ({
+    page,
+  }) => {
+    await loginAs(page, LORA_USER.email, LORA_USER.password)
+    await gotoHydrated(page, HISTORY_PATH)
+    await selectFarm(page, T.loraFarm, T.loraFarmDefault)
+
+    await selectFilter(page, T.filterPlot, T.loraPlot)
+    await selectFilter(page, T.filterVariable, T.varCo2)
+
+    await expect(page).toHaveURL(new RegExp(`[?&]variable=${CO2_KEY}`))
+    const charts = page.getByRole('region', { name: T.chartsRegion })
+    await expect(charts.locator('figure')).toHaveCount(1)
+    await expect(charts.locator('figcaption')).toContainText(T.varCo2)
+  })
+})
+
+// Seeded in backend/sensors/fixtures/initial_sensors.json on Finca El Tesoro,
+// the default farm: SEED-0001 is active, SEED-0004 is switched off.
+const ACTIVE_SERIAL = 'SEED-0001'
+const INACTIVE_SERIAL = 'SEED-0004'
+
+test.describe('Mis sensores', () => {
+  test('el sidebar lleva a la lista de sensores con su serial y estado', async ({
+    page,
+    request,
+  }) => {
+    const access = await apiAccessToken(request)
+    const apiKey = await apiSecretOf(request, access)
+    expect((await ingestReading(request, apiKey, ACTIVE_SERIAL)).status()).toBe(201)
+
+    await loginAs(page)
+    await page.getByRole('link', { name: T.navSensors }).click()
+    await expect(page).toHaveURL(/\/dashboard\/sensors$/)
+    await expect(page.getByRole('heading', { name: T.navSensors })).toBeVisible()
+
+    const table = page.getByRole('table', { name: T.sensorsTableFarmFirst })
+    const reporting = table.locator('tbody tr', { hasText: ACTIVE_SERIAL })
+    await expect(reporting).toContainText(T.sensorStatusOnline)
+    // The age sits in a <time> carrying the exact instant the page was fed.
+    await expect(reporting.locator('time')).toHaveAttribute('datetime', /Z$/)
+
+    const switchedOff = table.locator('tbody tr', { hasText: INACTIVE_SERIAL })
+    await expect(switchedOff).toContainText(T.sensorStatusInactive)
+  })
+
+  test('cambiar de finca muestra los sensores de la nueva finca', async ({
+    page,
+  }) => {
+    await loginAs(page)
+    await gotoHydrated(page, '/dashboard/sensors')
+    await expect(
+      page.getByRole('table', { name: T.sensorsTableFarmFirst }),
+    ).toBeVisible()
+
+    await selectFarm(page, T.farmSecond)
+
+    const table = page.getByRole('table', { name: `Sensores de ${T.farmSecond}` })
+    await expect(table).toBeVisible()
+    await expect(table.locator('tbody tr', { hasText: ACTIVE_SERIAL })).toHaveCount(0)
+  })
+})
+
+/** A local calendar day `days` before today, as `?from=`/`?to=` carry it. */
+function calendarDaysAgo(days: number): string {
+  const date = new Date(Date.now() - days * 86_400_000)
+  const pad = (value: number) => String(value).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+/** Stubs the series endpoint and records the `date_to` of every request. */
+async function recordSeriesRequests(page: Page): Promise<string[]> {
+  const dateTos: string[] = []
+  await page.route(
+    (url) => url.pathname.endsWith(`/sensors/farms/${STUB_FARM.id}/history/series/`),
+    (route) => {
+      dateTos.push(new URL(route.request().url()).searchParams.get('date_to') ?? '')
+      return route.fulfill({ json: [] })
+    },
+  )
+  return dateTos
+}
+
+test.describe('Rangos cortos del historial', () => {
+  // Served without the backend, so the spec holds without seeded users.
+  test.use({ serviceWorkers: 'block' })
+
+  test('la última hora y las últimas 6 horas piden la serie de ese lapso', async ({
+    page,
+  }) => {
+    await stubSession(page)
+    const spans: number[] = []
+    await page.route(
+      (url) => url.pathname.endsWith(`/sensors/farms/${STUB_FARM.id}/history/series/`),
+      (route) => {
+        const url = new URL(route.request().url())
+        const from = Date.parse(url.searchParams.get('date_from')!)
+        const to = Date.parse(url.searchParams.get('date_to')!)
+        spans.push(Math.round((to - from) / 3_600_000))
+        return route.fulfill({ json: [] })
+      },
+    )
+    await gotoHydrated(page, `${HISTORY_PATH}?view=chart&plot=${STUB_PLOT.id}`)
+    await expect.poll(() => spans.length).toBeGreaterThan(0)
+
+    for (const [label, hours] of [[T.range1h, 1], [T.range6h, 6]] as const) {
+      await selectFilter(page, T.filterRange, label)
+
+      await expect(page).toHaveURL(new RegExp(`[?&]range=${hours}h`))
+      await expect.poll(() => spans.at(-1)).toBe(hours)
+    }
+  })
+})
+
+test.describe('Actualización en vivo del historial', () => {
+  // Served without the backend, so the spec holds without seeded users.
+  test.use({ serviceWorkers: 'block' })
+
+  test.beforeEach(async ({ page }) => {
+    await page.clock.install()
+    await stubSession(page)
+  })
+
+  test('el rango por defecto vuelve a pedir la serie y desliza la ventana hasta ahora', async ({
+    page,
+  }) => {
+    const dateTos = await recordSeriesRequests(page)
+    await gotoHydrated(page, `${HISTORY_PATH}?view=chart&plot=${STUB_PLOT.id}`)
+    await expect.poll(() => dateTos.length).toBe(1)
+
+    await page.clock.fastForward(LIVE_REFRESH_MS)
+
+    await expect.poll(() => dateTos.length).toBe(2)
+    expect(Date.parse(dateTos[1]!)).toBeGreaterThan(Date.parse(dateTos[0]!))
+  })
+
+  test('un rango fijo en el pasado no vuelve a pedir la serie', async ({ page }) => {
+    const dateTos = await recordSeriesRequests(page)
+    const from = calendarDaysAgo(20)
+    const to = calendarDaysAgo(14)
+    await gotoHydrated(
+      page,
+      `${HISTORY_PATH}?view=chart&plot=${STUB_PLOT.id}&range=custom&from=${from}&to=${to}`,
+    )
+    await expect.poll(() => dateTos.length).toBe(1)
+
+    await page.clock.fastForward(LIVE_REFRESH_MS * 3)
+
+    // Let any request the fast-forward fired reach the route before counting.
+    await page.waitForTimeout(500)
+    expect(dateTos).toHaveLength(1)
   })
 })

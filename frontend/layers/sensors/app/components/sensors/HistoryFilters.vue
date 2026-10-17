@@ -59,6 +59,8 @@ const variableItems = computed(() => [
 const variableValue = computed(() => props.variable ?? ALL)
 
 const rangeItems = computed(() => [
+  { label: t('sensors.history.range.last1h'), value: '1h' },
+  { label: t('sensors.history.range.last6h'), value: '6h' },
   { label: t('sensors.history.range.last24h'), value: '24h' },
   { label: t('sensors.history.range.last7d'), value: '7d' },
   { label: t('sensors.history.range.last30d'), value: '30d' },
