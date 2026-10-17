@@ -1,2 +1,9 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
+
+/* Nuxt UI's light-mode success (green-500) reaches only ~2:1 as text on its own
+   tinted background, so status badges fail WCAG AA; green-700 clears 4.5:1.
+   Unlayered, so it wins over the colors Nuxt UI declares in `@layer theme`. */
+:root:not(.dark) {
+  --ui-success: var(--ui-color-success-700);
+}

@@ -31,3 +31,10 @@ export const retryUnlessNotFound = (
   failureCount: number,
   error: unknown,
 ): boolean => !isNotFound(error) && failureCount < 1
+
+// For a polled query: once the record is gone, every further poll would only
+// repeat the same 404, so the interval stops there.
+export const pollUnlessNotFound =
+  (intervalMs: number) =>
+  (query: { state: { error: unknown } }): number | false =>
+    isNotFound(query.state.error) ? false : intervalMs
