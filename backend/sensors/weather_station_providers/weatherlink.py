@@ -2,12 +2,22 @@ import requests
 from django.conf import settings
 from django.utils import timezone
 
+from sensors.constants import WEATHERLINK_FAHRENHEIT_FIELDS
+
+
+def fahrenheit_to_celsius(fahrenheit):
+    return round((fahrenheit - 32) * 5 / 9, 2)
+
 
 def _extract_measurements(raw_json):
     result = {}
     for sensor in raw_json.get('sensors', []):
         for record in sensor.get('data', []):
             result.update(record)
+    for field in WEATHERLINK_FAHRENHEIT_FIELDS:
+        value = result.get(field)
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            result[field] = fahrenheit_to_celsius(value)
     return result
 
 

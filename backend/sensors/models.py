@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
@@ -15,6 +16,14 @@ class SemanticKey(models.TextChoices):
     AIR_TEMPERATURE = ('air_temperature', _('Air temperature'))
     SOLAR_RADIATION = ('solar_radiation', _('Solar radiation'))
     RELATIVE_HUMIDITY = ('relative_humidity', _('Relative humidity'))
+    LEAF_TEMPERATURE = ('leaf_temperature', _('Leaf temperature'))
+    SOIL_TEMPERATURE = ('soil_temperature', _('Soil temperature'))
+    SOIL_WATER_TENSION = ('soil_water_tension', _('Soil water tension'))
+    CO2 = ('co2', _('CO2'))
+    BATTERY_VOLTAGE = ('battery_voltage', _('Battery voltage'))
+    BATTERY_CURRENT = ('battery_current', _('Battery current'))
+    SOLAR_PANEL_VOLTAGE = ('solar_panel_voltage', _('Solar panel voltage'))
+    SOLAR_PANEL_CURRENT = ('solar_panel_current', _('Solar panel current'))
     OTHER           = ('other',           _('Other'))
 
 
@@ -195,12 +204,21 @@ class WeatherStationVariableConfiguration(models.Model):
         default=True,
         verbose_name=_('Active'),
     )
+    use_in_predictions = models.BooleanField(
+        default=False,
+        verbose_name=_('Use in predictions'),
+        help_text=_(
+            'Feed this variable to the prediction models of the farm plots, averaged '
+            'with the field sensors that measure the same variable'
+        ),
+    )
 
     panels = [
         FieldPanel('station'),
         FieldPanel('env_variable'),
         FieldPanel('field_key'),
         FieldPanel('is_active'),
+        FieldPanel('use_in_predictions'),
     ]
 
     class Meta:
@@ -250,6 +268,12 @@ class FieldSensor(models.Model):
         blank=True,
         verbose_name=_('Installation date'),
     )
+    last_seen_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_('Last seen'),
+        help_text=_('When the sensor last reached the ingest API'),
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created'))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Updated'))
 
@@ -262,6 +286,7 @@ class FieldSensor(models.Model):
             FieldPanel('installed_at'),
         ], heading=_('Field sensor')),
         MultiFieldPanel([
+            FieldPanel('last_seen_at', read_only=True),
             FieldPanel('created_at', read_only=True),
             FieldPanel('updated_at', read_only=True),
         ], heading=_('Timestamps')),
@@ -270,6 +295,15 @@ class FieldSensor(models.Model):
     class Meta:
         verbose_name = _('Field sensor')
         verbose_name_plural = _('Field sensors')
+        constraints = [
+            # The ingest API resolves the sender by serial number, and hardware serials are
+            # global rather than per farm; blank means "not registered yet".
+            models.UniqueConstraint(
+                fields=['serial_number'],
+                condition=~models.Q(serial_number=''),
+                name='unique_field_sensor_serial_number',
+            ),
+        ]
  
     def __str__(self):
         return f'{self.name} ({self.plot.name})'
@@ -293,10 +327,16 @@ class FieldSensorVariable(models.Model):
         related_name='field_sensor_variables',
         verbose_name=_('Environmental variable'),
     )
+    use_in_predictions = models.BooleanField(
+        default=True,
+        verbose_name=_('Use in predictions'),
+        help_text=_('Feed this variable to the prediction models of its plot'),
+    )
 
     panels = [
         FieldPanel('sensor'),
         FieldPanel('env_variable'),
+        FieldPanel('use_in_predictions'),
     ]
 
     class Meta:
@@ -359,7 +399,7 @@ class WeatherSnapshot(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.station.name} — {self.recorded_at:%Y-%m-%d %H:%M}'
+        return f'{self.station.name} — {timezone.localtime(self.recorded_at):%Y-%m-%d %H:%M}'
 
 
 class WeatherMeasurement(models.Model):
@@ -459,14 +499,19 @@ class SensorMeasurement(models.Model):
         verbose_name = _('Sensor measurement')
         verbose_name_plural = _('Sensor measurements')
         ordering = ['-recorded_at']
-        indexes = [
-            models.Index(fields=['sensor_variable', 'recorded_at']),
+        constraints = [
+            # Devices retry when they miss the response, so a resent reading must not be
+            # stored twice.
+            models.UniqueConstraint(
+                fields=['sensor_variable', 'recorded_at'],
+                name='unique_sensor_measurement_per_instant',
+            ),
         ]
 
     def __str__(self):
         var = self.sensor_variable.env_variable
         return (
             f'{var.name}: {self.value} {var.unit} '
-            f'@ {self.recorded_at:%Y-%m-%d %H:%M}'
+            f'@ {timezone.localtime(self.recorded_at):%Y-%m-%d %H:%M}'
         )
  

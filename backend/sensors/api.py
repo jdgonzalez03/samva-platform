@@ -1,32 +1,91 @@
+import logging
+
+from django.db.models import Prefetch
 from django.http import StreamingHttpResponse
-from rest_framework import generics, pagination, serializers
+from drf_spectacular.utils import extend_schema
+from rest_framework import generics, pagination, serializers, status
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.utils import get_owned_or_404
+from farm.models import Farm
 from sensors.aggregation import (
     bucket_size_for,
     build_plot_averages,
     build_series,
     history_measurements,
+    station_measurements,
 )
-from sensors.constants import READING_ORDER
-from sensors.models import EnvironmentalVariable
+from sensors.authentication import (
+    ApiKeyAuthentication,
+    ApiKeyRateThrottle,
+    IsActiveApiKeyOwner,
+)
+from sensors.constants import (
+    READING_ORDER,
+    SENSOR_CSV_COLUMNS,
+    STATION_CSV_COLUMNS,
+    STATION_READING_ORDER,
+    STATION_TIME_FIELD,
+    STATION_VARIABLE_FIELD,
+)
+from sensors.models import (
+    EnvironmentalVariable,
+    FieldSensor,
+    FieldSensorVariable,
+    WeatherStation,
+)
+from sensors.openapi import (
+    INGEST_DESCRIPTION,
+    INGEST_REQUEST_EXAMPLES,
+    INGEST_RESPONSES,
+    INGEST_TAG,
+    STATION_DETAIL_DESCRIPTION,
+    STATION_DETAIL_RESPONSES,
+    STATION_EXPORT_DESCRIPTION,
+    STATION_HISTORY_PARAMETERS,
+    STATION_LIST_DESCRIPTION,
+    STATION_LIST_RESPONSES,
+    STATION_PAGE_PARAMETERS,
+    STATION_READINGS_RESPONSES,
+    STATION_SERIES_DESCRIPTION,
+    STATION_SERIES_RESPONSES,
+    STATIONS_TAG,
+    station_export_responses,
+)
 from sensors.serializers import (
+    FieldSensorSerializer,
     HistorySeriesSerializer,
     HistoryVariableSerializer,
     PlotAverageSerializer,
+    SensorIngestResultSerializer,
+    SensorIngestSerializer,
     SensorReadingSerializer,
+    StationReadingSerializer,
+    WeatherStationDetailSerializer,
+    WeatherStationSerializer,
 )
 from sensors.utils import (
     attachment_headers,
+    build_station_cards,
     export_cap_error,
     export_filename,
     export_rows,
     history_scope,
+    ingest_reading,
+    sensor_export_records,
+    station_cards_queryset,
+    station_export_filename,
+    station_export_records,
+    station_export_rows,
+    station_history_scope,
     stream_csv,
     stream_json,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class SensorHistoryPagination(pagination.PageNumberPagination):
@@ -137,7 +196,7 @@ class SensorHistoryCsvExportAPIView(APIView):
             return cap_error
 
         return StreamingHttpResponse(
-            stream_csv(export_rows(farm, plot, filters)),
+            stream_csv(SENSOR_CSV_COLUMNS, sensor_export_records(export_rows(farm, plot, filters))),
             content_type='text/csv; charset=utf-8',
             headers=attachment_headers(export_filename(farm, filters, 'csv')),
         )
@@ -154,7 +213,203 @@ class SensorHistoryJsonExportAPIView(APIView):
             return cap_error
 
         return StreamingHttpResponse(
-            stream_json(export_rows(farm, plot, filters)),
+            stream_json(sensor_export_records(export_rows(farm, plot, filters))),
             content_type='application/json',
             headers=attachment_headers(export_filename(farm, filters, 'json')),
+        )
+
+
+class SensorIngestAPIView(APIView):
+    """Public entry point for field sensors, authenticated by the owner's `X-API-Key`."""
+
+    authentication_classes = [ApiKeyAuthentication]
+    permission_classes = [IsActiveApiKeyOwner]
+    throttle_classes = [ApiKeyRateThrottle]
+
+    @extend_schema(
+        tags=[INGEST_TAG],
+        summary="Push a sensor reading",
+        description=INGEST_DESCRIPTION,
+        request=SensorIngestSerializer,
+        responses=INGEST_RESPONSES,
+        examples=INGEST_REQUEST_EXAMPLES,
+    )
+    def post(self, request):
+        serializer = SensorIngestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        created, duplicates = ingest_reading(request.auth, serializer.validated_data)
+        return Response(
+            SensorIngestResultSerializer({"created": created, "duplicates": duplicates}).data,
+            status=status.HTTP_201_CREATED,
+        )
+
+    def handle_exception(self, exc):
+        response = super().handle_exception(exc)
+        # Devices have no screen, so this log is the only place a misconfigured one shows
+        # up. The key itself is never logged: it would hand the account to log readers.
+        serial_number = None
+        if isinstance(self.request.data, dict):
+            serial_number = self.request.data.get("serial_number")
+        logger.warning(
+            "Sensor ingest rejected: status=%s farmer=%s serial=%s detail=%s",
+            response.status_code,
+            getattr(self.request.auth, "pk", None),
+            serial_number,
+            response.data,
+        )
+        return response
+
+
+class FieldSensorListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = FieldSensorSerializer
+
+    def get_queryset(self):
+        farm = get_owned_or_404(
+            Farm.objects.all(), pk=self.kwargs["farm_id"], owner__user=self.request.user
+        )
+        return (
+            FieldSensor.objects.filter(plot__farm=farm)
+            .select_related("plot")
+            .prefetch_related(
+                Prefetch(
+                    "sensor_variables",
+                    queryset=FieldSensorVariable.objects.select_related(
+                        "env_variable"
+                    ).order_by("env_variable__name"),
+                )
+            )
+            .order_by("plot__name", "name", "id")
+        )
+
+
+class WeatherStationListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        tags=[STATIONS_TAG],
+        summary="List a farm's weather stations",
+        description=STATION_LIST_DESCRIPTION,
+        responses=STATION_LIST_RESPONSES,
+    )
+    def get(self, request, farm_id):
+        farm = get_owned_or_404(Farm.objects.all(), pk=farm_id, owner__user=request.user)
+        stations = station_cards_queryset(WeatherStation.objects.filter(farm=farm))
+        return Response(WeatherStationSerializer(build_station_cards(stations), many=True).data)
+
+
+class WeatherStationDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        tags=[STATIONS_TAG],
+        summary="Get a weather station",
+        description=STATION_DETAIL_DESCRIPTION,
+        responses=STATION_DETAIL_RESPONSES,
+    )
+    def get(self, request, station_id):
+        stations = station_cards_queryset(
+            WeatherStation.objects.filter(pk=station_id, farm__owner__user=request.user)
+        )
+        cards = build_station_cards(stations, with_variables=True)
+        if not cards:
+            raise NotFound
+        return Response(WeatherStationDetailSerializer(cards[0]).data)
+
+
+class WeatherStationSeriesAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        tags=[STATIONS_TAG],
+        summary="Bucketed series of a weather station",
+        description=STATION_SERIES_DESCRIPTION,
+        parameters=STATION_HISTORY_PARAMETERS,
+        responses=STATION_SERIES_RESPONSES,
+    )
+    def get(self, request, station_id):
+        station, filters = station_history_scope(request, station_id)
+
+        bucket_size = bucket_size_for(filters['date_to'] - filters['date_from'])
+        series = build_series(
+            station_measurements(station, filters),
+            filters['date_from'],
+            bucket_size,
+            time_field=STATION_TIME_FIELD,
+            variable_field=STATION_VARIABLE_FIELD,
+        )
+        return Response(HistorySeriesSerializer(series, many=True).data)
+
+
+class WeatherStationReadingsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        tags=[STATIONS_TAG],
+        summary="Paginated readings of a weather station",
+        parameters=[*STATION_HISTORY_PARAMETERS, *STATION_PAGE_PARAMETERS],
+        responses=STATION_READINGS_RESPONSES,
+    )
+    def get(self, request, station_id):
+        station, filters = station_history_scope(request, station_id)
+
+        readings = (
+            station_measurements(station, filters)
+            .select_related('snapshot', 'station_variable__env_variable')
+            .order_by(*STATION_READING_ORDER)
+        )
+        paginator = SensorHistoryPagination()
+        page = paginator.paginate_queryset(readings, request, view=self)
+        return paginator.get_paginated_response(StationReadingSerializer(page, many=True).data)
+
+
+class WeatherStationCsvExportAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        tags=[STATIONS_TAG],
+        summary="Export a weather station's readings as CSV",
+        description=STATION_EXPORT_DESCRIPTION,
+        parameters=STATION_HISTORY_PARAMETERS,
+        responses=station_export_responses('text/csv'),
+    )
+    def get(self, request, station_id):
+        station, filters = station_history_scope(request, station_id)
+
+        cap_error = export_cap_error(station_measurements(station, filters))
+        if cap_error is not None:
+            return cap_error
+
+        return StreamingHttpResponse(
+            stream_csv(
+                STATION_CSV_COLUMNS,
+                station_export_records(station_export_rows(station, filters)),
+            ),
+            content_type='text/csv; charset=utf-8',
+            headers=attachment_headers(station_export_filename(station, filters, 'csv')),
+        )
+
+
+class WeatherStationJsonExportAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        tags=[STATIONS_TAG],
+        summary="Export a weather station's readings as JSON",
+        description=STATION_EXPORT_DESCRIPTION,
+        parameters=STATION_HISTORY_PARAMETERS,
+        responses=station_export_responses('application/json'),
+    )
+    def get(self, request, station_id):
+        station, filters = station_history_scope(request, station_id)
+
+        cap_error = export_cap_error(station_measurements(station, filters))
+        if cap_error is not None:
+            return cap_error
+
+        return StreamingHttpResponse(
+            stream_json(station_export_records(station_export_rows(station, filters))),
+            content_type='application/json',
+            headers=attachment_headers(station_export_filename(station, filters, 'json')),
         )

@@ -55,6 +55,94 @@
     }
   },
   {
+    "model": "sensors.environmentalvariable",
+    "pk": 6,
+    "fields": {
+      "name": "Temperatura foliar",
+      "semantic_key": "leaf_temperature",
+      "unit": "°C",
+      "data_type": "float",
+      "description": "Temperatura de la superficie de la hoja (infrarrojo)."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 7,
+    "fields": {
+      "name": "Temperatura del suelo",
+      "semantic_key": "soil_temperature",
+      "unit": "°C",
+      "data_type": "float",
+      "description": "Temperatura del suelo en la zona de raíces."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 8,
+    "fields": {
+      "name": "Tensión hídrica del suelo",
+      "semantic_key": "soil_water_tension",
+      "unit": "kPa",
+      "data_type": "float",
+      "description": "Tensión con la que el suelo retiene el agua (Watermark); más alta = más seco."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 9,
+    "fields": {
+      "name": "CO₂",
+      "semantic_key": "co2",
+      "unit": "ppm",
+      "data_type": "float",
+      "description": "Concentración de dióxido de carbono en el aire."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 10,
+    "fields": {
+      "name": "Voltaje de batería",
+      "semantic_key": "battery_voltage",
+      "unit": "V",
+      "data_type": "float",
+      "description": "Voltaje de la batería del nodo."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 11,
+    "fields": {
+      "name": "Corriente de batería",
+      "semantic_key": "battery_current",
+      "unit": "mA",
+      "data_type": "float",
+      "description": "Corriente de la batería del nodo (+ carga, − descarga)."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 12,
+    "fields": {
+      "name": "Voltaje del panel solar",
+      "semantic_key": "solar_panel_voltage",
+      "unit": "V",
+      "data_type": "float",
+      "description": "Voltaje del panel solar del nodo."
+    }
+  },
+  {
+    "model": "sensors.environmentalvariable",
+    "pk": 13,
+    "fields": {
+      "name": "Corriente del panel solar",
+      "semantic_key": "solar_panel_current",
+      "unit": "mA",
+      "data_type": "float",
+      "description": "Corriente que entrega el panel solar del nodo."
+    }
+  },
+  {
     "model": "sensors.weatherstation",
     "pk": 1,
     "fields": {

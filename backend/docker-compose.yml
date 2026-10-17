@@ -30,6 +30,14 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-samva_platform}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-samva_platform}
 
+  mqtt:
+    image: eclipse-mosquitto:2
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mqtt_data:/mosquitto/data
+    ports:
+      - "127.0.0.1:1883:1883"
+
   backend:
     build: *backend-build
     volumes:
@@ -52,6 +60,21 @@ services:
              python manage.py migrate --noinput &&
              python manage.py createsuperuser --noinput || true &&
              python manage.py runserver 0.0.0.0:8000"
+
+  mqtt_ingest:
+    build: *backend-build
+    volumes:
+      - .:/app
+    environment:
+      <<: *common-env
+      MQTT_SOURCE: ${MQTT_SOURCE:-local}
+      TTN_APP_ID: ${TTN_APP_ID:-agriculture-unillanos}
+      TTN_API_KEY: ${TTN_API_KEY:-}
+    command: python manage.py mqtt_ingest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - mqtt
 
   celery_worker:
     build: *backend-build
@@ -91,3 +114,4 @@ services:
 
 volumes:
   postgres_data:
+  mqtt_data:

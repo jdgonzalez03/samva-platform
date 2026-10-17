@@ -14,6 +14,14 @@ VALUE_RANGES = {
     SemanticKey.SOLAR_RADIATION: (0, 950),
     SemanticKey.RELATIVE_HUMIDITY: (50, 90),
     SemanticKey.SOIL_MOISTURE: (25, 55),
+    SemanticKey.LEAF_TEMPERATURE: (15, 35),
+    SemanticKey.SOIL_TEMPERATURE: (18, 32),
+    SemanticKey.SOIL_WATER_TENSION: (0, 239),
+    SemanticKey.CO2: (380, 900),
+    SemanticKey.BATTERY_VOLTAGE: (3.4, 4.2),
+    SemanticKey.BATTERY_CURRENT: (-100, 900),
+    SemanticKey.SOLAR_PANEL_VOLTAGE: (0, 7),
+    SemanticKey.SOLAR_PANEL_CURRENT: (0, 900),
     SemanticKey.OTHER: (1000, 1020),
 }
 DEFAULT_RANGE = (0, 100)
@@ -55,6 +63,51 @@ def barometric_pressure(moment, noise):
     return 1010 + 3 * math.sin(2 * math.pi * hour_of_day(moment) / 24) + noise.gauss(0, 0.5)
 
 
+def sunlight(moment):
+    """0 at night, rising to 1 at noon."""
+    return max(0.0, math.sin(math.pi * (hour_of_day(moment) - 6) / 12))
+
+
+def leaf_temperature(moment, noise):
+    # A watered leaf transpires and stays a little cooler than the air around it.
+    return air_temperature(moment, noise) - 0.6 * sunlight(moment)
+
+
+def soil_temperature(moment, noise):
+    # Smaller swing than the air, peaking later in the afternoon.
+    return 25.5 + 2 * math.cos(2 * math.pi * (hour_of_day(moment) - 17) / 24) + noise.gauss(0, 0.1)
+
+
+def soil_water_tension(moment, noise):
+    # The mirror of `soil_moisture`: tension climbs as the soil dries between irrigations.
+    elapsed = moment.timestamp() % IRRIGATION_CYCLE.total_seconds()
+    return 10 + 50 * (elapsed / IRRIGATION_CYCLE.total_seconds()) + noise.gauss(0, 0.8)
+
+
+def co2(moment, noise):
+    # Respiration raises it at night; photosynthesis draws it down in daylight.
+    return 540 - 110 * sunlight(moment) + noise.gauss(0, 8)
+
+
+def battery_voltage(moment, noise):
+    return 3.85 + 0.25 * sunlight(moment) + noise.gauss(0, 0.01)
+
+
+def battery_current(moment, noise):
+    # Positive while the panel charges it, the node's own draw at night.
+    return 400 * sunlight(moment) - 45 + noise.gauss(0, 5)
+
+
+def solar_panel_voltage(moment, noise):
+    if sunlight(moment) == 0:
+        return 0.2
+    return 5.8 + 0.8 * sunlight(moment) + noise.gauss(0, 0.05)
+
+
+def solar_panel_current(moment, noise):
+    return 750 * sunlight(moment) + noise.gauss(0, 10)
+
+
 def flat_curve(moment, noise):
     return 50 + noise.gauss(0, 5)
 
@@ -64,6 +117,14 @@ CURVES = {
     SemanticKey.RELATIVE_HUMIDITY: relative_humidity,
     SemanticKey.SOLAR_RADIATION: solar_radiation,
     SemanticKey.SOIL_MOISTURE: soil_moisture,
+    SemanticKey.LEAF_TEMPERATURE: leaf_temperature,
+    SemanticKey.SOIL_TEMPERATURE: soil_temperature,
+    SemanticKey.SOIL_WATER_TENSION: soil_water_tension,
+    SemanticKey.CO2: co2,
+    SemanticKey.BATTERY_VOLTAGE: battery_voltage,
+    SemanticKey.BATTERY_CURRENT: battery_current,
+    SemanticKey.SOLAR_PANEL_VOLTAGE: solar_panel_voltage,
+    SemanticKey.SOLAR_PANEL_CURRENT: solar_panel_current,
     SemanticKey.OTHER: barometric_pressure,
 }
 
@@ -85,7 +146,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--keep',
             action='store_true',
-            help='Append to the existing readings instead of replacing them.',
+            help='Add to the existing readings instead of replacing them.',
         )
 
     @transaction.atomic
@@ -96,8 +157,6 @@ class Command(BaseCommand):
         if not sensor_variables:
             return
 
-        # `SensorMeasurement` has no uniqueness on (sensor_variable, recorded_at), so without
-        # this delete a second run would silently double every series.
         if not options['keep']:
             SensorMeasurement.objects.filter(sensor_variable__in=sensor_variables).delete()
 
@@ -139,7 +198,11 @@ class Command(BaseCommand):
                     )
                 )
 
-            SensorMeasurement.objects.bulk_create(readings, batch_size=5000)
+            # With `--keep` the grid overlaps the previous run's; those instants are already
+            # stored and the unique (sensor_variable, recorded_at) constraint skips them.
+            SensorMeasurement.objects.bulk_create(
+                readings, batch_size=5000, ignore_conflicts=True
+            )
             seeded_measurements += len(readings)
 
         if options['verbosity']:

@@ -30,15 +30,15 @@ class WeatherStationAdmin(admin.ModelAdmin):
 
 @admin.register(WeatherStationVariableConfiguration)
 class WeatherStationVariableConfigurationAdmin(admin.ModelAdmin):
-    list_display = ('station', 'env_variable', 'field_key', 'is_active')
+    list_display = ('station', 'env_variable', 'field_key', 'is_active', 'use_in_predictions')
     search_fields = ('station__name', 'env_variable__name', 'field_key')
-    list_filter = ('station', 'env_variable', 'is_active')
+    list_filter = ('station', 'env_variable', 'is_active', 'use_in_predictions')
     ordering = ('station', 'env_variable')
 
 
 @admin.register(FieldSensor)
 class FieldSensorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'plot', 'serial_number', 'is_active')
+    list_display = ('name', 'plot', 'serial_number', 'is_active', 'last_seen_at')
     search_fields = ('name', 'plot__name', 'serial_number')
     list_filter = ('plot', 'is_active')
     ordering = ('-created_at',)
@@ -46,9 +46,9 @@ class FieldSensorAdmin(admin.ModelAdmin):
 
 @admin.register(FieldSensorVariable)
 class FieldSensorVariableAdmin(admin.ModelAdmin):
-    list_display = ('sensor', 'env_variable')
+    list_display = ('sensor', 'env_variable', 'use_in_predictions')
     search_fields = ('sensor__name', 'env_variable__name')
-    list_filter = ('sensor', 'env_variable')
+    list_filter = ('sensor', 'env_variable', 'use_in_predictions')
     ordering = ('sensor', 'env_variable')
 
 

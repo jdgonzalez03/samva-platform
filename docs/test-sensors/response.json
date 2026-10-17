@@ -1,0 +1,113 @@
+{
+  "name": "as.up.data.forward",
+  "time": "2026-10-06T01:11:57.424840381Z",
+  "identifiers": [
+    {
+      "device_ids": {
+        "device_id": "nodo-unillanos-id0",
+        "application_ids": {
+          "application_id": "agriculture-unillanos"
+        },
+        "dev_eui": "A8404143F184DECA",
+        "join_eui": "A840410000000101",
+        "dev_addr": "260D4324"
+      }
+    }
+  ],
+  "data": {
+    "@type": "type.googleapis.com/ttn.lorawan.v3.ApplicationUp",
+    "end_device_ids": {
+      "device_id": "nodo-unillanos-id0",
+      "application_ids": {
+        "application_id": "agriculture-unillanos"
+      },
+      "dev_eui": "A8404143F184DECA",
+      "join_eui": "A840410000000101",
+      "dev_addr": "260D4324"
+    },
+    "correlation_ids": ["gs:uplink:01M47C8W12S5VQM8ZD5AB1T940"],
+    "received_at": "2026-10-06T01:11:57.422087445Z",
+    "uplink_message": {
+      "session_key_id": "AaEOw7z3dL6BVysROn6+ew==",
+      "f_port": 2,
+      "f_cnt": 1,
+      "frm_payload": "CPojEwjtJCkIuQj4AfsAeQCzAGUJkA+a/9QApgAA",
+      "decoded_payload": {
+        "bat_ma": -44,
+        "bat_v": 3.994,
+        "co2_ppm": 507,
+        "delta_t_hoja_aire": -0.65,
+        "hum_aire": 89.79,
+        "hum_aux": 92.57,
+        "panel_ma": 0,
+        "panel_v": 0.166,
+        "temp_aire": 22.98,
+        "temp_amb_ir": 22.96,
+        "temp_aux": 22.85,
+        "temp_foliar": 22.33,
+        "temp_suelo": 24.48,
+        "watermark1_kpa": 12.1,
+        "watermark2_kpa": 17.9,
+        "watermark3_kpa": 10.1
+      },
+      "rx_metadata": [
+        {
+          "gateway_ids": {
+            "gateway_id": "eui-a84041fdfe25779b",
+            "eui": "A84041FDFE25779B"
+          },
+          "time": "2026-10-06T01:11:57.092Z",
+          "timestamp": 213850246,
+          "rssi": -62,
+          "channel_rssi": -62,
+          "snr": 13.8,
+          "frequency_offset": "-658",
+          "location": {
+            "latitude": 4.073287,
+            "longitude": -73.585994,
+            "altitude": 467,
+            "source": "SOURCE_REGISTRY"
+          },
+          "uplink_token": "CiIKIAoUZXVpLWE4NDA0MWZkZmUyNTc3OWISCKhAQf3+JXebEIax/GUaCwjdlZHWBhDqvP1nIPCW39OcBg==",
+          "channel_index": 5,
+          "received_at": "2026-10-06T01:11:57.023134407Z"
+        }
+      ],
+      "settings": {
+        "data_rate": {
+          "lora": {
+            "bandwidth": 125000,
+            "spreading_factor": 7,
+            "coding_rate": "4/5"
+          }
+        },
+        "frequency": "917800000",
+        "timestamp": 213850246,
+        "time": "2026-10-06T01:11:57.092Z"
+      },
+      "received_at": "2026-10-06T01:11:57.218983595Z",
+      "consumed_airtime": "0.097536s",
+      "network_ids": {
+        "net_id": "000013",
+        "ns_id": "EC656E0000000183",
+        "tenant_id": "ttn",
+        "cluster_id": "au1",
+        "cluster_address": "au1.cloud.thethings.network"
+      },
+      "last_battery_percentage": {
+        "f_cnt": 1,
+        "value": 100,
+        "received_at": "2026-10-06T01:11:57.218983595Z"
+      }
+    }
+  },
+  "correlation_ids": ["gs:uplink:01M47C8W12S5VQM8ZD5AB1T940"],
+  "origin": "ip-10-102-4-21.ap-southeast-2.compute.internal",
+  "context": {
+    "tenant-id": "CgN0dG4="
+  },
+  "visibility": {
+    "rights": ["RIGHT_APPLICATION_TRAFFIC_READ"]
+  },
+  "unique_id": "01M47C8W7G073ST280BQ9H4TYA"
+}

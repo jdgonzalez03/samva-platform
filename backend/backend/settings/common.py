@@ -165,6 +165,9 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_RATES": {
+        "sensor_ingest": "120/min",
+    },
 }
 
 SPECTACULAR_SETTINGS = {
@@ -221,3 +224,45 @@ CELERY_BEAT_SCHEDULE = {
 
 # Weather Station Provider Configuration
 WEATHERLINK_BASE_URL='https://api.weatherlink.com/v2'
+
+# MQTT ingest (LoRaWAN uplinks), consumed by the `mqtt_ingest` command.
+# `ttn` subscribes to The Things Network, where the real nodes arrive already decoded;
+# `local` subscribes to the compose Mosquitto, where only the simulator publishes.
+# An unknown source or a `ttn` profile without credentials is rejected by the command
+# itself, so a typo stops the subscriber instead of every web and Celery process.
+def mqtt_source(environ):
+    return environ.get('MQTT_SOURCE', 'local').strip().lower()
+
+
+def mqtt_ingest_config(source, environ):
+    if source == 'ttn':
+        # TTN's MQTT integration page shows the username as `<app>@ttn`, so that is what
+        # gets pasted; the tenant suffix is added below and must not appear twice.
+        app_id = environ.get('TTN_APP_ID', '').strip().removesuffix('@ttn')
+        return {
+            'source': 'ttn',
+            'app_id': app_id,
+            'host': environ.get('TTN_MQTT_HOST', 'au1.cloud.thethings.network'),
+            'port': int(environ.get('TTN_MQTT_PORT', '8883')),
+            'tls': True,
+            'username': f'{app_id}@ttn',
+            'password': environ.get('TTN_API_KEY', ''),
+            'topic': f'v3/{app_id}@ttn/devices/+/up',
+            'client_id': environ.get('MQTT_CLIENT_ID', 'samva-mqtt-ingest'),
+        }
+
+    return {
+        'source': 'local',
+        'host': environ.get('MQTT_HOST', 'mqtt'),
+        'port': int(environ.get('MQTT_PORT', '1883')),
+        'tls': False,
+        'username': '',
+        'password': '',
+        'topic': 'v3/+/devices/+/up',
+        'client_id': environ.get('MQTT_CLIENT_ID', 'samva-mqtt-ingest'),
+    }
+
+
+MQTT_SOURCE = mqtt_source(os.environ)
+MQTT_INGEST = mqtt_ingest_config(MQTT_SOURCE, os.environ)
+
