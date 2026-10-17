@@ -3,5 +3,7 @@ export enum FarmQueryKey {
   LIST = 'list',
   PLOTS = 'plots',
   PLOT = 'plot',
-  WEATHER = 'weather',
+  OVERVIEW = 'overview',
+  SUMMARIES = 'summaries',
+  STATIONS = 'stations',
 }

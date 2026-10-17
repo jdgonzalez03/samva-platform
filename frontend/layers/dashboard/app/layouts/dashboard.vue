@@ -9,18 +9,55 @@ const colorMode = useColorMode()
 if (colorMode.preference === 'light') {
   colorMode.preference = 'dark'
 }
-// A plain string to a route the sensors layer owns — the dashboard layer gains
-// no dependency on it.
+// Plain strings to routes the sensors, predictions and assistant layers own —
+// the dashboard layer gains no dependency on them.
 const links = computed(() => [
   {
     label: t('dashboard.nav.dashboard'),
     icon: 'i-lucide-layout-dashboard',
     to: localePath('/dashboard'),
+    exact: true,
+  },
+  {
+    label: t('dashboard.nav.plots'),
+    icon: 'i-lucide-land-plot',
+    to: localePath('/dashboard/plots'),
   },
   {
     label: t('dashboard.nav.history'),
     icon: 'i-lucide-history',
     to: localePath('/dashboard/history'),
+  },
+  {
+    label: t('dashboard.nav.sensors'),
+    icon: 'i-lucide-radio-tower',
+    to: localePath('/dashboard/sensors'),
+  },
+  {
+    label: t('dashboard.nav.stations'),
+    icon: 'i-lucide-cloud-sun',
+    to: localePath('/dashboard/stations'),
+  },
+  {
+    label: t('dashboard.nav.predictions'),
+    icon: 'i-lucide-brain-circuit',
+    to: localePath('/dashboard/predictions'),
+    exact: true,
+  },
+  // A sibling indented under "Predicciones" rather than one of its `children`:
+  // a vertical UNavigationMenu renders the expand chevron of a parent that is
+  // also a link as a `<span aria-expanded>`, which axe flags as critical.
+  {
+    label: t('dashboard.nav.fuzzyLogic'),
+    icon: 'i-lucide-waves',
+    to: localePath('/dashboard/predictions/fuzzy'),
+    class: 'in-data-[collapsed=false]:ps-7',
+  },
+  {
+    label: t('dashboard.nav.assistant'),
+    icon: 'i-lucide-bot',
+    to: localePath('/dashboard/assistant'),
+    class: 'in-data-[collapsed=false]:ps-7',
   },
   {
     label: t('dashboard.nav.profile'),
@@ -29,7 +66,42 @@ const links = computed(() => [
   },
 ])
 
+// Undefined on the server. Only some browsers raise the native install prompt
+// (never iOS), so without it the entry opens manual steps instead.
+const { $pwa } = useNuxtApp()
+const installHelpOpen = ref(false)
+
+// Whether the app is already installed is only known in the browser; showing
+// the entry after mount keeps the hydrated markup identical to the SSR one.
+const mounted = ref(false)
+onMounted(() => {
+  mounted.value = true
+})
+
+const installApp = async () => {
+  if ($pwa?.showInstallPrompt) {
+    await $pwa.install()
+    return
+  }
+  installHelpOpen.value = true
+}
+
+const installLink = computed(() =>
+  mounted.value && !$pwa?.isPWAInstalled
+    ? [
+        {
+          label: t('dashboard.help.installApp'),
+          icon: 'i-lucide-download',
+          onSelect: () => {
+            void installApp()
+          },
+        },
+      ]
+    : [],
+)
+
 const helpLinks = computed(() => [
+  ...installLink.value,
   {
     label: t('dashboard.help.feedback'),
     icon: 'i-lucide-message-circle',
@@ -114,5 +186,6 @@ const helpLinks = computed(() => [
     <div class="flex flex-1 min-w-0 overflow-hidden">
       <slot />
     </div>
+    <InstallAppModal v-model:open="installHelpOpen" />
   </UDashboardGroup>
 </template>

@@ -13,6 +13,30 @@
       "noFarm": "Selecciona una finca para ver sus lotes.",
       "error": "No se pudieron cargar los lotes.",
       "retry": "Reintentar"
+    },
+    "stations": {
+      "status": {
+        "online": "En línea",
+        "stale": "Sin datos recientes",
+        "never_seen": "Sin reportar",
+        "inactive": "Inactiva",
+        "unknown": "Estado desconocido"
+      },
+      "providers": {
+        "weatherlink": "WeatherLink (Davis)",
+        "wunderground": "Weather Underground",
+        "other": "Otro proveedor"
+      },
+      "lastReading": "Última lectura",
+      "neverReported": "Nunca ha reportado",
+      "noReadings": "Sin lecturas todavía.",
+      "sparkline": {
+        "label": "Temperatura del aire, últimas 24 h",
+        "range": "Mínima {min} · máxima {max}",
+        "empty": "Sin datos suficientes de temperatura en las últimas 24 h."
+      },
+      "detail": "Ver detalle",
+      "detailFor": "Ver detalle de {name}"
     }
   }
 }

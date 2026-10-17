@@ -50,8 +50,8 @@ test.describe('Selector de fincas', () => {
     await loginAs(page)
 
     // Text-based fallback (not colour/icon alone) + a labeled Retry control.
-    // "Reintentar" also labels the retry of each weather card, so the button is
-    // located inside the plots alert rather than by name alone.
+    // Other dashboard sections label their retries "Reintentar" too, so the
+    // button is located inside the plots alert rather than by name alone.
     const plotsAlert = page
       .getByRole('alert')
       .filter({ hasText: T.plotsLoadError })

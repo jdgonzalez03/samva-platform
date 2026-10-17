@@ -2,12 +2,30 @@
   "dashboard": {
     "nav": {
       "dashboard": "Dashboard",
+      "plots": "Mis lotes",
       "history": "Historial",
+      "sensors": "Mis sensores",
+      "stations": "Estaciones",
+      "predictions": "Predicciones",
+      "fuzzyLogic": "Lógica difusa",
+      "assistant": "Asistente",
       "profile": "Perfil"
     },
     "help": {
       "feedback": "Comentarios",
-      "support": "Ayuda y soporte"
+      "support": "Ayuda y soporte",
+      "installApp": "Instalar app"
+    },
+    "installHelp": {
+      "title": "Instalar SAMVA",
+      "description": "Agrega SAMVA a la pantalla de inicio para abrirla como una aplicación.",
+      "iosStep1": "En Safari, toca el botón Compartir.",
+      "iosStep2": "Elige «Agregar a pantalla de inicio».",
+      "iosStep3": "Toca «Agregar».",
+      "otherStep1": "Abre el menú ⋮ del navegador.",
+      "otherStep2": "Elige «Instalar app» o «Agregar a la pantalla principal».",
+      "otherStep3": "Confirma con «Instalar».",
+      "close": "Entendido"
     },
     "userMenu": {
       "logout": "Cerrar sesión",
@@ -19,24 +37,14 @@
     "index": {
       "title": "Dashboard"
     },
-    "view": {
-      "label": "Vista de los lotes",
-      "map": "Mapa",
-      "list": "Lista"
-    },
     "stats": {
       "plots": "Lotes",
       "sensors": "Sensores activos",
-      "temperature": "Temperatura del aire",
-      "radiation": "Radiación solar",
-      "noData": "Sin datos",
-      "stale": "Desactualizada",
-      "error": "No se pudo cargar el clima.",
-      "updated": "Actualizado {age}"
+      "noData": "Sin datos"
     },
     "map": {
       "region": "Mapa de la finca, {name}",
-      "alternative": "La vista de lista muestra la misma información en texto.",
+      "alternative": "El ranking de lotes muestra la misma información en texto.",
       "plotLabel": "{name}, {description}, {sensors}",
       "unmapped": "{count} lote no se muestra en el mapa | {count} lotes no se muestran en el mapa",
       "noLocation": "Esta finca aún no tiene ubicación en el mapa.",
@@ -49,18 +57,219 @@
       "noDescription": "Sin descripción",
       "sensors": "{count} sensor | {count} sensores",
       "area": "{value} ha",
-      "viewPlot": "Ver lote",
-      "listLabel": "Lotes de la finca"
+      "viewPlot": "Ver lote"
     },
     "plotDetail": {
       "title": "{name}",
-      "dump": "Datos del lote",
       "back": "Volver al panel",
       "notFound": "Lote no encontrado",
       "notFoundBody": "Este lote no existe o no pertenece a tu cuenta.",
-      "error": "No se pudo cargar el lote."
+      "error": "No se pudo cargar el lote.",
+      "overviewError": "No se pudieron cargar los datos del lote.",
+      "hero": {
+        "farm": "{name}",
+        "area": "{value} ha",
+        "sensors": "Sin sensores | {count} sensor | {count} sensores",
+        "updated": "Última lectura {time}",
+        "live": "Reportando",
+        "stale": "Sin reportes recientes",
+        "noData": "Sin lecturas",
+        "map": "Ubicación del lote {name}",
+        "noMap": "Este lote aún no tiene un polígono dibujado."
+      },
+      "conditions": {
+        "title": "Condiciones actuales",
+        "empty": "Este lote todavía no tiene lecturas de sus sensores.",
+        "change": "{value} en 24 h",
+        "noChange": "Sin dato de hace 24 h",
+        "level": "Nivel {level}",
+        "levels": {
+          "low": "Bajo",
+          "medium": "Medio",
+          "high": "Alto"
+        }
+      },
+      "trend": {
+        "title": "Evolución",
+        "variable": "Variable",
+        "range": "Periodo",
+        "ranges": {
+          "24h": "24 h",
+          "7d": "7 días"
+        },
+        "min": "Mínimo",
+        "average": "Promedio",
+        "max": "Máximo",
+        "empty": "No hay lecturas en este periodo."
+      },
+      "heatmap": {
+        "title": "Mapa de calor por hora",
+        "description": "Promedio de cada hora en los últimos 7 días, en tu hora local. Los tonos más intensos son valores más altos.",
+        "variable": "Variable del mapa de calor",
+        "less": "Menor",
+        "more": "Mayor",
+        "cell": "{day}, {hour} h: {value}",
+        "noValue": "{day}, {hour} h: sin lecturas",
+        "summary": "Valor más alto: {value} el {day} a las {hour} h. Valor más bajo: {minValue} el {minDay} a las {minHour} h.",
+        "empty": "No hay lecturas en los últimos 7 días."
+      },
+      "irrigation": {
+        "title": "Riego recomendado",
+        "empty": "Aún no se ha calculado una predicción de riego para este lote.",
+        "calculate": "Calcular predicción",
+        "recalculate": "Recalcular",
+        "minutes": "{value} min",
+        "computedAt": "Calculada {time} con el promedio de las últimas {hours} h.",
+        "labels": {
+          "nothing": "Sin riego",
+          "very_little": "Muy poco",
+          "little": "Poco",
+          "long": "Largo",
+          "very_long": "Muy largo"
+        }
+      },
+      "sensors": {
+        "title": "Sensores del lote",
+        "empty": "Este lote no tiene sensores.",
+        "serial": "Serie {serial}",
+        "lastSeen": "Última lectura {time}",
+        "neverSeen": "Nunca ha reportado",
+        "status": {
+          "online": "En línea",
+          "offline": "Sin conexión",
+          "never_seen": "Sin reportar",
+          "inactive": "Inactivo"
+        }
+      }
     },
     "profileUnavailable": "Perfil no disponible.",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "home": {
+      "greeting": {
+        "morning": "Buenos días",
+        "afternoon": "Buenas tardes",
+        "evening": "Buenas noches",
+        "named": "{greeting}, {name}",
+        "summary": "Así está {farm} hoy."
+      },
+      "stats": {
+        "area": "Área total",
+        "areaValue": "{value} ha",
+        "sensorsOnline": "Sensores en línea",
+        "sensorsValue": "{online} de {total}",
+        "alerts": "Alertas"
+      },
+      "conditions": {
+        "title": "Condiciones de la finca",
+        "subtitle": "Promedio de la última lectura de cada lote.",
+        "empty": "Ningún lote de esta finca tiene lecturas todavía."
+      },
+      "attention": {
+        "title": "Necesita atención",
+        "allGood": "Todo en orden: no hay alertas en esta finca.",
+        "more": "+{count} alerta más | +{count} alertas más",
+        "dry": "Suelo seco en {plot}",
+        "dryDetail": "Humedad del suelo: {value}",
+        "stale": "{plot} sin lecturas recientes",
+        "staleDetail": "Última lectura {time}",
+        "noReadings": "{plot} no tiene lecturas",
+        "noReadingsDetail": "Revisa que tenga sensores activos.",
+        "sensorOffline": "{sensor} sin conexión",
+        "sensorOfflineDetail": "{plot} · última lectura {time}",
+        "sensorNeverSeen": "{sensor} nunca ha reportado",
+        "sensorNeverSeenDetail": "{plot}",
+        "noIrrigation": "Calcula el riego de {plot}",
+        "noIrrigationDetail": "No tiene una predicción de las últimas 24 h.",
+        "severity": {
+          "critical": "Crítica",
+          "warning": "Aviso",
+          "info": "Sugerencia"
+        }
+      },
+      "comparison": {
+        "title": "Comparativa entre lotes",
+        "variable": "Variable de la comparativa",
+        "range": "Periodo de la comparativa",
+        "empty": "No hay lecturas de esta variable en el periodo.",
+        "alternative": "Último valor por lote: {list}."
+      },
+      "ranking": {
+        "title": "Lotes",
+        "subtitle": "Del más seco al más húmedo",
+        "noData": "Sin lecturas",
+        "irrigation": "Riego {value} min",
+        "noIrrigation": "Riego sin calcular",
+        "open": "Ver {name}"
+      },
+      "heatmap": {
+        "title": "Mapa de calor de la finca",
+        "description": "Promedio por hora de cada lote en las últimas 24 h, en tu hora local. Los tonos más intensos son valores más altos.",
+        "variable": "Variable del mapa de calor",
+        "cell": "{plot}, {hour} h: {value}",
+        "noValue": "{plot}, {hour} h: sin lecturas",
+        "summary": "Valor más alto: {value} en {plot} a las {hour} h. Valor más bajo: {minValue} en {minPlot} a las {minHour} h.",
+        "empty": "No hay lecturas en las últimas 24 h."
+      },
+      "irrigation": {
+        "title": "Riego recomendado por lote",
+        "total": "Total recomendado: {value} min",
+        "pending": "Sin calcular: {plots}",
+        "empty": "Aún no hay predicciones de riego en esta finca.",
+        "alternative": "Minutos de riego por lote: {list}.",
+        "calculate": "Calcular riego"
+      },
+      "sensors": {
+        "title": "Estado de los sensores",
+        "center": "{online}/{total}",
+        "centerLabel": "en línea",
+        "empty": "Esta finca no tiene sensores.",
+        "status": {
+          "online": "En línea",
+          "offline": "Sin conexión",
+          "never_seen": "Sin reportar",
+          "inactive": "Inactivos"
+        }
+      },
+      "climate": {
+        "title": "Clima diario",
+        "description": "Mínimo, promedio y máximo de cada día en los últimos 7 días.",
+        "variable": "Variable del clima diario",
+        "min": "Mínimo",
+        "average": "Promedio",
+        "max": "Máximo",
+        "empty": "No hay lecturas de esta variable en los últimos 7 días.",
+        "alternative": "{day}: mínimo {min}, promedio {average}, máximo {max}"
+      },
+      "stations": {
+        "title": "Estaciones meteorológicas",
+        "viewAll": "Ver todas",
+        "error": "No se pudieron cargar las estaciones.",
+        "empty": "Esta finca no tiene estaciones meteorológicas."
+      }
+    },
+    "plotsIndex": {
+      "title": "Mis lotes",
+      "subtitle": "{plots} en {farms}",
+      "plotsCount": "Sin lotes | {count} lote | {count} lotes",
+      "farmsCount": "ninguna finca | {count} finca | {count} fincas",
+      "search": "Buscar lote",
+      "farm": "Finca",
+      "allFarms": "Todas las fincas",
+      "empty": "Todavía no tienes lotes registrados.",
+      "noMatches": "Ningún lote coincide con los filtros.",
+      "clearFilters": "Limpiar filtros",
+      "error": "No se pudieron cargar tus lotes.",
+      "card": {
+        "moisture": "Humedad del suelo",
+        "temperature": "Temperatura",
+        "sensors": "Sensores",
+        "area": "Área",
+        "noValue": "—",
+        "lastReading": "Última lectura {time}",
+        "noReadings": "Sin lecturas todavía",
+        "irrigation": "Riego {value} min",
+        "noMap": "Sin polígono"
+      }
+    }
   }
 }

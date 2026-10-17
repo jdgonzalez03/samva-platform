@@ -2,12 +2,30 @@
   "dashboard": {
     "nav": {
       "dashboard": "Dashboard",
+      "plots": "My plots",
       "history": "History",
+      "sensors": "My sensors",
+      "stations": "Weather stations",
+      "predictions": "Predictions",
+      "fuzzyLogic": "Fuzzy logic",
+      "assistant": "Assistant",
       "profile": "Profile"
     },
     "help": {
       "feedback": "Feedback",
-      "support": "Help & Support"
+      "support": "Help & Support",
+      "installApp": "Install app"
+    },
+    "installHelp": {
+      "title": "Install SAMVA",
+      "description": "Add SAMVA to your home screen to open it like an app.",
+      "iosStep1": "In Safari, tap the Share button.",
+      "iosStep2": "Choose “Add to Home Screen”.",
+      "iosStep3": "Tap “Add”.",
+      "otherStep1": "Open the browser menu ⋮.",
+      "otherStep2": "Choose “Install app” or “Add to Home screen”.",
+      "otherStep3": "Confirm with “Install”.",
+      "close": "Got it"
     },
     "userMenu": {
       "logout": "Log out",
@@ -19,24 +37,14 @@
     "index": {
       "title": "Dashboard"
     },
-    "view": {
-      "label": "Plots view",
-      "map": "Map",
-      "list": "List"
-    },
     "stats": {
       "plots": "Plots",
       "sensors": "Active sensors",
-      "temperature": "Air temperature",
-      "radiation": "Solar radiation",
-      "noData": "No data",
-      "stale": "Outdated",
-      "error": "Weather could not be loaded.",
-      "updated": "Updated {age}"
+      "noData": "No data"
     },
     "map": {
       "region": "Farm map, {name}",
-      "alternative": "The list view shows the same information as text.",
+      "alternative": "The plot ranking shows the same information as text.",
       "plotLabel": "{name}, {description}, {sensors}",
       "unmapped": "{count} plot is not shown on the map | {count} plots are not shown on the map",
       "noLocation": "This farm has no map location yet.",
@@ -49,18 +57,219 @@
       "noDescription": "No description",
       "sensors": "{count} sensor | {count} sensors",
       "area": "{value} ha",
-      "viewPlot": "View plot",
-      "listLabel": "Farm plots"
+      "viewPlot": "View plot"
     },
     "plotDetail": {
       "title": "{name}",
-      "dump": "Plot data",
       "back": "Back to dashboard",
       "notFound": "Plot not found",
       "notFoundBody": "This plot does not exist or does not belong to your account.",
-      "error": "The plot could not be loaded."
+      "error": "The plot could not be loaded.",
+      "overviewError": "The plot data could not be loaded.",
+      "hero": {
+        "farm": "{name}",
+        "area": "{value} ha",
+        "sensors": "No sensors | {count} sensor | {count} sensors",
+        "updated": "Last reading {time}",
+        "live": "Reporting",
+        "stale": "No recent reports",
+        "noData": "No readings",
+        "map": "Location of plot {name}",
+        "noMap": "This plot has no polygon drawn yet."
+      },
+      "conditions": {
+        "title": "Current conditions",
+        "empty": "This plot has no sensor readings yet.",
+        "change": "{value} in 24 h",
+        "noChange": "No reading from 24 h ago",
+        "level": "{level} level",
+        "levels": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        }
+      },
+      "trend": {
+        "title": "Trend",
+        "variable": "Variable",
+        "range": "Period",
+        "ranges": {
+          "24h": "24 h",
+          "7d": "7 days"
+        },
+        "min": "Minimum",
+        "average": "Average",
+        "max": "Maximum",
+        "empty": "No readings in this period."
+      },
+      "heatmap": {
+        "title": "Hourly heatmap",
+        "description": "Average of each hour over the last 7 days, in your local time. Stronger tones are higher values.",
+        "variable": "Heatmap variable",
+        "less": "Lower",
+        "more": "Higher",
+        "cell": "{day}, {hour}:00: {value}",
+        "noValue": "{day}, {hour}:00: no readings",
+        "summary": "Highest value: {value} on {day} at {hour}:00. Lowest value: {minValue} on {minDay} at {minHour}:00.",
+        "empty": "No readings in the last 7 days."
+      },
+      "irrigation": {
+        "title": "Recommended irrigation",
+        "empty": "No irrigation prediction has been calculated for this plot yet.",
+        "calculate": "Calculate prediction",
+        "recalculate": "Recalculate",
+        "minutes": "{value} min",
+        "computedAt": "Calculated {time} from the average of the last {hours} h.",
+        "labels": {
+          "nothing": "No irrigation",
+          "very_little": "Very little",
+          "little": "Little",
+          "long": "Long",
+          "very_long": "Very long"
+        }
+      },
+      "sensors": {
+        "title": "Plot sensors",
+        "empty": "This plot has no sensors.",
+        "serial": "Serial {serial}",
+        "lastSeen": "Last reading {time}",
+        "neverSeen": "Has never reported",
+        "status": {
+          "online": "Online",
+          "offline": "Offline",
+          "never_seen": "Not reporting",
+          "inactive": "Inactive"
+        }
+      }
     },
     "profileUnavailable": "Profile unavailable.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "home": {
+      "greeting": {
+        "morning": "Good morning",
+        "afternoon": "Good afternoon",
+        "evening": "Good evening",
+        "named": "{greeting}, {name}",
+        "summary": "Here is how {farm} is doing today."
+      },
+      "stats": {
+        "area": "Total area",
+        "areaValue": "{value} ha",
+        "sensorsOnline": "Sensors online",
+        "sensorsValue": "{online} of {total}",
+        "alerts": "Alerts"
+      },
+      "conditions": {
+        "title": "Farm conditions",
+        "subtitle": "Average of the latest reading of each plot.",
+        "empty": "No plot on this farm has readings yet."
+      },
+      "attention": {
+        "title": "Needs attention",
+        "allGood": "All good: there are no alerts on this farm.",
+        "more": "+{count} more alert | +{count} more alerts",
+        "dry": "Dry soil on {plot}",
+        "dryDetail": "Soil moisture: {value}",
+        "stale": "{plot} has no recent readings",
+        "staleDetail": "Last reading {time}",
+        "noReadings": "{plot} has no readings",
+        "noReadingsDetail": "Check that it has active sensors.",
+        "sensorOffline": "{sensor} is offline",
+        "sensorOfflineDetail": "{plot} · last reading {time}",
+        "sensorNeverSeen": "{sensor} has never reported",
+        "sensorNeverSeenDetail": "{plot}",
+        "noIrrigation": "Calculate irrigation for {plot}",
+        "noIrrigationDetail": "It has no prediction from the last 24 h.",
+        "severity": {
+          "critical": "Critical",
+          "warning": "Warning",
+          "info": "Tip"
+        }
+      },
+      "comparison": {
+        "title": "Plot comparison",
+        "variable": "Comparison variable",
+        "range": "Comparison period",
+        "empty": "No readings of this variable in the period.",
+        "alternative": "Latest value per plot: {list}."
+      },
+      "ranking": {
+        "title": "Plots",
+        "subtitle": "From driest to wettest",
+        "noData": "No readings",
+        "irrigation": "Irrigation {value} min",
+        "noIrrigation": "Irrigation not calculated",
+        "open": "View {name}"
+      },
+      "heatmap": {
+        "title": "Farm heatmap",
+        "description": "Hourly average of each plot over the last 24 h, in your local time. Stronger tones are higher values.",
+        "variable": "Heatmap variable",
+        "cell": "{plot}, {hour}:00: {value}",
+        "noValue": "{plot}, {hour}:00: no readings",
+        "summary": "Highest value: {value} on {plot} at {hour}:00. Lowest value: {minValue} on {minPlot} at {minHour}:00.",
+        "empty": "No readings in the last 24 h."
+      },
+      "irrigation": {
+        "title": "Recommended irrigation per plot",
+        "total": "Total recommended: {value} min",
+        "pending": "Not calculated: {plots}",
+        "empty": "There are no irrigation predictions on this farm yet.",
+        "alternative": "Irrigation minutes per plot: {list}.",
+        "calculate": "Calculate irrigation"
+      },
+      "sensors": {
+        "title": "Sensor status",
+        "center": "{online}/{total}",
+        "centerLabel": "online",
+        "empty": "This farm has no sensors.",
+        "status": {
+          "online": "Online",
+          "offline": "Offline",
+          "never_seen": "Not reporting",
+          "inactive": "Inactive"
+        }
+      },
+      "climate": {
+        "title": "Daily climate",
+        "description": "Minimum, average and maximum of each day over the last 7 days.",
+        "variable": "Daily climate variable",
+        "min": "Minimum",
+        "average": "Average",
+        "max": "Maximum",
+        "empty": "No readings of this variable in the last 7 days.",
+        "alternative": "{day}: minimum {min}, average {average}, maximum {max}"
+      },
+      "stations": {
+        "title": "Weather stations",
+        "viewAll": "View all",
+        "error": "Weather stations could not be loaded.",
+        "empty": "This farm has no weather stations."
+      }
+    },
+    "plotsIndex": {
+      "title": "My plots",
+      "subtitle": "{plots} on {farms}",
+      "plotsCount": "No plots | {count} plot | {count} plots",
+      "farmsCount": "no farms | {count} farm | {count} farms",
+      "search": "Search plot",
+      "farm": "Farm",
+      "allFarms": "All farms",
+      "empty": "You have no plots registered yet.",
+      "noMatches": "No plot matches the filters.",
+      "clearFilters": "Clear filters",
+      "error": "Your plots could not be loaded.",
+      "card": {
+        "moisture": "Soil moisture",
+        "temperature": "Temperature",
+        "sensors": "Sensors",
+        "area": "Area",
+        "noValue": "—",
+        "lastReading": "Last reading {time}",
+        "noReadings": "No readings yet",
+        "irrigation": "Irrigation {value} min",
+        "noMap": "No polygon"
+      }
+    }
   }
 }

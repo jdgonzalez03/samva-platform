@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/vue-query'
+import type { Ref } from 'vue'
 import { FarmQueryKey } from '../constants/query-keys'
 import { farmApi } from '../utils/api/farm'
 import { hasTokens } from '#api/tokens'
@@ -16,4 +17,16 @@ export const useFarmsQuery = () =>
     // Getter so the token check runs at observer creation on the client;
     // on the server tokens are always null, keeping the query SSR-inert.
     enabled: () => hasTokens(),
+  })
+
+export const farmOverviewQueryOptions = (farmId: Ref<number | null>) => ({
+  queryKey: [FarmQueryKey.ROOT, FarmQueryKey.OVERVIEW, farmId] as const,
+  queryFn: () => farmApi.getFarmOverview(farmId.value!),
+})
+
+export const useFarmOverviewQuery = (farmId: Ref<number | null>) =>
+  useQuery({
+    ...farmOverviewQueryOptions(farmId),
+    enabled: () => hasTokens() && farmId.value !== null,
+    refetchInterval: LIVE_REFRESH_INTERVAL_MS,
   })

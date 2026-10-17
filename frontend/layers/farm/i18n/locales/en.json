@@ -13,6 +13,30 @@
       "noFarm": "Select a farm to see its plots.",
       "error": "Plots could not be loaded.",
       "retry": "Retry"
+    },
+    "stations": {
+      "status": {
+        "online": "Online",
+        "stale": "No recent data",
+        "never_seen": "Never reported",
+        "inactive": "Inactive",
+        "unknown": "Unknown status"
+      },
+      "providers": {
+        "weatherlink": "WeatherLink (Davis)",
+        "wunderground": "Weather Underground",
+        "other": "Other provider"
+      },
+      "lastReading": "Last reading",
+      "neverReported": "Has never reported",
+      "noReadings": "No readings yet.",
+      "sparkline": {
+        "label": "Air temperature, last 24 h",
+        "range": "Low {min} · high {max}",
+        "empty": "Not enough temperature data in the last 24 h."
+      },
+      "detail": "View details",
+      "detailFor": "View details of {name}"
     }
   }
 }
